@@ -28,12 +28,14 @@ import { TokenUsageCounter } from '../components/TokenUsageCounter';
 import { GitHubAuthModal } from '../components/GitHubAuthModal';
 import { CodespaceStatus } from '../components/CodespaceStatus';
 import { CodespaceModal } from '../components/CodespaceModal';
+import { LoadingSpinner, LoadingOverlay, ProgressBar, StepProgress, useLoadingState, useProgress } from '../components/LoadingStates';
 import { toolService } from '../services/toolService';
 import { chatMemoryService } from '../services/chatMemoryService';
 import { tokenUsageService } from '../services/tokenUsageService';
 import { githubService } from '../services/githubService';
 import { githubCommandService } from '../services/githubCommandService';
 import { codespaceService } from '../services/codespaceService';
+import { validationService } from '../services/validationService';
 
 const MODELS: ZAIModel[] = [
   {
@@ -90,6 +92,10 @@ export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
   const [showCodespaceModal, setShowCodespaceModal] = useState(false);
   const flatListRef = useRef<FlatList>(null);
 
+  // Loading states
+  const loadingStates = useLoadingState();
+  const progress = useProgress();
+
   useEffect(() => {
     initializeChat();
     // Initialize GitHub service
@@ -97,13 +103,21 @@ export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
   }, []);
 
   const initializeChat = async () => {
+    loadingStates.setLoading('initialization', true);
     try {
+      progress.setProgress('initialization', 0.2);
       await chatMemoryService.init();
+      
+      progress.setProgress('initialization', 0.5);
       startNewChat();
+      
+      progress.setProgress('initialization', 1.0);
     } catch (error) {
       console.error('Failed to initialize chat:', error);
       // Fallback to welcome message
       addWelcomeMessage();
+    } finally {
+      loadingStates.setLoading('initialization', false);
     }
   };
 
@@ -158,8 +172,23 @@ How can I help you today?`,
 
     const messageText = inputText.trim();
 
+    // Validate input
+    const validation = validationService.validateAndSanitize(messageText, 'text');
+    if (!validation.isValid) {
+      Alert.alert('Validation Error', validation.errors.join('\n'));
+      return;
+    }
+
+    if (validation.warnings.length > 0) {
+      console.warn('Input validation warnings:', validation.warnings);
+    }
+
+    const sanitizedText = validation.sanitized;
+    loadingStates.setLoading('sending', true);
+    progress.setProgress('sending', 0.1);
+
     // Check for GitHub commands and URLs
-    const gitHubCommands = githubService.detectGitHubCommands(messageText);
+    const gitHubCommands = githubService.detectGitHubCommands(sanitizedText);
     if (gitHubCommands.length > 0) {
       if (!githubService.isAuthenticated()) {
         setDetectedGitHubCommands(gitHubCommands);
@@ -203,7 +232,7 @@ How can I help you today?`,
 
     // In Full-Stack mode, check if user is talking about a project and suggest codespace
     if (selectedMode.id === 'fullstack' && githubService.isAuthenticated()) {
-      const repository = codespaceService.extractRepositoryFromMessage(messageText);
+      const repository = codespaceService.extractRepositoryFromMessage(sanitizedText);
       const currentCodespace = await codespaceService.getCurrentCodespace();
       
       if (repository && !currentCodespace) {
@@ -237,19 +266,19 @@ You can tap the Codespace status button in the header to create one, or just let
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: messageText,
+      content: sanitizedText,
       timestamp: new Date(),
     };
 
     // Create new chat if this is the first message
     if (!currentChatId && messages.length <= 1) {
-      const chatId = await chatMemoryService.createNewChat(messageText);
+      const chatId = await chatMemoryService.createNewChat(sanitizedText);
       setCurrentChatId(chatId);
-      setChatTitle(messageText.slice(0, 30) + (messageText.length > 30 ? '...' : ''));
+      setChatTitle(sanitizedText.slice(0, 30) + (sanitizedText.length > 30 ? '...' : ''));
     }
 
     // Get context from previous chats
-    const context = await chatMemoryService.findRelevantContext(messageText);
+    const context = await chatMemoryService.findRelevantContext(sanitizedText);
     setInjectedContext(context);
 
     setMessages(prev => [...prev, userMessage]);
@@ -444,6 +473,8 @@ You can tap the Codespace status button in the header to create one, or just let
     } finally {
       setIsLoading(false);
       setInjectedContext([]);
+      loadingStates.setLoading('sending', false);
+      progress.setProgress('sending', 0);
     }
   };
 
@@ -780,6 +811,27 @@ You can tap the Codespace status button in the header to create one, or just let
           </TouchableOpacity>
         </View>
       </View>
+      
+      {/* Loading Overlays */}
+      <LoadingOverlay 
+        visible={loadingStates.isLoading('initialization')} 
+        text="Initializing chat..." 
+      />
+      <LoadingOverlay 
+        visible={loadingStates.isLoading('sending')} 
+        text="Sending message..." 
+      />
+      
+      {/* Progress Bar for initialization */}
+      {loadingStates.isLoading('initialization') && (
+        <View style={styles.progressContainer}>
+          <ProgressBar 
+            progress={progress.getProgress('initialization')} 
+            showPercentage={true}
+            label="Initializing"
+          />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -788,6 +840,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  progressContainer: {
+    position: 'absolute',
+    bottom: 100,
+    left: 16,
+    right: 16,
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
   header: {
     flexDirection: 'row',

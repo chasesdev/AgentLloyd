@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SecureStorage } from '../utils/secureStorage';
 import axios from 'axios';
 
 interface GitHubUser {
@@ -44,7 +44,7 @@ class GitHubService {
       if (response.data) {
         this.token = token;
         this.authenticated = true;
-        await AsyncStorage.setItem('github_token', token);
+        await SecureStorage.setApiKey('github_token', token);
         return true;
       }
       return false;
@@ -56,7 +56,7 @@ class GitHubService {
 
   async loadStoredToken(): Promise<boolean> {
     try {
-      const token = await AsyncStorage.getItem('github_token');
+      const token = await SecureStorage.getApiKey('github_token');
       if (token) {
         return await this.setToken(token);
       }
@@ -218,7 +218,7 @@ class GitHubService {
   async logout(): Promise<void> {
     this.token = null;
     this.authenticated = false;
-    await AsyncStorage.removeItem('github_token');
+    await SecureStorage.removeItem('github_token');
   }
 
   // Helper method to generate GitHub token setup instructions

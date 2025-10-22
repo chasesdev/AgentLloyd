@@ -1,5 +1,7 @@
 import { ToolCall, ToolResult, AgentTool } from '../types/tools';
 import { zaiService } from './zaiService';
+import { codeInterpreterService, CodeExecutionResult } from './codeInterpreterService';
+import { fileAnalyzerService, FileAnalysisResult } from './fileAnalyzerService';
 import ZAI from 'z-ai-web-dev-sdk';
 
 export class ToolService {
@@ -90,40 +92,138 @@ export class ToolService {
 
   private async executeCodeInterpreter(args: { code: string; language?: string }): Promise<ToolResult> {
     try {
-      // For now, return a placeholder response
-      // In a real implementation, you would set up a code execution environment
-      const result = `Code execution simulated for ${args.language || 'python'}:\n\`\`\`${args.language || 'python'}\n${args.code}\n\`\`\`\n\nExecution result: This is a placeholder. In a production environment, this would execute the code and return the actual output.`;
+      const language = (args.language || 'python') as any;
       
+      // Validate language
+      const supportedLanguages = codeInterpreterService.getSupportedLanguages();
+      if (!supportedLanguages.includes(language)) {
+        throw new Error(`Unsupported language: ${language}. Supported: ${supportedLanguages.join(', ')}`);
+      }
+
+      // Execute code
+      const result = await codeInterpreterService.executeCode({
+        code: args.code,
+        language,
+        timeout: 10000 // 10 second timeout
+      });
+
+      let output = '';
+      if (result.success) {
+        output = `✅ **Execution Successful**\n\n`;
+        output += `**Language:** ${language}\n`;
+        output += `**Execution Time:** ${result.executionTime}ms\n\n`;
+        output += `**Output:**\n\`\`\`\n${result.output || 'No output'}\n\`\`\``;
+        
+        if (result.stdout) {
+          output += `\n**Stdout:**\n\`\`\`\n${result.stdout}\n\`\`\``;
+        }
+      } else {
+        output = `❌ **Execution Failed**\n\n`;
+        output += `**Language:** ${language}\n`;
+        output += `**Execution Time:** ${result.executionTime}ms\n\n`;
+        output += `**Error:**\n\`\`\`\n${result.error}\n\`\`\``;
+        
+        if (result.stderr) {
+          output += `\n**Stderr:**\n\`\`\`\n${result.stderr}\n\`\`\``;
+        }
+      }
+
       return {
         tool_call_id: 'code_interpreter_' + Date.now(),
-        result
+        result: output
       };
     } catch (error) {
       console.error('Code execution failed:', error);
       return {
         tool_call_id: 'code_interpreter_' + Date.now(),
-        result: `Code execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        result: `❌ **Code execution failed:** ${error instanceof Error ? error.message : 'Unknown error'}`
       };
     }
   }
 
   private async executeFileAnalyzer(args: { file_path: string; analysis_type?: string }): Promise<ToolResult> {
     try {
-      // For now, return a placeholder response
-      // In a real implementation, you would analyze the actual file
-      const result = `File analysis simulated for ${args.file_path}:\n\nAnalysis type: ${args.analysis_type || 'auto'}\n\nThis is a placeholder. In a production environment, this would analyze the actual file content and provide insights.`;
+      const analysisType = (args.analysis_type || 'auto') as any;
       
+      // Since we can't access arbitrary file paths in React Native for security,
+      // we'll prompt the user to pick a file instead
+      let result: FileAnalysisResult;
+      
+      if (args.file_path.includes('image') || analysisType === 'image') {
+        result = await fileAnalyzerService.pickAndAnalyzeImage();
+      } else {
+        result = await fileAnalyzerService.pickAndAnalyzeFile(analysisType);
+      }
+
+      let output = '';
+      if (result.success) {
+        output = `📄 **File Analysis Complete**\n\n`;
+        output += `**File:** ${result.fileName}\n`;
+        output += `**Type:** ${result.fileType}\n`;
+        output += `**Size:** ${this.formatFileSize(result.size)}\n`;
+        output += `**Processing Time:** ${result.processingTime}ms\n\n`;
+        
+        output += `**Summary:**\n${result.analysis.summary}\n\n`;
+        
+        if (result.analysis.keyPoints.length > 0) {
+          output += `**Key Points:**\n`;
+          result.analysis.keyPoints.forEach(point => {
+            output += `• ${point}\n`;
+          });
+          output += '\n';
+        }
+        
+        if (result.analysis.entities.length > 0) {
+          output += `**Entities:**\n`;
+          result.analysis.entities.forEach(entity => {
+            output += `• ${entity}\n`;
+          });
+          output += '\n';
+        }
+        
+        if (result.analysis.sentiment) {
+          output += `**Sentiment:** ${result.analysis.sentiment}\n\n`;
+        }
+        
+        if (result.analysis.language) {
+          output += `**Language:** ${result.analysis.language}\n\n`;
+        }
+        
+        if (result.extractedText && result.extractedText.length < 500) {
+          output += `**Extracted Text:**\n\`\`\`\n${result.extractedText}\n\`\`\``;
+        } else if (result.extractedText) {
+          output += `**Extracted Text:**\n\`\`\`\n${result.extractedText.slice(0, 500)}...\n\`\`\``;
+        }
+      } else {
+        output = `❌ **File Analysis Failed**\n\n`;
+        output += `**Error:** ${result.error}\n`;
+        output += `**Processing Time:** ${result.processingTime}ms`;
+      }
+
       return {
         tool_call_id: 'file_analyzer_' + Date.now(),
-        result
+        result: output
       };
     } catch (error) {
       console.error('File analysis failed:', error);
       return {
         tool_call_id: 'file_analyzer_' + Date.now(),
-        result: `File analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        result: `❌ **File analysis failed:** ${error instanceof Error ? error.message : 'Unknown error'}\n\n💡 **Tip:** Make sure to select a file when prompted.`
       };
     }
+  }
+
+  /**
+   * Format file size in human readable format
+   */
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
   getAvailableTools(): AgentTool[] {

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { zaiService } from '../services/zaiService';
+import { validationService } from '../services/validationService';
 
 interface Props {
   onApiKeySet: () => void;
@@ -38,11 +39,23 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
       return;
     }
 
+    // Validate API key
+    const validation = validationService.validateAndSanitize(apiKey, 'text');
+    if (!validation.isValid) {
+      Alert.alert('Validation Error', validation.errors.join('\n'));
+      return;
+    }
+
+    if (validation.warnings.length > 0) {
+      console.warn('API key validation warnings:', validation.warnings);
+    }
+
+    const sanitizedKey = validation.sanitized;
     setIsLoading(true);
     try {
-      const isValid = await zaiService.validateApiKey(apiKey.trim());
+      const isValid = await zaiService.validateApiKey(sanitizedKey);
       if (isValid) {
-        await zaiService.setApiKey(apiKey.trim());
+        await zaiService.setApiKey(sanitizedKey);
         Alert.alert('Success', 'API key saved successfully!', [
           { text: 'OK', onPress: onApiKeySet }
         ]);
