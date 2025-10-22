@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -13,12 +12,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { settingsService } from '@/services/settingsService';
-
 interface IntegrationsModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 interface IntegrationCardProps {
   title: string;
   description: string;
@@ -27,7 +24,6 @@ interface IntegrationCardProps {
   onToggle: (enabled: boolean) => void;
   children?: React.ReactNode;
 }
-
 function IntegrationCard({ title, description, icon, enabled, onToggle, children }: IntegrationCardProps) {
   return (
     <View style={styles.integrationCard}>
@@ -54,27 +50,22 @@ function IntegrationCard({ title, description, icon, enabled, onToggle, children
     </View>
   );
 }
-
 export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
   const [githubEnabled, setGithubEnabled] = useState(false);
   const [gistEnabled, setGistEnabled] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
       loadSettings();
     }
   }, [isOpen]);
-
   const loadSettings = () => {
     const settings = settingsService.getSettings();
     setGithubEnabled(settings.githubEnabled);
     setGistEnabled(settings.gistEnabled);
   };
-
   const handleGitHubToggle = (enabled: boolean) => {
     setGithubEnabled(enabled);
     settingsService.updateGitHubEnabled(enabled);
-    
     if (enabled) {
       Alert.alert(
         'GitHub Integration',
@@ -82,11 +73,9 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
       );
     }
   };
-
   const handleGistToggle = (enabled: boolean) => {
     setGistEnabled(enabled);
     settingsService.updateGistEnabled(enabled);
-    
     if (enabled) {
       Alert.alert(
         'Gist Integration',
@@ -94,7 +83,6 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
       );
     }
   };
-
   return (
     <Modal
       visible={isOpen}
@@ -103,7 +91,7 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
       onRequestClose={onClose}
     >
       <View style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Ionicons name="extension-puzzle-outline" size={24} color="#333" />
@@ -113,9 +101,8 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
             <Ionicons name="close" size={24} color="#666" />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* GitHub Integration */}
+          {}
           <IntegrationCard
             title="GitHub"
             description="Connect to GitHub for repository management, codespaces, and pull requests"
@@ -147,8 +134,7 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
               </View>
             </View>
           </IntegrationCard>
-
-          {/* Gist Integration */}
+          {}
           <IntegrationCard
             title="GitHub Gist"
             description="Create and manage GitHub gists for sharing planning and documentation"
@@ -180,8 +166,7 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
               </View>
             </View>
           </IntegrationCard>
-
-          {/* Info Section */}
+          {}
           <View style={styles.infoSection}>
             <Text style={styles.infoTitle}>About Integrations</Text>
             <Text style={styles.infoText}>
@@ -192,8 +177,7 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
             </Text>
           </View>
         </ScrollView>
-
-        {/* Footer */}
+        {}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.footerButton, styles.footerCloseButton]}
@@ -206,7 +190,6 @@ export function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
     </Modal>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

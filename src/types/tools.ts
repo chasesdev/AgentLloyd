@@ -5,7 +5,6 @@ export interface AgentTool {
   parameters: Record<string, any>;
   enabled: boolean;
 }
-
 export interface MCPTool {
   id: string;
   name: string;
@@ -13,7 +12,6 @@ export interface MCPTool {
   description: string;
   enabled: boolean;
 }
-
 export interface ToolCall {
   id: string;
   type: 'function';
@@ -22,12 +20,10 @@ export interface ToolCall {
     arguments: string;
   };
 }
-
 export interface ToolResult {
   tool_call_id: string;
   result: string;
 }
-
 export const AVAILABLE_TOOLS: AgentTool[] = [
   {
     id: 'web_search',
@@ -60,7 +56,6 @@ export const AVAILABLE_TOOLS: AgentTool[] = [
     enabled: true,
   },
 ];
-
 export const MCP_SERVERS: MCPTool[] = [
   {
     id: 'filesystem',

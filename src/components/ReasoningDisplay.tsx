@@ -9,16 +9,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ReasoningProcess } from '../types/modes';
-
 interface Props {
   reasoning: ReasoningProcess | null;
   isLoading?: boolean;
 }
-
 export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [showFullReasoning, setShowFullReasoning] = useState(false);
-
   const toggleStep = (stepId: string) => {
     setExpandedSteps(prev => {
       const newSet = new Set(prev);
@@ -30,7 +27,6 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
       return newSet;
     });
   };
-
   const getStepIcon = (type: string) => {
     switch (type) {
       case 'analysis':
@@ -45,7 +41,6 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
         return 'ellipse-outline';
     }
   };
-
   const getStepColor = (type: string) => {
     switch (type) {
       case 'analysis':
@@ -60,9 +55,7 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
         return '#666';
     }
   };
-
   if (!reasoning && !isLoading) return null;
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -89,9 +82,7 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
       </View>
     );
   }
-
   if (!reasoning) return null;
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -110,13 +101,11 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
           />
         </TouchableOpacity>
       </View>
-
       {showFullReasoning && (
         <ScrollView style={styles.stepsContainer} showsVerticalScrollIndicator={false}>
           {reasoning.steps.map((step, index) => {
             const isExpanded = expandedSteps.has(step.id);
             const stepColor = getStepColor(step.type);
-
             return (
               <View key={step.id} style={styles.stepContainer}>
                 <TouchableOpacity
@@ -136,7 +125,6 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
                     color="#666"
                   />
                 </TouchableOpacity>
-
                 {isExpanded && (
                   <View style={styles.stepContent}>
                     <Text style={styles.stepContentText}>{step.content}</Text>
@@ -148,7 +136,6 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
               </View>
             );
           })}
-
           {reasoning.conclusion && (
             <View style={styles.conclusionContainer}>
               <View style={styles.conclusionHeader}>
@@ -163,7 +150,6 @@ export const ReasoningDisplay: React.FC<Props> = ({ reasoning, isLoading }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff8e1',

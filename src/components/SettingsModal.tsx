@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -13,47 +12,38 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { settingsService } from '@/services/settingsService';
-
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState('');
   const [apiUrl, setApiUrl] = useState('');
   const [modelName, setModelName] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
       loadSettings();
     }
   }, [isOpen]);
-
   const loadSettings = () => {
     const settings = settingsService.getSettings();
     setApiKey(settings.apiKey);
     setApiUrl(settings.apiUrl);
     setModelName(settings.modelName);
   };
-
   const handleSave = () => {
-    // Validate settings
     const validation = settingsService.validateSettings();
     if (!validation.valid) {
       Alert.alert('Invalid Settings', validation.error);
       return;
     }
-
     settingsService.updateApiKey(apiKey);
     settingsService.updateApiUrl(apiUrl);
     settingsService.updateModelName(modelName);
-    
     Alert.alert('Success', 'Settings saved successfully');
     onClose();
   };
-
   const handleReset = () => {
     Alert.alert(
       'Reset Settings',
@@ -72,14 +62,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       ]
     );
   };
-
   const handleExport = () => {
     const settingsJson = settingsService.exportSettings();
-    // In a real app, this would share or save the file
     console.log('Export settings:', settingsJson);
     Alert.alert('Export', 'Settings exported to console (dev mode)');
   };
-
   return (
     <Modal
       visible={isOpen}
@@ -88,7 +75,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       onRequestClose={onClose}
     >
       <View style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Ionicons name="settings-outline" size={24} color="#333" />
@@ -98,12 +85,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <Ionicons name="close" size={24} color="#666" />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* API Configuration */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>API Configuration</Text>
-            
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>API Key</Text>
               <Text style={styles.inputHint}>
@@ -131,7 +116,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </TouchableOpacity>
               </View>
             </View>
-
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Model Name</Text>
               <Text style={styles.inputHint}>
@@ -146,23 +130,21 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 autoCapitalize="none"
               />
             </View>
-
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>API URL</Text>
               <Text style={styles.inputHint}>
-                Z-AI API or LM Studio URL (e.g., http://192.168.1.100:1234/v1)
+                Z-AI API or LM Studio URL (e.g., http:
               </Text>
               <TextInput
                 style={styles.textInput}
                 value={apiUrl}
                 onChangeText={setApiUrl}
-                placeholder="https://api.z-ai.dev"
+                placeholder="https:
                 placeholderTextColor="#999"
                 autoCapitalize="none"
               />
             </View>
-
-            {/* Configuration Mode Info */}
+            {}
             <View style={styles.modeInfo}>
               <Ionicons name="information-circle-outline" size={16} color="#3b82f6" />
               <Text style={styles.modeInfoText}>
@@ -174,23 +156,19 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </Text>
             </View>
           </View>
-
-          {/* Danger Zone */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Danger Zone</Text>
-            
             <TouchableOpacity style={styles.dangerButton} onPress={handleReset}>
               <Ionicons name="refresh-outline" size={20} color="#dc2626" />
               <Text style={styles.dangerButtonText}>Reset to Defaults</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.exportButton} onPress={handleExport}>
               <Ionicons name="download-outline" size={20} color="#059669" />
               <Text style={styles.exportButtonText}>Export Settings</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Info */}
+          {}
           <View style={styles.infoSection}>
             <Text style={styles.infoTitle}>About</Text>
             <Text style={styles.infoText}>
@@ -201,8 +179,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </Text>
           </View>
         </ScrollView>
-
-        {/* Footer */}
+        {}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.footerButton, styles.cancelButton]}
@@ -210,7 +187,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           >
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity
             style={[styles.footerButton, styles.saveButton]}
             onPress={handleSave}
@@ -222,7 +198,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     </Modal>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

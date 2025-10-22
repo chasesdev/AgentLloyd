@@ -13,14 +13,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Codespace, codespaceService } from '../services/codespaceService';
-
 interface CodespaceModalProps {
   visible: boolean;
   onClose: () => void;
   currentProject?: string;
   onCodespaceCreated: (codespace: Codespace) => void;
 }
-
 export const CodespaceModal: React.FC<CodespaceModalProps> = ({
   visible,
   onClose,
@@ -35,13 +33,10 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
   const [branch, setBranch] = useState('main');
   const [displayName, setDisplayName] = useState('');
   const [hasCodespacesAccess, setHasCodespacesAccess] = useState<boolean | null>(null);
-
   useEffect(() => {
     if (visible) {
       loadCodespaces();
       checkCodespacesAccess();
-      
-      // Pre-fill repository if we have a current project
       if (currentProject) {
         const repo = codespaceService.extractRepositoryFromMessage(currentProject);
         if (repo) {
@@ -52,7 +47,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       }
     }
   }, [visible, currentProject]);
-
   const checkCodespacesAccess = async () => {
     try {
       const access = await codespaceService.hasCodespacesAccess();
@@ -61,13 +55,11 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       setHasCodespacesAccess(false);
     }
   };
-
   const loadCodespaces = async () => {
     setLoading(true);
     try {
       const current = await codespaceService.getCurrentCodespace();
       setCurrentCodespace(current);
-      
       const existing = await codespaceService.getCodespaces();
       setExistingCodespaces(existing.filter(cs => cs.id !== current?.id));
     } catch (error) {
@@ -76,13 +68,11 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       setLoading(false);
     }
   };
-
   const handleCreateCodespace = async () => {
     if (!repository.trim()) {
       Alert.alert('Error', 'Please enter a repository (owner/repo)');
       return;
     }
-
     setLoading(true);
     try {
       const options = {
@@ -90,7 +80,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
         branch: branch.trim() || undefined,
         display_name: displayName.trim() || undefined,
       };
-
       const newCodespace = await codespaceService.createCodespace(options);
       if (newCodespace) {
         await codespaceService.setCurrentCodespace(newCodespace);
@@ -104,7 +93,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       setLoading(false);
     }
   };
-
   const handleStartCodespace = async (codespace: Codespace) => {
     setLoading(true);
     try {
@@ -121,7 +109,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       setLoading(false);
     }
   };
-
   const handleStopCodespace = async (codespace: Codespace) => {
     Alert.alert(
       'Stop Codespace',
@@ -153,7 +140,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       ]
     );
   };
-
   const handleDeleteCodespace = async (codespace: Codespace) => {
     Alert.alert(
       'Delete Codespace',
@@ -185,19 +171,16 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       ]
     );
   };
-
   const handleOpenCodespace = (codespace: Codespace) => {
     if (codespace.web_url) {
       Linking.openURL(codespace.web_url);
     }
   };
-
   const handleCreateRepository = async () => {
     if (!displayName.trim()) {
       Alert.alert('Error', 'Please enter a project name');
       return;
     }
-
     setLoading(true);
     try {
       const fullName = await codespaceService.suggestRepositoryCreation(displayName.trim());
@@ -209,7 +192,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       setLoading(false);
     }
   };
-
   const renderCodespaceItem = (codespace: Codespace, isCurrent: boolean = false) => (
     <View key={codespace.id} style={[styles.codespaceItem, isCurrent && styles.currentCodespaceItem]}>
       <View style={styles.codespaceInfo}>
@@ -225,7 +207,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
           Machine: {codespace.machine.display_name}
         </Text>
       </View>
-      
       <View style={styles.codespaceActions}>
         {codespace.state === 'available' && (
           <TouchableOpacity
@@ -235,7 +216,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             <Ionicons name="open-outline" size={20} color="#007AFF" />
           </TouchableOpacity>
         )}
-        
         {codespace.state === 'shutdown' && (
           <TouchableOpacity
             style={styles.actionButton}
@@ -244,7 +224,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             <Ionicons name="play-outline" size={20} color="#34C759" />
           </TouchableOpacity>
         )}
-        
         {codespace.state === 'available' && (
           <TouchableOpacity
             style={styles.actionButton}
@@ -253,7 +232,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             <Ionicons name="stop-outline" size={20} color="#FF9500" />
           </TouchableOpacity>
         )}
-        
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => handleDeleteCodespace(codespace)}
@@ -263,7 +241,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       </View>
     </View>
   );
-
   if (hasCodespacesAccess === false) {
     return (
       <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
@@ -275,7 +252,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             <Text style={styles.title}>GitHub Codespaces</Text>
             <View style={styles.placeholder} />
           </View>
-
           <View style={styles.noAccessContainer}>
             <Ionicons name="alert-circle-outline" size={64} color="#FF9500" />
             <Text style={styles.noAccessTitle}>Codespaces Not Available</Text>
@@ -284,7 +260,7 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             </Text>
             <TouchableOpacity
               style={styles.learnMoreButton}
-              onPress={() => Linking.openURL('https://docs.github.com/en/codespaces')}
+              onPress={() => Linking.openURL('https:
             >
               <Text style={styles.learnMoreButtonText}>Learn More</Text>
             </TouchableOpacity>
@@ -293,7 +269,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
       </Modal>
     );
   }
-
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
@@ -304,7 +279,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
           <Text style={styles.title}>GitHub Codespaces</Text>
           <View style={styles.placeholder} />
         </View>
-
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'current' && styles.activeTab]}
@@ -331,7 +305,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             </Text>
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {loading && (
             <View style={styles.loadingContainer}>
@@ -339,7 +312,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
               <Text style={styles.loadingText}>Loading...</Text>
             </View>
           )}
-
           {!loading && (
             <>
               {activeTab === 'current' && (
@@ -357,7 +329,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                   )}
                 </View>
               )}
-
               {activeTab === 'create' && (
                 <View style={styles.createContainer}>
                   <View style={styles.inputGroup}>
@@ -372,7 +343,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                       autoCorrect={false}
                     />
                   </View>
-
                   <View style={styles.inputGroup}>
                     <Text style={styles.inputLabel}>Branch</Text>
                     <TextInput
@@ -385,7 +355,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                       autoCorrect={false}
                     />
                   </View>
-
                   <View style={styles.inputGroup}>
                     <Text style={styles.inputLabel}>Display Name</Text>
                     <TextInput
@@ -396,7 +365,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                       placeholderTextColor="#999"
                     />
                   </View>
-
                   <TouchableOpacity
                     style={styles.createRepoButton}
                     onPress={handleCreateRepository}
@@ -404,7 +372,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                     <Ionicons name="add-outline" size={20} color="#007AFF" />
                     <Text style={styles.createRepoButtonText}>Create New Repository</Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     style={[styles.button, styles.createButton]}
                     onPress={handleCreateCodespace}
@@ -414,7 +381,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
                   </TouchableOpacity>
                 </View>
               )}
-
               {activeTab === 'existing' && (
                 <View>
                   {existingCodespaces.length > 0 ? (
@@ -437,7 +403,6 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

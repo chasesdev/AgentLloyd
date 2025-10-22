@@ -4,7 +4,6 @@ interface TokenUsage {
   totalTokens: number;
   cost: number;
 }
-
 class TokenUsageService {
   private currentChatTokens: TokenUsage = {
     inputTokens: 0,
@@ -12,11 +11,10 @@ class TokenUsageService {
     totalTokens: 0,
     cost: 0
   };
-
   private readonly TOKEN_COSTS = {
     'glm-4.6': {
-      input: 0.005,  // $0.005 per 1K input tokens
-      output: 0.015  // $0.015 per 1K output tokens
+      input: 0.005,  
+      output: 0.015  
     },
     'glm-4.5v': {
       input: 0.003,
@@ -27,19 +25,16 @@ class TokenUsageService {
       output: 0.003
     }
   };
-
   updateTokenUsage(
     model: string, 
     inputTokens: number, 
     outputTokens: number
   ): void {
     const costs = this.TOKEN_COSTS[model as keyof typeof this.TOKEN_COSTS] || this.TOKEN_COSTS['glm-4.6'];
-    
     const inputCost = (inputTokens / 1000) * costs.input;
     const outputCost = (outputTokens / 1000) * costs.output;
     const totalCost = inputCost + outputCost;
     const totalTokens = inputTokens + outputTokens;
-
     this.currentChatTokens = {
       inputTokens: this.currentChatTokens.inputTokens + inputTokens,
       outputTokens: this.currentChatTokens.outputTokens + outputTokens,
@@ -47,18 +42,15 @@ class TokenUsageService {
       cost: this.currentChatTokens.cost + totalCost
     };
   }
-
   getCurrentChatUsage(): TokenUsage {
     return { ...this.currentChatTokens };
   }
-
   formatCost(cost: number): string {
     if (cost < 0.01) {
       return '<$0.01';
     }
     return `$${cost.toFixed(3)}`;
   }
-
   formatTokens(tokens: number): string {
     if (tokens >= 1000000) {
       return `${(tokens / 1000000).toFixed(1)}M`;
@@ -67,7 +59,6 @@ class TokenUsageService {
     }
     return tokens.toString();
   }
-
   resetCurrentChat(): void {
     this.currentChatTokens = {
       inputTokens: 0,
@@ -76,13 +67,9 @@ class TokenUsageService {
       cost: 0
     };
   }
-
-  // Estimate tokens from text (rough approximation: ~4 characters per token)
   estimateTokens(text: string): number {
     return Math.ceil(text.length / 4);
   }
-
-  // Extract token usage from API response if available
   extractTokenUsage(response: any): { input: number; output: number } | null {
     try {
       const usage = response?.usage;
@@ -98,5 +85,4 @@ class TokenUsageService {
     return null;
   }
 }
-
 export const tokenUsageService = new TokenUsageService();

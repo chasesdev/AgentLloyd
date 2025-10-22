@@ -8,12 +8,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Codespace, codespaceService } from '../services/codespaceService';
-
 interface CodespaceStatusProps {
   isFullStackMode: boolean;
   onCodespacePress: () => void;
 }
-
 export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
   isFullStackMode,
   onCodespacePress,
@@ -21,7 +19,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
   const [codespace, setCodespace] = useState<Codespace | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
-
   useEffect(() => {
     if (isFullStackMode) {
       checkCodespacesAccess();
@@ -30,23 +27,19 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       setCodespace(null);
     }
   }, [isFullStackMode]);
-
   useEffect(() => {
-    // Set up periodic checking for codespace status
     let interval: NodeJS.Timeout;
     if (isFullStackMode && codespace) {
       interval = setInterval(() => {
         loadCurrentCodespace();
-      }, 30000); // Check every 30 seconds
+      }, 30000); 
     }
-
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
   }, [isFullStackMode, codespace?.id]);
-
   const checkCodespacesAccess = async () => {
     try {
       const access = await codespaceService.hasCodespacesAccess();
@@ -55,7 +48,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       setHasAccess(false);
     }
   };
-
   const loadCurrentCodespace = async () => {
     setLoading(true);
     try {
@@ -68,11 +60,9 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       setLoading(false);
     }
   };
-
   if (!isFullStackMode) {
     return null;
   }
-
   if (hasAccess === false) {
     return (
       <TouchableOpacity
@@ -85,7 +75,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       </TouchableOpacity>
     );
   }
-
   if (loading) {
     return (
       <TouchableOpacity
@@ -98,7 +87,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       </TouchableOpacity>
     );
   }
-
   if (!codespace) {
     return (
       <TouchableOpacity
@@ -110,7 +98,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
       </TouchableOpacity>
     );
   }
-
   const getStatusStyle = () => {
     switch (codespace.state) {
       case 'available':
@@ -124,7 +111,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
         return styles.disabledContainer;
     }
   };
-
   const getStatusText = () => {
     switch (codespace.state) {
       case 'available':
@@ -139,7 +125,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
         return 'Unavailable';
     }
   };
-
   const getStatusIcon = () => {
     switch (codespace.state) {
       case 'available':
@@ -153,7 +138,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
         return 'alert-circle-outline';
     }
   };
-
   const getStatusColor = () => {
     switch (codespace.state) {
       case 'available':
@@ -167,7 +151,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
         return '#999';
     }
   };
-
   return (
     <TouchableOpacity
       style={[styles.container, getStatusStyle()]}
@@ -183,7 +166,6 @@ export const CodespaceStatus: React.FC<CodespaceStatusProps> = ({
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

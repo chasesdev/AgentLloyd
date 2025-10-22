@@ -13,43 +13,34 @@ import {
 } from 'react-native';
 import { zaiService } from '../services/zaiService';
 import { validationService } from '../services/validationService';
-
 interface Props {
   onApiKeySet: () => void;
 }
-
 export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
   const [apiKey, setApiKey] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showKey, setShowKey] = useState(false);
-
   useEffect(() => {
     checkExistingKey();
   }, []);
-
   const checkExistingKey = async () => {
     if (zaiService.hasApiKey) {
       onApiKeySet();
     }
   };
-
   const handleSaveApiKey = async () => {
     if (!apiKey.trim()) {
       Alert.alert('Error', 'Please enter an API key');
       return;
     }
-
-    // Validate API key
     const validation = validationService.validateAndSanitize(apiKey, 'text');
     if (!validation.isValid) {
       Alert.alert('Validation Error', validation.errors.join('\n'));
       return;
     }
-
     if (validation.warnings.length > 0) {
       console.warn('API key validation warnings:', validation.warnings);
     }
-
     const sanitizedKey = validation.sanitized;
     setIsLoading(true);
     try {
@@ -68,7 +59,6 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
       setIsLoading(false);
     }
   };
-
   return (
     <KeyboardAvoidingView 
       style={styles.container}
@@ -81,7 +71,6 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
             Enter your API key to start chatting with advanced AI models
           </Text>
         </View>
-
         <View style={styles.form}>
           <Text style={styles.label}>API Key</Text>
           <View style={styles.inputContainer}>
@@ -104,7 +93,6 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
               </Text>
             </TouchableOpacity>
           </View>
-
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
             onPress={handleSaveApiKey}
@@ -116,11 +104,10 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
               <Text style={styles.buttonText}>Save API Key</Text>
             )}
           </TouchableOpacity>
-
           <View style={styles.helpSection}>
             <Text style={styles.helpTitle}>How to get your API key:</Text>
             <Text style={styles.helpText}>
-              1. Visit {'https://z.ai/model-api'}
+              1. Visit {'https:
             </Text>
             <Text style={styles.helpText}>
               2. Register or login to your account
@@ -137,7 +124,6 @@ export const ApiKeyScreen: React.FC<Props> = ({ onApiKeySet }) => {
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

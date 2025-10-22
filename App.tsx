@@ -18,10 +18,7 @@ export default function App() {
   const initializeApp = async () => {
     try {
       await checkApiKey();
-      // Initialize chat memory service
       await chatMemoryService.init();
-      
-      // Initialize error handler
       await errorHandlerService.testErrorReporting();
     } catch (error) {
       await errorHandlerService.handleError(error as Error, {

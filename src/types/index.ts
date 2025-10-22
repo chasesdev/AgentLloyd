@@ -7,7 +7,6 @@ export interface Message {
   model?: string;
   chatId?: string;
 }
-
 export interface MessageContent {
   type: 'text' | 'image_url';
   text?: string;
@@ -15,7 +14,6 @@ export interface MessageContent {
     url: string;
   };
 }
-
 export interface ChatBio {
   id: string;
   name: string;
@@ -23,7 +21,6 @@ export interface ChatBio {
   createdAt: Date;
   updatedAt: Date;
 }
-
 export interface ChatMemory {
   id: string;
   title: string;
@@ -35,20 +32,17 @@ export interface ChatMemory {
   updatedAt: Date;
   lastMessageAt: Date;
 }
-
 export interface SemanticMatch {
   memoryId: string;
   score: number;
   matchedTerms: string[];
   summary: string;
 }
-
 export interface ContextInjection {
   originalMessage: string;
   injectedContext: string[];
   relevantMemories: SemanticMatch[];
 }
-
 export interface ChatState {
   messages: Message[];
   isLoading: boolean;
@@ -61,7 +55,6 @@ export interface ChatState {
   isLoadingMemories: boolean;
   sidebarOpen: boolean;
 }
-
 export interface ZAIModel {
   id: string;
   name: string;
@@ -70,7 +63,6 @@ export interface ZAIModel {
   supportsThinking: boolean;
   maxTokens: number;
 }
-
 export interface APIConfig {
   baseURL: string;
   apiKey: string;

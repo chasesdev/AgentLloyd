@@ -14,24 +14,20 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { ChatBio } from '../types';
 import { chatMemoryService } from '../services/chatMemoryService';
-
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
-
 export const BioModal: React.FC<Props> = ({ visible, onClose }) => {
   const [bioName, setBioName] = useState('');
   const [bioContent, setBioContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentBio, setCurrentBio] = useState<ChatBio | null>(null);
-
   useEffect(() => {
     if (visible) {
       loadBio();
     }
   }, [visible]);
-
   const loadBio = async () => {
     try {
       const bio = await chatMemoryService.getBio();
@@ -40,30 +36,25 @@ export const BioModal: React.FC<Props> = ({ visible, onClose }) => {
         setBioName(bio.name);
         setBioContent(bio.content);
       } else {
-        // Set default values
         setBioName('Default Bio');
         setBioContent(`I am a helpful AI assistant. I can help with various tasks including:
-
 • Answering questions and providing information
 • Helping with coding and technical problems
 • Analyzing images and documents
 • Creative writing and brainstorming
 • Research and web searches
 • General conversation and advice
-
 I strive to be helpful, accurate, and thoughtful in my responses.`);
       }
     } catch (error) {
       console.error('Failed to load bio:', error);
     }
   };
-
   const handleSaveBio = async () => {
     if (!bioName.trim() || !bioContent.trim()) {
       Alert.alert('Error', 'Please fill in both name and content fields');
       return;
     }
-
     setIsLoading(true);
     try {
       await chatMemoryService.saveBio(bioName.trim(), bioContent.trim());
@@ -75,7 +66,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
       setIsLoading(false);
     }
   };
-
   const handleResetBio = () => {
     Alert.alert(
       'Reset Bio',
@@ -88,21 +78,18 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
           onPress: () => {
             setBioName('Default Bio');
             setBioContent(`I am a helpful AI assistant. I can help with various tasks including:
-
 • Answering questions and providing information
 • Helping with coding and technical problems
 • Analyzing images and documents
 • Creative writing and brainstorming
 • Research and web searches
 • General conversation and advice
-
 I strive to be helpful, accurate, and thoughtful in my responses.`);
           },
         },
       ]
     );
   };
-
   return (
     <Modal
       visible={visible}
@@ -123,7 +110,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
             <Ionicons name="refresh" size={20} color="#FF6B6B" />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>About Bio</Text>
@@ -132,7 +118,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
               This information will be referenced to maintain consistency and provide personalized responses.
             </Text>
           </View>
-
           <View style={styles.form}>
             <View style={styles.field}>
               <Text style={styles.label}>Bio Name</Text>
@@ -145,7 +130,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
                 multiline
               />
             </View>
-
             <View style={styles.field}>
               <Text style={styles.label}>Bio Content</Text>
               <TextInput
@@ -161,7 +145,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
                 {bioContent.length} characters
               </Text>
             </View>
-
             <View style={styles.tipsSection}>
               <Text style={styles.tipsTitle}>💡 Tips for effective bio:</Text>
               <Text style={styles.tip}>• Define the AI's personality and communication style</Text>
@@ -171,7 +154,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
             </View>
           </View>
         </ScrollView>
-
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.saveButton, isLoading && styles.saveButtonDisabled]}
@@ -187,7 +169,6 @@ I strive to be helpful, accurate, and thoughtful in my responses.`);
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

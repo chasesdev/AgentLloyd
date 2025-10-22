@@ -4,20 +4,16 @@ import { Message, MessageContent, APIConfig } from '../types';
 import { tokenUsageService } from './tokenUsageService';
 import { offlineService } from './offlineService';
 import { cacheService } from './cacheService';
-
 export class ZAIService {
   private client: AxiosInstance;
   private apiKey: string | null = null;
-
   constructor() {
     this.client = axios.create({
-      baseURL: 'https://api.z.ai/api/paas/v4',
+      baseURL: 'https:
       timeout: 60000,
     });
-
     this.loadApiKey();
   }
-
   private async loadApiKey(): Promise<void> {
     try {
       this.apiKey = await SecureStorage.getApiKey('zai_api_key');
@@ -28,7 +24,6 @@ export class ZAIService {
       console.error('Failed to load API key:', error);
     }
   }
-
   async setApiKey(apiKey: string): Promise<void> {
     try {
       const success = await SecureStorage.setApiKey('zai_api_key', apiKey);
@@ -42,11 +37,9 @@ export class ZAIService {
       throw error;
     }
   }
-
   get hasApiKey(): boolean {
     return !!this.apiKey;
   }
-
   async sendMessage(
     messages: Message[],
     model: string = 'glm-4.6',
@@ -57,23 +50,15 @@ export class ZAIService {
     if (!this.apiKey) {
       throw new Error('API key not set');
     }
-
-    // Generate cache key for this request
     const cacheKey = this.generateCacheKey(messages, model, thinkingEnabled, tools);
-    
-    // Check cache first
     const cachedResponse = await cacheService.get(cacheKey);
     if (cachedResponse) {
       console.log('Using cached response for:', cacheKey);
       return cachedResponse;
     }
-
-    // Check if offline
     const status = offlineService.getStatus();
     if (!status.isOnline) {
       console.log('Offline mode - queuing message request');
-      
-      // Add to offline queue
       await offlineService.addToQueue({
         type: 'message',
         data: {
@@ -85,12 +70,10 @@ export class ZAIService {
         },
         maxRetries: 3
       });
-      
       throw new Error('Offline - Request queued for when connection is restored');
     }
-
     const config: APIConfig = {
-      baseURL: 'https://api.z.ai/api/paas/v4',
+      baseURL: 'https:
       apiKey: this.apiKey,
       model,
       temperature: 0.7,
@@ -100,7 +83,6 @@ export class ZAIService {
       },
       stream: !!onStream
     };
-
     const formattedMessages = messages.map(msg => ({
       role: msg.role,
       content: Array.isArray(msg.content) 
@@ -111,27 +93,19 @@ export class ZAIService {
           }))
         : msg.content
     }));
-
     try {
       let response;
-      
       if (onStream) {
         response = await this.streamMessage(formattedMessages, config, onStream, tools);
       } else {
         response = await this.completeMessage(formattedMessages, config, tools);
       }
-
-      // Cache the response
       await cacheService.set(cacheKey, response, 60 * 60 * 1000, ['api', 'response']);
-
       return response;
     } catch (error) {
       console.error('API Error:', error);
-      
-      // Add to offline queue if it's a network error
       if (this.isNetworkError(error)) {
         console.log('Network error - queuing message request');
-        
         await offlineService.addToQueue({
           type: 'message',
           data: {
@@ -144,12 +118,9 @@ export class ZAIService {
           maxRetries: 3
         });
       }
-      
       throw error;
     }
   }
-
-  // Enhanced reasoning support for GLM models
   async sendReasoningMessage(
     messages: Message[],
     model: string = 'glm-4.6',
@@ -160,19 +131,17 @@ export class ZAIService {
     if (!this.apiKey) {
       throw new Error('API key not set');
     }
-
     const config: APIConfig = {
-      baseURL: 'https://api.z.ai/api/paas/v4',
+      baseURL: 'https:
       apiKey: this.apiKey,
       model,
-      temperature: 0.3, // Lower temperature for more consistent reasoning
-      maxTokens: 8192, // Higher token limit for detailed reasoning
+      temperature: 0.3,
+      maxTokens: 8192,
       thinking: {
-        type: 'enabled' // Always enable thinking for reasoning
+        type: 'enabled'
       },
       stream: !!onStream
     };
-
     const formattedMessages = messages.map(msg => ({
       role: msg.role,
       content: Array.isArray(msg.content) 
@@ -183,7 +152,6 @@ export class ZAIService {
           }))
         : msg.content
     }));
-
     try {
       if (onStream) {
         return await this.streamReasoningMessage(formattedMessages, config, onStream, onReasoning, tools);
@@ -195,7 +163,6 @@ export class ZAIService {
       throw error;
     }
   }
-
   private async completeMessage(
     messages: any[],
     config: APIConfig,
@@ -209,33 +176,25 @@ export class ZAIService {
       temperature: config.temperature,
       stream: false,
     };
-
     if (tools && tools.length > 0) {
       requestBody.tools = tools;
       requestBody.tool_choice = 'auto';
     }
-
     const response = await this.client.post('/chat/completions', requestBody);
-
     const choice = response.data.choices[0];
-    
-    // Extract and track token usage
     const usage = tokenUsageService.extractTokenUsage(response.data);
     if (usage) {
       tokenUsageService.updateTokenUsage(config.model, usage.input, usage.output);
     } else {
-      // Fallback: estimate tokens if usage not provided
       const inputTokens = this.estimateTokensFromMessages(messages);
       const outputTokens = this.estimateTokens(choice.message.content || '');
       tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
     }
-    
     return {
       content: choice.message.content || '',
       thinking: choice.message.reasoning_content
     };
   }
-
   private async streamReasoningMessage(
     messages: any[],
     config: APIConfig,
@@ -251,76 +210,59 @@ export class ZAIService {
       temperature: config.temperature,
       stream: true,
     };
-
     if (tools && tools.length > 0) {
       requestBody.tools = tools;
       requestBody.tool_choice = 'auto';
     }
-
     const response = await this.client.post('/chat/completions', requestBody, {
       responseType: 'stream'
     });
-
     return new Promise((resolve, reject) => {
       let content = '';
       let thinking = '';
       let reasoning = '';
-
       response.data.on('data', (chunk: Buffer) => {
         const lines = chunk.toString().split('\n');
-        
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
             if (data === '[DONE]') {
-              // Track tokens for streaming response
               const inputTokens = this.estimateTokensFromMessages(messages);
               const outputTokens = this.estimateTokens(content);
               tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              
               resolve({ content, thinking, reasoning });
               return;
             }
-
             try {
               const parsed = JSON.parse(data);
               const delta = parsed.choices[0]?.delta;
-              
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
               }
-              
               if (delta?.reasoning_content) {
                 thinking += delta.reasoning_content;
                 if (onReasoning) {
                   onReasoning(delta.reasoning_content);
                 }
               }
-
-              // Enhanced reasoning extraction
               if (delta?.reasoning_content) {
                 reasoning += delta.reasoning_content;
               }
             } catch (e) {
-              // Ignore parsing errors for streaming chunks
             }
           }
         }
       });
-
       response.data.on('error', reject);
       response.data.on('end', () => {
-        // Track tokens for streaming response
         const inputTokens = this.estimateTokensFromMessages(messages);
         const outputTokens = this.estimateTokens(content);
         tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-        
         resolve({ content, thinking, reasoning });
       });
     });
   }
-
   private async streamMessage(
     messages: any[],
     config: APIConfig,
@@ -335,95 +277,75 @@ export class ZAIService {
       temperature: config.temperature,
       stream: true,
     };
-
     if (tools && tools.length > 0) {
       requestBody.tools = tools;
       requestBody.tool_choice = 'auto';
     }
-
     const response = await this.client.post('/chat/completions', requestBody, {
       responseType: 'stream'
     });
-
     return new Promise((resolve, reject) => {
       let content = '';
       let thinking = '';
-
       response.data.on('data', (chunk: Buffer) => {
         const lines = chunk.toString().split('\n');
-        
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
             if (data === '[DONE]') {
-              // Track tokens for streaming response
               const inputTokens = this.estimateTokensFromMessages(messages);
               const outputTokens = this.estimateTokens(content);
               tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              
               resolve({ content, thinking });
               return;
             }
-
             try {
               const parsed = JSON.parse(data);
               const delta = parsed.choices[0]?.delta;
-              
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
               }
-              
               if (delta?.reasoning_content) {
                 thinking += delta.reasoning_content;
               }
             } catch (e) {
-              // Ignore parsing errors for streaming chunks
             }
           }
         }
       });
-
       response.data.on('error', reject);
       response.data.on('end', () => {
-        // Track tokens for streaming response
         const inputTokens = this.estimateTokensFromMessages(messages);
         const outputTokens = this.estimateTokens(content);
         tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-        
         resolve({ content, thinking });
       });
     });
   }
-
   async validateApiKey(apiKey: string): Promise<boolean> {
     try {
       const testClient = axios.create({
-        baseURL: 'https://api.z.ai/api/paas/v4',
+        baseURL: 'https:
         timeout: 10000,
         headers: {
           'Authorization': `Bearer ${apiKey}`
         }
       });
-
       await testClient.post('/chat/completions', {
         model: 'glm-4.6',
         messages: [{ role: 'user', content: 'test' }],
         max_tokens: 10
       });
-
       return true;
     } catch (error) {
       console.error('API key validation failed:', error);
       return false;
     }
   }
-
-  // Helper methods for token estimation
   private estimateTokens(text: string): number {
     return tokenUsageService.estimateTokens(text);
   }
-
   private estimateTokensFromMessages(messages: any[]): number {
     let totalTokens = 0;
     for (const message of messages) {
@@ -439,59 +361,36 @@ export class ZAIService {
     }
     return totalTokens;
   }
-
-  /**
-   * Generate cache key for message request
-   */
   private generateCacheKey(
     messages: Message[], 
     model: string, 
     thinkingEnabled: boolean, 
     tools?: any[]
   ): string {
-    // Create a deterministic key from the request parameters
     const messageHash = this.hashMessages(messages);
     const toolsHash = tools ? this.hashObject(tools) : 'no-tools';
-    
     return `zai_msg_${model}_${thinkingEnabled ? 'thinking' : 'no-thinking'}_${messageHash}_${toolsHash}`;
   }
-
-  /**
-   * Hash messages for cache key
-   */
   private hashMessages(messages: Message[]): string {
     const messageString = messages.map(msg => ({
       role: msg.role,
       content: typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content),
       timestamp: msg.timestamp.getTime()
     }));
-    
     return this.hashObject(messageString);
   }
-
-  /**
-   * Hash object for cache key
-   */
   private hashObject(obj: any): string {
     const str = JSON.stringify(obj);
     let hash = 0;
-    
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
+      hash = hash & hash; 
     }
-    
     return Math.abs(hash).toString(36);
   }
-
-  /**
-   * Check if error is a network error
-   */
   private isNetworkError(error: any): boolean {
     if (!error) return false;
-    
-    // Check for common network error patterns
     const errorMessage = error.message?.toLowerCase() || '';
     const networkErrorPatterns = [
       'network error',
@@ -508,9 +407,7 @@ export class ZAIService {
       'enotfound',
       'etimedout'
     ];
-    
     return networkErrorPatterns.some(pattern => errorMessage.includes(pattern));
   }
 }
-
 export const zaiService = new ZAIService();
