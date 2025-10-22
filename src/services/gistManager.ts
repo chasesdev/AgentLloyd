@@ -1,3 +1,7 @@
+import { githubService } from './githubService';
+import { chatDatabase } from './chatDatabase';
+import { SecureStorage } from '../utils/secureStorage';
+
 interface GistContent {
   filename: string;
   content: string;
@@ -139,7 +143,7 @@ class GistManager {
 
       this.gists.set(chatId, updatedGist);
       
-      // In a real implementation, this would update the GitHub gist
+      // Update actual GitHub gist
       await this.updateGitHubGist(updatedGist);
       
       return updatedGist;
@@ -194,6 +198,140 @@ class GistManager {
       // In a real implementation, this would delete the GitHub gist
       await this.deleteGitHubGist(gist.gistId);
       this.gists.delete(chatId);
+    }
+  }
+
+  // Create actual GitHub gist
+  private async createGitHubGist(gist: ChatGist): Promise<void> {
+    try {
+      if (!githubService.isAuthenticated()) {
+        throw new Error('GitHub authentication required');
+      }
+
+      const token = await SecureStorage.getApiKey('github_token');
+      if (!token) {
+        throw new Error('GitHub token not found');
+      }
+
+      // Prepare files for GitHub API
+      const files: Record<string, { content: string }> = {};
+      gist.content.forEach(file => {
+        files[file.filename] = {
+          content: file.content
+        };
+      });
+
+      const response = await fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: gist.description,
+          public: gist.isPublic,
+          files
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to create gist: ${errorData.message || response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      // Update gist with real GitHub data
+      gist.gistId = data.id;
+      gist.gistUrl = data.html_url;
+      
+      console.log('GitHub gist created successfully:', data.html_url);
+    } catch (error) {
+      console.error('Failed to create GitHub gist:', error);
+      throw error;
+    }
+  }
+
+  // Update existing GitHub gist
+  private async updateGitHubGist(gist: ChatGist): Promise<void> {
+    try {
+      if (!githubService.isAuthenticated()) {
+        throw new Error('GitHub authentication required');
+      }
+
+      const token = await SecureStorage.getApiKey('github_token');
+      if (!token) {
+        throw new Error('GitHub token not found');
+      }
+
+      // Prepare files for GitHub API
+      const files: Record<string, { content: string }> = {};
+      gist.content.forEach(file => {
+        files[file.filename] = {
+          content: file.content
+        };
+      });
+
+      const response = await fetch(`https://api.github.com/gists/${gist.gistId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: gist.description,
+          files
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to update gist: ${errorData.message || response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      // Update gist with latest GitHub data
+      gist.gistUrl = data.html_url;
+      
+      console.log('GitHub gist updated successfully:', data.html_url);
+    } catch (error) {
+      console.error('Failed to update GitHub gist:', error);
+      throw error;
+    }
+  }
+
+  // Delete GitHub gist
+  private async deleteGitHubGist(gistId: string): Promise<void> {
+    try {
+      if (!githubService.isAuthenticated()) {
+        throw new Error('GitHub authentication required');
+      }
+
+      const token = await SecureStorage.getApiKey('github_token');
+      if (!token) {
+        throw new Error('GitHub token not found');
+      }
+
+      const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to delete gist: ${errorData.message || response.statusText}`);
+      }
+
+      console.log('GitHub gist deleted successfully:', gistId);
+    } catch (error) {
+      console.error('Failed to delete GitHub gist:', error);
+      throw error;
     }
   }
 

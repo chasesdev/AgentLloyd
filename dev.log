@@ -60,3 +60,1865 @@ Error: Invalid package config /home/z/my-project/package.json.
 
 Node.js v22.20.0
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+npm warn exec The following package was not found and will be installed: tsx@4.20.6
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+(node:190) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [Bus]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+(node:190) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [Bus]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'socket.io'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

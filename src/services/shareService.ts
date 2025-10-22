@@ -2,6 +2,7 @@ import { localRepoService } from './localRepoService';
 import { codespaceService } from './codespaceService';
 import { gistManager } from './gistManager';
 import { branchManager } from './branchManager';
+import { pullRequestService, PullRequestData } from './pullRequestService';
 
 interface ShareOptions {
   mode: 'fullstack' | 'code' | 'reasoning' | 'general';
@@ -52,30 +53,56 @@ class ShareService {
       }
 
       // Get or create codespace
-      let codespace = await codespaceService.getCodespace(repoName);
-      if (!codespace) {
-        codespace = await codespaceService.createCodespace(repoName, branch);
+      let codespace = await codespaceService.getCurrentCodespace();
+      if (!codespace || codespace.repository.full_name !== repoName) {
+        codespace = await codespaceService.createCodespace({
+          repository: repoName,
+          branch: branch
+        });
       }
 
-      // Manage branch for this chat
-      branchManager.getOrCreateChatBranch(chatId, repoName, branch);
-      branchManager.updateActivity(chatId, repoName);
+      // Generate branch name for this chat
+      const branchName = `chat-${chatId.slice(-8)}`;
       
-      // In a real implementation, this would:
-      // 1. Create/update files in the codespace
-      // 2. Commit changes to the chat branch
-      // 3. Push to remote
-      // 4. Create pull request
+      // Generate content from chat messages
+      const content = this.generateChatContent(messages);
       
-      const prUrl = `https://github.com/${repoName}/pull/${Math.floor(Math.random() * 1000)}`;
-      
+      // Prepare pull request data
+      const prData: PullRequestData = {
+        title: title || `Changes from chat ${chatId.slice(-8)}`,
+        description: description || `Pull request with ${messages.length} messages from Full-Stack mode\n\n${content}`,
+        head: branchName,
+        base: branch || 'main',
+        repository: repoName,
+        files: [
+          {
+            path: `chat-${chatId.slice(-8)}.md`,
+            content: content,
+            mode: '100644'
+          }
+        ]
+      };
+
+      // Create the pull request
+      const pr = await pullRequestService.createPullRequest(prData);
+
       // Update branch with PR URL
-      branchManager.setPullRequestUrl(chatId, repoName, prUrl);
+      branchManager.setPullRequestUrl(chatId, repoName, pr.htmlUrl);
+      
+      // Store in database
+      await chatDatabase.saveBranch({
+        id: `pr-${pr.number}`,
+        chatId,
+        repository: repoName,
+        branchName,
+        prUrl: pr.htmlUrl,
+        status: 'pr_created'
+      });
       
       return {
         type: 'pr',
-        url: prUrl,
-        title: title || `Changes from chat ${chatId.slice(-8)}`,
+        url: pr.htmlUrl,
+        title: pr.title,
         description: description || `Pull request with ${messages.length} messages from Full-Stack mode`
       };
     } catch (error) {
@@ -112,42 +139,63 @@ class ShareService {
         throw new Error('No changes to commit');
       }
 
-      // Manage branch for this chat
-      branchManager.getOrCreateChatBranch(chatId, repoName, branch);
-      branchManager.updateActivity(chatId, repoName);
-
+      // Generate branch name for this chat
+      const branchName = `chat-${chatId.slice(-8)}`;
+      
       // Generate content from chat messages
       const content = this.generateChatContent(messages);
       
-      // Track the chat content as a change
-      localRepoService.trackChange(repoId, {
-        type: 'modified',
-        file: `chat-${chatId.slice(-8)}.md`,
-        content
+      // Get tracked changes
+      const trackedChanges = localRepoService.getTrackedChanges(repoId);
+      
+      // Prepare files for PR
+      const files = trackedChanges.map(change => ({
+        path: change.file,
+        content: change.content || `# ${change.file}\n\nGenerated from chat ${chatId.slice(-8)}`,
+        mode: '100644' as const
+      }));
+      
+      // Add the chat content file
+      files.push({
+        path: `chat-${chatId.slice(-8)}.md`,
+        content: content,
+        mode: '100644'
       });
 
-      // Generate commit message
-      const commitMessage = localRepoService.generateCommitMessage(repoId);
-      
-      // In a real implementation, this would:
-      // 1. Create new branch for this chat
-      // 2. Commit all tracked changes
-      // 3. Push to remote
-      // 4. Create pull request
-      
-      const prUrl = `https://github.com/${repoName}/pull/${Math.floor(Math.random() * 1000)}`;
-      
+      // Prepare pull request data
+      const prData: PullRequestData = {
+        title: title || localRepoService.generateCommitMessage(repoId),
+        description: description || `Pull request with ${trackedChanges.length} changes from Code mode\n\n${content}`,
+        head: branchName,
+        base: branch || 'main',
+        repository: repoName,
+        files
+      };
+
+      // Create the pull request
+      const pr = await pullRequestService.createPullRequest(prData);
+
       // Update branch with PR URL
-      branchManager.setPullRequestUrl(chatId, repoName, prUrl);
+      branchManager.setPullRequestUrl(chatId, repoName, pr.htmlUrl);
+      
+      // Store in database
+      await chatDatabase.saveBranch({
+        id: `pr-${pr.number}`,
+        chatId,
+        repository: repoName,
+        branchName,
+        prUrl: pr.htmlUrl,
+        status: 'pr_created'
+      });
       
       // Clear tracked changes after successful commit
       localRepoService.clearChanges(repoId);
       
       return {
         type: 'pr',
-        url: prUrl,
-        title: title || commitMessage,
-        description: description || `Pull request with ${localRepoService.getTrackedChanges(repoId).length} changes from Code mode`
+        url: pr.htmlUrl,
+        title: pr.title,
+        description: description || `Pull request with ${trackedChanges.length} changes from Code mode`
       };
     } catch (error) {
       console.error('Code share failed:', error);
@@ -194,7 +242,8 @@ class ShareService {
     description?: string
   ): Promise<ShareResult> {
     // For general mode, create a simple shareable link
-    const shareUrl = `${window.location.origin}/chat/${chatId}`;
+    // In React Native, we'll use a deep link format instead of window.location
+    const shareUrl = `zai-chat://chat/${chatId}`;
     
     return {
       type: 'link',

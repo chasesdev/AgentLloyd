@@ -1,7 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SecureStorage } from '../utils/secureStorage';
 import { Message, MessageContent, APIConfig } from '../types';
 import { tokenUsageService } from './tokenUsageService';
+import { offlineService } from './offlineService';
+import { cacheService } from './cacheService';
 
 export class ZAIService {
   private client: AxiosInstance;
@@ -18,7 +20,7 @@ export class ZAIService {
 
   private async loadApiKey(): Promise<void> {
     try {
-      this.apiKey = await AsyncStorage.getItem('zai_api_key');
+      this.apiKey = await SecureStorage.getApiKey('zai_api_key');
       if (this.apiKey) {
         this.client.defaults.headers.common['Authorization'] = `Bearer ${this.apiKey}`;
       }
@@ -29,7 +31,10 @@ export class ZAIService {
 
   async setApiKey(apiKey: string): Promise<void> {
     try {
-      await AsyncStorage.setItem('zai_api_key', apiKey);
+      const success = await SecureStorage.setApiKey('zai_api_key', apiKey);
+      if (!success) {
+        throw new Error('Failed to store API key securely');
+      }
       this.apiKey = apiKey;
       this.client.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
     } catch (error) {
@@ -51,6 +56,37 @@ export class ZAIService {
   ): Promise<{ content: string; thinking?: string }> {
     if (!this.apiKey) {
       throw new Error('API key not set');
+    }
+
+    // Generate cache key for this request
+    const cacheKey = this.generateCacheKey(messages, model, thinkingEnabled, tools);
+    
+    // Check cache first
+    const cachedResponse = await cacheService.get(cacheKey);
+    if (cachedResponse) {
+      console.log('Using cached response for:', cacheKey);
+      return cachedResponse;
+    }
+
+    // Check if offline
+    const status = offlineService.getStatus();
+    if (!status.isOnline) {
+      console.log('Offline mode - queuing message request');
+      
+      // Add to offline queue
+      await offlineService.addToQueue({
+        type: 'message',
+        data: {
+          messages,
+          model,
+          thinkingEnabled,
+          saveToMemory: true,
+          chatId: messages.find(m => m.chatId)?.chatId
+        },
+        maxRetries: 3
+      });
+      
+      throw new Error('Offline - Request queued for when connection is restored');
     }
 
     const config: APIConfig = {
@@ -77,13 +113,38 @@ export class ZAIService {
     }));
 
     try {
+      let response;
+      
       if (onStream) {
-        return await this.streamMessage(formattedMessages, config, onStream, tools);
+        response = await this.streamMessage(formattedMessages, config, onStream, tools);
       } else {
-        return await this.completeMessage(formattedMessages, config, tools);
+        response = await this.completeMessage(formattedMessages, config, tools);
       }
+
+      // Cache the response
+      await cacheService.set(cacheKey, response, 60 * 60 * 1000, ['api', 'response']);
+
+      return response;
     } catch (error) {
       console.error('API Error:', error);
+      
+      // Add to offline queue if it's a network error
+      if (this.isNetworkError(error)) {
+        console.log('Network error - queuing message request');
+        
+        await offlineService.addToQueue({
+          type: 'message',
+          data: {
+            messages,
+            model,
+            thinkingEnabled,
+            saveToMemory: true,
+            chatId: messages.find(m => m.chatId)?.chatId
+          },
+          maxRetries: 3
+        });
+      }
+      
       throw error;
     }
   }
@@ -377,6 +438,78 @@ export class ZAIService {
       }
     }
     return totalTokens;
+  }
+
+  /**
+   * Generate cache key for message request
+   */
+  private generateCacheKey(
+    messages: Message[], 
+    model: string, 
+    thinkingEnabled: boolean, 
+    tools?: any[]
+  ): string {
+    // Create a deterministic key from the request parameters
+    const messageHash = this.hashMessages(messages);
+    const toolsHash = tools ? this.hashObject(tools) : 'no-tools';
+    
+    return `zai_msg_${model}_${thinkingEnabled ? 'thinking' : 'no-thinking'}_${messageHash}_${toolsHash}`;
+  }
+
+  /**
+   * Hash messages for cache key
+   */
+  private hashMessages(messages: Message[]): string {
+    const messageString = messages.map(msg => ({
+      role: msg.role,
+      content: typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content),
+      timestamp: msg.timestamp.getTime()
+    }));
+    
+    return this.hashObject(messageString);
+  }
+
+  /**
+   * Hash object for cache key
+   */
+  private hashObject(obj: any): string {
+    const str = JSON.stringify(obj);
+    let hash = 0;
+    
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    return Math.abs(hash).toString(36);
+  }
+
+  /**
+   * Check if error is a network error
+   */
+  private isNetworkError(error: any): boolean {
+    if (!error) return false;
+    
+    // Check for common network error patterns
+    const errorMessage = error.message?.toLowerCase() || '';
+    const networkErrorPatterns = [
+      'network error',
+      'fetch error',
+      'connection refused',
+      'timeout',
+      'unreachable',
+      'dns',
+      'offline',
+      'no internet',
+      'connection reset',
+      'socket hang up',
+      'econnrefused',
+      'enotfound',
+      'etimedout'
+    ];
+    
+    return networkErrorPatterns.some(pattern => errorMessage.includes(pattern));
   }
 }
 
