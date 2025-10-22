@@ -1,5 +1,6 @@
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { errorHandlerService } from './errorHandlerService';
 import ZAI from 'z-ai-web-dev-sdk';
 
@@ -312,19 +313,33 @@ export class FileAnalyzerService {
     size: number;
   }> {
     try {
-      // For React Native, we'll simulate file content extraction
-      // In a real implementation, you would use appropriate libraries
+      // Read the actual file content
+      const fileInfo = await FileSystem.getInfoAsync(request.fileUri);
+      
+      if (!fileInfo.exists) {
+        throw new Error('File does not exist');
+      }
+
+      const size = fileInfo.size || 0;
+      
+      // For images, we can't read text content directly, but we can get metadata
+      if (fileType === 'image') {
+        return await this.extractImageContent(request, size);
+      }
+      
+      // For text-based files, read the content
+      const content = await FileSystem.readAsStringAsync(request.fileUri, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
       
       switch (fileType) {
-        case 'image':
-          return await this.extractImageContent(request);
         case 'code':
-          return await this.extractCodeContent(request);
+          return await this.extractCodeContent(request, content, size);
         case 'document':
-          return await this.extractDocumentContent(request);
+          return await this.extractDocumentContent(request, content, size);
         case 'text':
         default:
-          return await this.extractTextContent(request);
+          return await this.extractTextContent(request, content, size);
       }
     } catch (error) {
       console.error('Failed to extract file content:', error);
@@ -339,94 +354,119 @@ export class FileAnalyzerService {
   /**
    * Extract image content
    */
-  private async extractImageContent(request: FileAnalysisRequest): Promise<{
+  private async extractImageContent(request: FileAnalysisRequest, size: number): Promise<{
     text: string;
     data: any;
     size: number;
   }> {
-    // Simulate image analysis
-    // In a real implementation, you would use image processing libraries
-    
-    return {
-      text: `Image file: ${request.fileName}`,
-      data: {
-        fileName: request.fileName,
-        mimeType: request.mimeType,
-        analysis: 'Image content would be analyzed using computer vision',
-        features: ['color_analysis', 'object_detection', 'text_recognition']
-      },
-      size: 1024 // Simulated size
-    };
+    try {
+      // Get image metadata
+      const fileInfo = await FileSystem.getInfoAsync(request.fileUri);
+      
+      return {
+        text: `Image file: ${request.fileName}`,
+        data: {
+          fileName: request.fileName,
+          mimeType: request.mimeType,
+          size: size,
+          uri: request.fileUri,
+          lastModified: fileInfo.modificationTime,
+          analysis: 'Image metadata extracted',
+          features: ['file_info', 'mime_type_detection', 'size_analysis']
+        },
+        size
+      };
+    } catch (error) {
+      return {
+        text: `Image file: ${request.fileName}`,
+        data: {
+          fileName: request.fileName,
+          mimeType: request.mimeType,
+          size: size,
+          error: 'Failed to extract image metadata'
+        },
+        size
+      };
+    }
   }
 
   /**
    * Extract code content
    */
-  private async extractCodeContent(request: FileAnalysisRequest): Promise<{
+  private async extractCodeContent(request: FileAnalysisRequest, content: string, size: number): Promise<{
     text: string;
     data: any;
     size: number;
   }> {
-    // Simulate code file reading
-    const sampleCode = this.getSampleCode(request.fileName);
+    const lines = content.split('\n');
+    const language = this.detectLanguage(request.fileName);
     
     return {
-      text: sampleCode,
+      text: content,
       data: {
         fileName: request.fileName,
-        language: this.detectLanguage(request.fileName),
-        lines: sampleCode.split('\n').length,
-        functions: this.extractFunctions(sampleCode),
-        classes: this.extractClasses(sampleCode)
+        language,
+        lines: lines.length,
+        functions: this.extractFunctions(content, language),
+        classes: this.extractClasses(content, language),
+        imports: this.extractImports(content, language),
+        size,
+        encoding: 'utf-8'
       },
-      size: sampleCode.length
+      size
     };
   }
 
   /**
    * Extract document content
    */
-  private async extractDocumentContent(request: FileAnalysisRequest): Promise<{
+  private async extractDocumentContent(request: FileAnalysisRequest, content: string, size: number): Promise<{
     text: string;
     data: any;
     size: number;
   }> {
-    // Simulate document content extraction
-    const sampleText = this.getSampleDocumentContent(request.fileName);
+    const words = content.split(/\s+/);
+    const paragraphs = content.split(/\n\n+/).filter(p => p.trim().length > 0);
     
     return {
-      text: sampleText,
+      text: content,
       data: {
         fileName: request.fileName,
-        wordCount: sampleText.split(/\s+/).length,
-        pageCount: Math.ceil(sampleText.length / 2000), // Rough estimate
-        author: 'Unknown',
-        created: new Date().toISOString()
+        wordCount: words.length,
+        lineCount: content.split('\n').length,
+        paragraphCount: paragraphs.length,
+        pageCount: Math.ceil(content.length / 2000), // Rough estimate
+        size,
+        encoding: 'utf-8',
+        language: this.detectLanguage(content)
       },
-      size: sampleText.length
+      size
     };
   }
 
   /**
    * Extract text content
    */
-  private async extractTextContent(request: FileAnalysisRequest): Promise<{
+  private async extractTextContent(request: FileAnalysisRequest, content: string, size: number): Promise<{
     text: string;
     data: any;
     size: number;
   }> {
-    // Simulate text file reading
-    const sampleText = this.getSampleTextContent(request.fileName);
+    const lines = content.split('\n');
+    const words = content.split(/\s+/);
     
     return {
-      text: sampleText,
+      text: content,
       data: {
         fileName: request.fileName,
         encoding: 'utf-8',
-        lineCount: sampleText.split('\n').length,
-        characterCount: sampleText.length
+        lineCount: lines.length,
+        wordCount: words.length,
+        characterCount: content.length,
+        size,
+        language: this.detectLanguage(content)
       },
-      size: sampleText.length
+      size
     };
   }
 
@@ -592,61 +632,66 @@ export class FileAnalyzerService {
     };
   }
 
-  // Helper methods
-  private getSampleCode(fileName: string): string {
-    const extension = fileName.split('.').pop()?.toLowerCase();
+  private detectLanguage(fileNameOrContent: string): string {
+    // First check if it's a file name (for programming languages)
+    if (fileNameOrContent.includes('.')) {
+      const extension = fileNameOrContent.split('.').pop()?.toLowerCase();
+      const languages: Record<string, string> = {
+        'js': 'JavaScript',
+        'jsx': 'JavaScript',
+        'ts': 'TypeScript',
+        'tsx': 'TypeScript',
+        'py': 'Python',
+        'java': 'Java',
+        'c': 'C',
+        'cpp': 'C++',
+        'html': 'HTML',
+        'css': 'CSS',
+        'sql': 'SQL',
+        'json': 'JSON',
+        'xml': 'XML'
+      };
+      
+      return languages[extension || ''] || 'Unknown';
+    }
     
-    const samples: Record<string, string> = {
-      'js': `function hello() {\n  console.log("Hello, World!");\n  return "Hello";\n}`,
-      'py': `def hello():\n    print("Hello, World!")\n    return "Hello"`,
-      'java': `public class Hello {\n  public static void main(String[] args) {\n    System.out.println("Hello, World!");\n  }\n}`,
-      'html': `<!DOCTYPE html>\n<html>\n<head><title>Hello</title></head>\n<body>\n  <h1>Hello, World!</h1>\n</body>\n</html>`,
-      'css': `body {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n}`,
-      'sql': `SELECT * FROM users WHERE id = 1;`
-    };
+    // For content, detect spoken language
+    const content = fileNameOrContent.toLowerCase();
+    const englishWords = ['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
+    const chineseWords = ['的', '了', '和', '是', '在', '有', '不', '这', '我', '你', '他', '她'];
     
-    return samples[extension || 'txt'] || '// Sample code content';
-  }
-
-  private getSampleDocumentContent(fileName: string): string {
-    return `This is a sample document content for ${fileName}.\n\nIt contains multiple paragraphs of text to demonstrate the file analysis capabilities.\n\nThe analysis will extract key information, entities, and provide a comprehensive summary of the document's content.`;
-  }
-
-  private getSampleTextContent(fileName: string): string {
-    return `This is a sample text file: ${fileName}.\n\nIt contains plain text content that can be analyzed for meaning, sentiment, and key information extraction.`;
-  }
-
-  private detectLanguage(fileName: string): string {
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    const languages: Record<string, string> = {
-      'js': 'JavaScript',
-      'jsx': 'JavaScript',
-      'ts': 'TypeScript',
-      'tsx': 'TypeScript',
-      'py': 'Python',
-      'java': 'Java',
-      'c': 'C',
-      'cpp': 'C++',
-      'html': 'HTML',
-      'css': 'CSS',
-      'sql': 'SQL',
-      'json': 'JSON',
-      'xml': 'XML'
-    };
+    let englishCount = 0;
+    let chineseCount = 0;
     
-    return languages[extension || ''] || 'Unknown';
+    englishWords.forEach(word => {
+      if (content.includes(word)) englishCount++;
+    });
+    
+    chineseWords.forEach(word => {
+      if (content.includes(word)) chineseCount++;
+    });
+    
+    if (chineseCount > englishCount) return 'Chinese';
+    if (englishCount > 0) return 'English';
+    return 'Unknown';
   }
 
-  private extractFunctions(code: string): string[] {
+  private extractFunctions(code: string, language: string): string[] {
     const functions: string[] = [];
-    const patterns = [
-      /function\s+(\w+)/g,
-      /const\s+(\w+)\s*=\s*\(/g,
-      /def\s+(\w+)/g,
-      /public\s+\w+\s+(\w+)/g
-    ];
     
-    patterns.forEach(pattern => {
+    // Language-specific patterns
+    const patterns: Record<string, RegExp[]> = {
+      'JavaScript': [/function\s+(\w+)/g, /const\s+(\w+)\s*=\s*\(/g, /(\w+)\s*:\s*function/g],
+      'TypeScript': [/function\s+(\w+)/g, /const\s+(\w+)\s*=\s*\(/g, /(\w+)\s*:\s*\(/g],
+      'Python': [/def\s+(\w+)/g],
+      'Java': [/public\s+\w+\s+(\w+)/g, /private\s+\w+\s+(\w+)/g, /protected\s+\w+\s+(\w+)/g],
+      'C': [/(\w+)\s*\([^)]*\)\s*{/g],
+      'C++': [/(\w+)\s*\([^)]*\)\s*{/g, /class\s+(\w+)/g]
+    };
+    
+    const langPatterns = patterns[language] || patterns['JavaScript'];
+    
+    langPatterns.forEach(pattern => {
       let match;
       while ((match = pattern.exec(code)) !== null) {
         functions.push(match[1]);
@@ -656,14 +701,20 @@ export class FileAnalyzerService {
     return [...new Set(functions)];
   }
 
-  private extractClasses(code: string): string[] {
+  private extractClasses(code: string, language: string): string[] {
     const classes: string[] = [];
-    const patterns = [
-      /class\s+(\w+)/g,
-      /interface\s+(\w+)/g
-    ];
     
-    patterns.forEach(pattern => {
+    const patterns: Record<string, RegExp[]> = {
+      'JavaScript': [/class\s+(\w+)/g],
+      'TypeScript': [/class\s+(\w+)/g, /interface\s+(\w+)/g],
+      'Python': [/class\s+(\w+)/g],
+      'Java': [/class\s+(\w+)/g, /interface\s+(\w+)/g],
+      'C++': [/class\s+(\w+)/g]
+    };
+    
+    const langPatterns = patterns[language] || [];
+    
+    langPatterns.forEach(pattern => {
       let match;
       while ((match = pattern.exec(code)) !== null) {
         classes.push(match[1]);
@@ -671,6 +722,30 @@ export class FileAnalyzerService {
     });
     
     return [...new Set(classes)];
+  }
+
+  private extractImports(code: string, language: string): string[] {
+    const imports: string[] = [];
+    
+    const patterns: Record<string, RegExp[]> = {
+      'JavaScript': [/import\s+.*?from\s+['"]([^'"]+)['"]/g, /require\s*\(\s*['"]([^'"]+)['"]\s*\)/g],
+      'TypeScript': [/import\s+.*?from\s+['"]([^'"]+)['"]/g, /import\s+.*?=\s*require\s*\(\s*['"]([^'"]+)['"]\s*\)/g],
+      'Python': [/import\s+(\w+)/g, /from\s+(\w+)\s+import/g],
+      'Java': [/import\s+([^;]+);/g],
+      'C': [/#include\s*[<"]([^>"]+)[>"]/g],
+      'C++': [/#include\s*[<"]([^>"]+)[>"]/g, /using\s+namespace\s+(\w+);/g]
+    };
+    
+    const langPatterns = patterns[language] || [];
+    
+    langPatterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.exec(code)) !== null) {
+        imports.push(match[1]);
+      }
+    });
+    
+    return [...new Set(imports)];
   }
 
   private extractEntities(text: string): string[] {

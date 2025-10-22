@@ -2,6 +2,7 @@ import { cacheService } from './cacheService';
 import { errorHandlerService } from './errorHandlerService';
 import { zaiService } from './zaiService';
 import { chatMemoryService } from './chatMemoryService';
+import NetInfo from '@react-native-community/netinfo';
 
 export interface OfflineQueueItem {
   id: string;
@@ -57,43 +58,62 @@ export class OfflineService {
    * Setup connectivity monitoring
    */
   private setupConnectivityMonitoring(): void {
-    // In React Native, you would use NetInfo
-    // For this demo, we'll simulate connectivity checks
-    
-    const checkConnectivity = async () => {
-      try {
-        // Simple connectivity check
-        const response = await fetch('https://api.github.com/rate_limit', {
-          method: 'HEAD',
-          cache: 'no-cache',
-          signal: AbortSignal.timeout(5000)
-        });
-        
-        const wasOnline = this.isOnline;
-        this.isOnline = response.ok;
-        
-        if (!wasOnline && this.isOnline) {
-          // Came back online
-          console.log('Back online, starting sync...');
-          this.processQueue();
+    // Use React Native NetInfo for real connectivity monitoring
+    const unsubscribe = NetInfo.addEventListener(state => {
+      const wasOnline = this.isOnline;
+      this.isOnline = state.isConnected && state.isInternetReachable;
+      
+      if (!wasOnline && this.isOnline) {
+        // Came back online
+        console.log('Back online, starting sync...');
+        this.processQueue();
+      } else if (wasOnline && !this.isOnline) {
+        // Went offline
+        console.log('Went offline, enabling offline mode');
+      }
+      
+      this.notifyListeners();
+    });
+
+    // Additional connectivity validation with periodic checks
+    const validateConnectivity = async () => {
+      if (this.isOnline) {
+        try {
+          // Validate actual internet connectivity
+          const response = await fetch('https://api.github.com/rate_limit', {
+            method: 'HEAD',
+            cache: 'no-cache',
+            signal: AbortSignal.timeout(5000)
+          });
+          
+          if (!response.ok) {
+            // Network is connected but no internet access
+            const wasOnline = this.isOnline;
+            this.isOnline = false;
+            
+            if (wasOnline) {
+              console.log('Network connected but no internet access');
+              this.notifyListeners();
+            }
+          }
+        } catch (error) {
+          // Network connectivity issue
+          const wasOnline = this.isOnline;
+          this.isOnline = false;
+          
+          if (wasOnline) {
+            console.log('Network connectivity issue detected');
+            this.notifyListeners();
+          }
         }
-        
-        this.notifyListeners();
-      } catch (error) {
-        const wasOnline = this.isOnline;
-        this.isOnline = false;
-        
-        if (wasOnline) {
-          console.log('Went offline, enabling offline mode');
-        }
-        
-        this.notifyListeners();
       }
     };
 
-    // Check connectivity every 30 seconds
-    setInterval(checkConnectivity, 30000);
-    checkConnectivity(); // Initial check
+    // Validate connectivity every 60 seconds
+    setInterval(validateConnectivity, 60000);
+    
+    // Initial validation
+    setTimeout(validateConnectivity, 5000);
   }
 
   /**

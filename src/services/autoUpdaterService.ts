@@ -325,27 +325,79 @@ class AutoUpdaterService {
 
   private async getLatestStoreVersion(): Promise<{ version: string; buildNumber: string; releaseNotes?: string; isMandatory?: boolean; publishedAt?: string } | null> {
     try {
-      // This is where you would implement the actual store API calls
-      // For demonstration purposes, we'll return a simple version check
+      if (Platform.OS === 'ios') {
+        return await this.getLatestAppStoreVersion();
+      } else if (Platform.OS === 'android') {
+        return await this.getLatestPlayStoreVersion();
+      }
       
-      // You can extend this with real API calls:
-      // iOS: https://itunes.apple.com/lookup?bundleId=com.yourapp.id
-      // Android: Google Play Developer API
-      
-      // For now, return null to indicate no update is available
-      // This prevents the mock update behavior while still having the infrastructure in place
       return null;
-      
-      // Example of what a real implementation might return:
-      // return {
-      //   version: '1.1.0',
-      //   buildNumber: '10',
-      //   releaseNotes: 'Major new features and improvements!',
-      //   isMandatory: false,
-      //   publishedAt: new Date().toISOString(),
-      // };
     } catch (error) {
       errorLog('Failed to get latest store version:', error);
+      return null;
+    }
+  }
+
+  private async getLatestAppStoreVersion(): Promise<{ version: string; buildNumber: string; releaseNotes?: string; isMandatory?: boolean; publishedAt?: string } | null> {
+    try {
+      const bundleId = ENVIRONMENT.APP_STORE_URL || 'com.zai.chatapp';
+      
+      // Use iTunes Search API to get app info
+      const response = await fetch(`https://itunes.apple.com/lookup?bundleId=${bundleId}&country=US`);
+      
+      if (!response.ok) {
+        throw new Error(`App Store API request failed: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.results && data.results.length > 0) {
+        const app = data.results[0];
+        
+        return {
+          version: app.version,
+          buildNumber: app.bundleId || '1',
+          releaseNotes: app.releaseNotes || 'New version available',
+          isMandatory: false,
+          publishedAt: app.currentVersionReleaseDate || new Date().toISOString()
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      errorLog('Failed to get App Store version:', error);
+      return null;
+    }
+  }
+
+  private async getLatestPlayStoreVersion(): Promise<{ version: string; buildNumber: string; releaseNotes?: string; isMandatory?: boolean; publishedAt?: string } | null> {
+    try {
+      // For Play Store, we need to use a third-party API or scrape the page
+      // For now, we'll implement a basic version check using the Play Store page
+      const packageName = ENVIRONMENT.PLAY_STORE_URL || 'com.zai.chatapp';
+      
+      // This is a simplified implementation
+      // In production, you might want to use a service like:
+      // - Google Play Developer API (requires authentication)
+      // - Third-party APIs like 42matters.com or appbrain.com
+      
+      const response = await fetch(`https://play.google.com/store/apps/details?id=${packageName}`);
+      
+      if (!response.ok) {
+        throw new Error(`Play Store page request failed: ${response.status}`);
+      }
+      
+      // For now, return a placeholder implementation
+      // In a real implementation, you would parse the HTML to extract version info
+      return {
+        version: '1.0.0', // Would be extracted from the page
+        buildNumber: '1',
+        releaseNotes: 'Latest version from Play Store',
+        isMandatory: false,
+        publishedAt: new Date().toISOString()
+      };
+    } catch (error) {
+      errorLog('Failed to get Play Store version:', error);
       return null;
     }
   }

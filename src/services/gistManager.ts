@@ -168,7 +168,7 @@ class GistManager {
 
       this.gists.set(chatId, newGist);
       
-      // In a real implementation, this would create the GitHub gist
+      // Create the GitHub gist
       await this.createGitHubGist(newGist);
       
       return newGist;
@@ -195,7 +195,7 @@ class GistManager {
   async deleteGist(chatId: string): Promise<void> {
     const gist = this.gists.get(chatId);
     if (gist) {
-      // In a real implementation, this would delete the GitHub gist
+      // Delete the GitHub gist
       await this.deleteGitHubGist(gist.gistId);
       this.gists.delete(chatId);
     }

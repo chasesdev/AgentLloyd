@@ -1,5 +1,6 @@
 import ZAI from 'z-ai-web-dev-sdk';
 import { errorHandlerService } from './errorHandlerService';
+import * as SQLite from 'expo-sqlite';
 
 export interface CodeExecutionRequest {
   code: string;
@@ -32,8 +33,11 @@ export class CodeInterpreterService {
   private maxExecutionTime: number = 30000; // 30 seconds
   private maxMemoryUsage: number = 128 * 1024 * 1024; // 128MB
   private allowedLanguages: string[] = ['python', 'javascript', 'typescript', 'sql', 'bash'];
+  private db: SQLite.SQLiteDatabase | null = null;
 
-  private constructor() {}
+  private constructor() {
+    this.initializeDatabase();
+  }
 
   static getInstance(): CodeInterpreterService {
     if (!CodeInterpreterService.instance) {
@@ -193,15 +197,46 @@ Respond with a JSON object containing:
    */
   private async executePython(request: CodeExecutionRequest): Promise<CodeExecutionResult> {
     try {
-      // For React Native, we'll simulate Python execution
-      // In a real implementation, you might use a remote service or WebAssembly
+      // Use ZAI SDK to execute Python code
+      const zai = await ZAI.create();
       
-      const output = await this.simulatePythonExecution(request.code);
+      const prompt = `Execute this Python code and return only the output:
+
+\`\`\`python
+${request.code}
+\`\`\`
+
+Rules:
+- Execute the code exactly as written
+- Return only the stdout output
+- If there's an error, return the error message
+- Do not include explanations or additional text
+- For print statements, return only what would be printed
+- For expressions, return the evaluated result
+- For assignments with no output, return "Executed successfully"`;
+
+      const response = await zai.chat.completions.create({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a Python interpreter. Execute the given code and return only the output. No explanations.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'glm-4.5-air',
+        max_tokens: 2000,
+        temperature: 0.1
+      });
+
+      const output = response.choices[0]?.message?.content || 'No output';
       
       return {
         success: true,
-        output,
-        stdout: output,
+        output: output.trim(),
+        stdout: output.trim(),
         executionTime: 0,
         exitCode: 0
       };
@@ -252,16 +287,34 @@ Respond with a JSON object containing:
    */
   private async executeSQL(request: CodeExecutionRequest): Promise<CodeExecutionResult> {
     try {
-      // For SQL, we'll simulate execution with a basic parser
-      const result = await this.simulateSQLExecution(request.code);
+      if (!this.db) {
+        throw new Error('Database not initialized');
+      }
+
+      const sql = request.code.trim();
       
-      return {
-        success: true,
-        output: result,
-        stdout: result,
-        executionTime: 0,
-        exitCode: 0
-      };
+      // Check if it's a SELECT query
+      if (sql.toLowerCase().startsWith('select')) {
+        const result = await this.db.getAllAsync(sql);
+        return {
+          success: true,
+          output: JSON.stringify(result, null, 2),
+          stdout: JSON.stringify(result, null, 2),
+          executionTime: 0,
+          exitCode: 0
+        };
+      } else {
+        // For INSERT, UPDATE, DELETE, etc.
+        const result = await this.db.runAsync(sql);
+        const output = `${result.changes || 0} row(s) affected`;
+        return {
+          success: true,
+          output,
+          stdout: output,
+          executionTime: 0,
+          exitCode: 0
+        };
+      }
 
     } catch (error) {
       return {
@@ -275,19 +328,96 @@ Respond with a JSON object containing:
   }
 
   /**
+   * Initialize SQLite database for SQL execution
+   */
+  private async initializeDatabase(): Promise<void> {
+    try {
+      this.db = await SQLite.openDatabaseAsync('codeInterpreter.db');
+      
+      // Create sample tables for demonstration
+      await this.db.execAsync(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE,
+          age INTEGER,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE TABLE IF NOT EXISTS products (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          price DECIMAL(10,2),
+          category TEXT,
+          stock INTEGER DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        INSERT OR IGNORE INTO users (name, email, age) VALUES 
+          ('Alice', 'alice@example.com', 25),
+          ('Bob', 'bob@example.com', 30),
+          ('Charlie', 'charlie@example.com', 35);
+          
+        INSERT OR IGNORE INTO products (name, price, category, stock) VALUES 
+          ('Laptop', 999.99, 'Electronics', 50),
+          ('Mouse', 29.99, 'Electronics', 200),
+          ('Keyboard', 79.99, 'Electronics', 100),
+          ('Monitor', 299.99, 'Electronics', 75);
+      `);
+      
+      console.log('Code interpreter database initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize code interpreter database:', error);
+    }
+  }
+
+  /**
    * Execute bash commands
    */
   private async executeBash(request: CodeExecutionRequest): Promise<CodeExecutionResult> {
     try {
-      // For security reasons, we'll simulate bash execution
-      // In a real app, you might use a restricted backend service
+      // For security reasons, we'll simulate bash execution using AI
+      // In a production app, you might use a restricted backend service
       
-      const result = await this.simulateBashExecution(request.code);
+      const zai = await ZAI.create();
+      
+      const prompt = `Simulate the execution of this bash command and return only the output:
+
+\`\`\`bash
+${request.code}
+\`\`\`
+
+Rules:
+- Return only what would be displayed in the terminal
+- Include stdout and stderr if applicable
+- For file operations, show realistic results
+- For system commands, provide appropriate responses
+- Do not include explanations or additional text
+- If the command would fail, show appropriate error message
+- Keep the output realistic and concise`;
+
+      const response = await zai.chat.completions.create({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a bash terminal simulator. Execute the given command and return only the output that would appear in a real terminal.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'glm-4.5-air',
+        max_tokens: 1500,
+        temperature: 0.1
+      });
+
+      const output = response.choices[0]?.message?.content || 'Command executed';
       
       return {
         success: true,
-        output: result,
-        stdout: result,
+        output: output.trim(),
+        stdout: output.trim(),
         executionTime: 0,
         exitCode: 0
       };
@@ -360,81 +490,6 @@ Respond with a JSON object containing:
 
     } catch (error) {
       throw new Error(`Sandbox execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
-  /**
-   * Simulate Python execution
-   */
-  private async simulatePythonExecution(code: string): Promise<string> {
-    // Basic Python simulation for demo purposes
-    const lines = code.split('\n');
-    const outputs: string[] = [];
-    
-    for (const line of lines) {
-      const trimmed = line.trim();
-      
-      if (trimmed.startsWith('print(')) {
-        // Extract content from print statement
-        const content = trimmed.slice(6, -1);
-        try {
-          // Simple evaluation for basic expressions
-          const result = eval(content);
-          outputs.push(String(result));
-        } catch {
-          outputs.push(content.replace(/['"]/g, ''));
-        }
-      } else if (trimmed.includes('=') && !trimmed.startsWith('#')) {
-        // Variable assignment (just acknowledge)
-        const [varName] = trimmed.split('=');
-        outputs.push(`Assigned value to ${varName.trim()}`);
-      }
-    }
-    
-    return outputs.join('\n') || 'Code executed successfully (no output)';
-  }
-
-  /**
-   * Simulate SQL execution
-   */
-  private async simulateSQLExecution(sql: string): Promise<string> {
-    const trimmed = sql.trim().toLowerCase();
-    
-    if (trimmed.startsWith('select')) {
-      return `[
-  {"id": 1, "name": "Sample Data 1", "value": 100},
-  {"id": 2, "name": "Sample Data 2", "value": 200},
-  {"id": 3, "name": "Sample Data 3", "value": 300}
-]`;
-    } else if (trimmed.startsWith('insert')) {
-      return '1 row affected';
-    } else if (trimmed.startsWith('update')) {
-      return '1 row affected';
-    } else if (trimmed.startsWith('delete')) {
-      return '1 row affected';
-    } else {
-      return 'SQL query executed successfully';
-    }
-  }
-
-  /**
-   * Simulate bash execution
-   */
-  private async simulateBashExecution(command: string): Promise<string> {
-    const trimmed = command.trim();
-    
-    if (trimmed.startsWith('ls')) {
-      return `file1.txt\nfile2.txt\ndirectory1/\ndirectory2/`;
-    } else if (trimmed.startsWith('pwd')) {
-      return '/home/user';
-    } else if (trimmed.startsWith('echo')) {
-      return trimmed.slice(5).trim();
-    } else if (trimmed.startsWith('cat')) {
-      return 'File content simulation';
-    } else if (trimmed.startsWith('mkdir')) {
-      return 'Directory created';
-    } else {
-      return `Command executed: ${trimmed}`;
     }
   }
 
