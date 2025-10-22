@@ -1922,3 +1922,266 @@ Require stack:
 
 Node.js v22.20.0
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+node:internal/modules/cjs/loader:1383
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module '@/lib/socket'
+Require stack:
+- /home/z/my-project/server.ts
+    at node:internal/modules/cjs/loader:1383:15
+    at nextResolveSimple (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542
+    at resolveTsPaths (/home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)
+    at /home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102
+    at m._resolveFilename (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/home/z/my-project/server.ts' ]
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163463141:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163463141:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163463141:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163466049:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163466049:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163466049:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163469503:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163469503:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163469503:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163472446:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163472446:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163472446:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163474723:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163474723:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163474723:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163479390:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163479390:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163479390:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163484136:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163484136:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163484136:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163485946:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163485946:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163485946:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+(node:190) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [Bus]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163489245:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163489245:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163489245:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/z/my-project/server.ts' imported from /home/z/my-project/
+    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
+    at moduleResolve (node:internal/modules/esm/resolve:859:10)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163495374:2:3744)
+    at async resolveDirectory (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163495374:2:4237)
+    at async resolve (file:///home/z/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1761163495374:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/z/my-project/server.ts'
+}
+
+Node.js v22.20.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

@@ -35,7 +35,13 @@
         {
           "photosPermission": "The app needs access to your photos to let you share them with the AI assistant."
         }
-      ]
-    ]
+      ],
+      "expo-updates"
+    ],
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

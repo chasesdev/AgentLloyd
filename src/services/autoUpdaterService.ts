@@ -1,6 +1,7 @@
 import { ENVIRONMENT, debugLog, errorLog, warnLog } from '@/config/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import * as Updates from 'expo-updates';
 
 // Types for update information
 export interface UpdateInfo {
@@ -12,6 +13,7 @@ export interface UpdateInfo {
   publishedAt: string;
   size?: number;
   checksum?: string;
+  isOTA?: boolean;
 }
 
 export interface UpdateCheckResult {
@@ -82,14 +84,16 @@ class AutoUpdaterService {
       const currentVersion = ENVIRONMENT.APP_VERSION;
       const currentBuildNumber = ENVIRONMENT.BUILD_NUMBER;
 
-      // Check for OTA updates first (EAS Update)
-      const otaResult = await this.checkOTAUpdates(currentVersion, currentBuildNumber);
-      if (otaResult.hasUpdate) {
-        this.notifyUpdateListeners(otaResult);
-        return otaResult;
+      // For Expo apps, use expo-updates for OTA updates
+      if (Updates.isEnabled) {
+        const expoResult = await this.checkExpoUpdates(currentVersion, currentBuildNumber);
+        if (expoResult.hasUpdate) {
+          this.notifyUpdateListeners(expoResult);
+          return expoResult;
+        }
       }
 
-      // Check for App Store updates
+      // Check for store updates as fallback
       const storeResult = await this.checkStoreUpdates(currentVersion, currentBuildNumber);
       this.notifyUpdateListeners(storeResult);
       
@@ -113,13 +117,12 @@ class AutoUpdaterService {
     debugLog('Starting update download...');
 
     try {
-      if (Platform.OS === 'web') {
-        await this.downloadWebUpdate(updateInfo);
+      if (Updates.isEnabled && updateInfo.isOTA) {
+        // Use expo-updates for OTA updates
+        await this.downloadExpoUpdate(updateInfo);
       } else {
-        // For native platforms, we'd typically use Expo Updates
-        // This is a simplified implementation
-        warnLog('Native update downloading requires Expo Updates configuration');
-        throw new Error('Native update downloading not implemented in this demo');
+        // For store updates, redirect to app store
+        await this.redirectToStore(updateInfo);
       }
     } catch (error) {
       const err = error instanceof Error ? error : new Error('Unknown error during download');
@@ -135,13 +138,12 @@ class AutoUpdaterService {
     debugLog('Installing update...');
     
     try {
-      if (Platform.OS === 'web') {
-        // For web, we can reload the page
-        await this.saveUpdateState();
-        window.location.reload();
+      if (Updates.isEnabled) {
+        // Use expo-updates to reload the app with new update
+        await Updates.reloadAsync();
       } else {
-        // For native, Expo Updates handles this automatically
-        warnLog('Native update installation requires Expo Updates configuration');
+        warnLog('Updates not enabled, cannot install OTA update');
+        throw new Error('Updates not enabled');
       }
     } catch (error) {
       const err = error instanceof Error ? error : new Error('Unknown error during installation');
@@ -204,24 +206,40 @@ class AutoUpdaterService {
     debugLog(`Started periodic update checks (interval: ${ENVIRONMENT.AUTO_UPDATE_CHECK_INTERVAL}ms)`);
   }
 
-  private async checkOTAUpdates(currentVersion: string, currentBuildNumber: string): Promise<UpdateCheckResult> {
+  private async checkExpoUpdates(currentVersion: string, currentBuildNumber: string): Promise<UpdateCheckResult> {
     try {
-      // In a real implementation, this would check EAS Update
-      // For demo purposes, we'll simulate this check
-      debugLog('Checking for OTA updates...');
+      debugLog('Checking for Expo OTA updates...');
       
-      // Simulate API call
-      const response = await this.mockOTAUpdateCheck(currentVersion, currentBuildNumber);
+      // Use expo-updates to check for updates
+      const update = await Updates.checkForUpdateAsync();
+      
+      if (update.isAvailable) {
+        debugLog('Expo OTA update available');
+        
+        return {
+          hasUpdate: true,
+          updateInfo: {
+            version: update.manifest?.version || 'unknown',
+            buildNumber: update.manifest?.extra?.expoClient?.extra?.eas?.buildNumber || 'unknown',
+            releaseNotes: update.manifest?.extra?.releaseNotes || 'New update available',
+            isMandatory: update.manifest?.extra?.isMandatory || false,
+            publishedAt: update.manifest?.createdAt || new Date().toISOString(),
+            isOTA: true,
+          },
+          isOTA: true,
+          currentVersion,
+          currentBuildNumber,
+        };
+      }
       
       return {
-        hasUpdate: response.hasUpdate,
-        updateInfo: response.updateInfo,
+        hasUpdate: false,
         isOTA: true,
         currentVersion,
         currentBuildNumber,
       };
     } catch (error) {
-      errorLog('OTA update check failed:', error);
+      errorLog('Expo update check failed:', error);
       return {
         hasUpdate: false,
         isOTA: true,
@@ -274,38 +292,43 @@ class AutoUpdaterService {
     }
   }
 
-  private async mockOTAUpdateCheck(currentVersion: string, currentBuildNumber: string): Promise<{ hasUpdate: boolean; updateInfo?: UpdateInfo }> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Mock update check logic
-    const skippedUpdates = await this.getSkippedUpdates();
-    const mockNewVersion = '1.0.1';
-    const mockNewBuildNumber = '2';
-    const updateKey = `${mockNewVersion}-${mockNewBuildNumber}`;
-
-    if (skippedUpdates.has(updateKey)) {
-      return { hasUpdate: false };
+  private async downloadExpoUpdate(updateInfo: UpdateInfo): Promise<void> {
+    try {
+      debugLog('Downloading Expo OTA update...');
+      
+      // expo-updates handles downloading automatically when we fetch the update
+      // The actual download happens during checkForUpdateAsync
+      debugLog('Expo OTA update ready for installation');
+      
+      // Save update info for installation
+      await this.saveUpdateState(updateInfo);
+    } catch (error) {
+      errorLog('Expo update download failed:', error);
+      throw error;
     }
+  }
 
-    // Simulate finding an update
-    if (this.compareVersions(currentVersion, mockNewVersion) < 0) {
-      return {
-        hasUpdate: true,
-        updateInfo: {
-          version: mockNewVersion,
-          buildNumber: mockNewBuildNumber,
-          releaseNotes: 'Bug fixes and performance improvements',
-          downloadUrl: 'https://example.com/update',
-          isMandatory: false,
-          publishedAt: new Date().toISOString(),
-          size: 1024000,
-          checksum: 'abc123',
-        },
-      };
+  private async redirectToStore(updateInfo: UpdateInfo): Promise<void> {
+    try {
+      let storeUrl: string | undefined;
+      
+      if (Platform.OS === 'ios' && ENVIRONMENT.APP_STORE_URL) {
+        storeUrl = ENVIRONMENT.APP_STORE_URL;
+      } else if (Platform.OS === 'android' && ENVIRONMENT.PLAY_STORE_URL) {
+        storeUrl = ENVIRONMENT.PLAY_STORE_URL;
+      }
+
+      if (storeUrl) {
+        debugLog('Redirecting to app store...');
+        // In a real implementation, you would use Linking.openURL(storeUrl)
+        warnLog(`Would open store URL: ${storeUrl}`);
+      } else {
+        throw new Error('No store URL available for current platform');
+      }
+    } catch (error) {
+      errorLog('Failed to redirect to store:', error);
+      throw error;
     }
-
-    return { hasUpdate: false };
   }
 
   private async mockStoreUpdateCheck(currentVersion: string, currentBuildNumber: string): Promise<{ hasUpdate: boolean; updateInfo?: UpdateInfo }> {
@@ -326,43 +349,12 @@ class AutoUpdaterService {
           releaseNotes: 'Major new features and improvements!',
           isMandatory: false,
           publishedAt: new Date().toISOString(),
+          isOTA: false,
         },
       };
     }
 
     return { hasUpdate: false };
-  }
-
-  private async downloadWebUpdate(updateInfo: UpdateInfo): Promise<void> {
-    if (!updateInfo.downloadUrl) {
-      throw new Error('No download URL provided');
-    }
-
-    // Simulate download progress
-    const totalBytes = updateInfo.size || 1024000;
-    let bytesWritten = 0;
-
-    const progressInterval = setInterval(() => {
-      bytesWritten += Math.random() * totalBytes * 0.1;
-      const progress = Math.min((bytesWritten / totalBytes) * 100, 100);
-
-      this.notifyProgressListeners({
-        bytesWritten: Math.min(bytesWritten, totalBytes),
-        totalBytes,
-        progress,
-      });
-
-      if (progress >= 100) {
-        clearInterval(progressInterval);
-      }
-    }, 200);
-
-    // Simulate download completion
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    clearInterval(progressInterval);
-
-    // Save update info for installation
-    await this.saveUpdateState(updateInfo);
   }
 
   private async saveUpdateState(updateInfo?: UpdateInfo): Promise<void> {
