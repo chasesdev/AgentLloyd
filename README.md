@@ -1,141 +1,116 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# Z.AI Chat App
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+A React Native chat application for iOS that integrates with Z.AI's advanced AI models, including GLM-4.6, GLM-4.5V, and GLM-4.5-Air.
 
-## ✨ Technology Stack
+## Features
 
-This scaffold provides a robust foundation built with:
+- **Multiple AI Models**: Support for GLM-4.6, GLM-4.5V (multimodal), and GLM-4.5-Air
+- **Multimodal Support**: Send and analyze images with GLM-4.5V
+- **Thinking Mode**: Enable reasoning display for supported models
+- **Streaming Responses**: Real-time message streaming
+- **Secure API Key Storage**: Secure storage for your Z.AI API key
+- **iOS Optimized**: Designed specifically for iOS devices
 
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+## Supported Models
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+### GLM-4.6
+- Latest flagship model with superior reasoning capabilities
+- 200K context window
+- Supports thinking mode
+- Best for complex tasks and coding
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### GLM-4.5V
+- Visual reasoning model for images and videos
+- Multimodal input support (text + images)
+- Supports thinking mode
+- Ideal for image analysis and GUI tasks
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
+### GLM-4.5-Air
+- Efficient model for everyday tasks
+- Faster response times
+- Lower token consumption
+- Great for general conversations
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+## Getting Started
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+1. **Get your API key**:
+   - Visit [Z.AI Open Platform](https://z.ai/model-api)
+   - Register or login to your account
+   - Navigate to API Keys section
+   - Create and copy your API key
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-## 🎯 Why This Scaffold?
+3. **Run the app**:
+   ```bash
+   npm run ios
+   ```
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+4. **Enter your API key**:
+   - Launch the app
+   - Enter your Z.AI API key
+   - The app will validate and save it securely
 
-## 🚀 Quick Start
+## Usage
 
-```bash
-# Install dependencies
-npm install
+### Sending Messages
+- Type your message in the input field
+- Tap the send button to get AI responses
+- Responses stream in real-time
 
-# Start development server
-npm run dev
+### Adding Images (GLM-4.5V only)
+- Select GLM-4.5V model
+- Tap the image icon
+- Select an image from your photo library
+- Add text description if needed
+- Send to analyze the image
 
-# Build for production
-npm run build
+### Model Selection
+- Tap the current model name in the header
+- Select from available models
+- Enable/disable thinking mode for supported models
 
-# Start production server
-npm start
-```
+### Thinking Mode
+- Available for GLM-4.6 and GLM-4.5V
+- Shows the model's reasoning process
+- Toggle in model selection panel
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+## API Configuration
 
-## 🤖 Powered by Z.ai
+The app uses the Z.AI API with the following configuration:
+- Base URL: `https://api.z.ai/api/paas/v4`
+- Models: `glm-4.6`, `glm-4.5v`, `glm-4.5-air`
+- Streaming support enabled
+- Thinking mode configurable
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+## Development
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
-
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
-
-## 📁 Project Structure
-
+### Project Structure
 ```
 src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+├── components/     # Reusable UI components
+├── screens/       # Main app screens
+├── services/      # API and business logic
+├── types/         # TypeScript type definitions
+└── utils/         # Utility functions
 ```
 
-## 🎨 Available Features & Components
+### Key Files
+- `App.tsx` - Main app component
+- `src/screens/ApiKeyScreen.tsx` - API key input screen
+- `src/screens/ChatScreen.tsx` - Main chat interface
+- `src/services/zaiService.ts` - Z.AI API integration
 
-This scaffold includes a comprehensive set of modern web development tools:
+## Requirements
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+- iOS 13.0+
+- React Native 0.76+
+- Expo SDK 52
+- Z.AI API key
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+## License
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
-
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
-
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
-
-## 🤝 Get Started with Z.ai
-
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
-
----
-
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+This project is for demonstration purposes. Please ensure you have proper licensing for all dependencies and comply with Z.AI's terms of service.
