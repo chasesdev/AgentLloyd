@@ -11,12 +11,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { AgentTool, MCPTool } from '../types/tools';
 import { toolService } from '../services/toolService';
-
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
-
 export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
   const [agentTools, setAgentTools] = useState<AgentTool[]>(toolService.getAvailableTools());
   const [mcpServers, setMcpServers] = useState<MCPTool[]>([
@@ -42,7 +40,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
       enabled: false,
     },
   ]);
-
   const toggleAgentTool = (toolId: string) => {
     const tool = agentTools.find(t => t.id === toolId);
     if (tool) {
@@ -54,7 +51,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
       setAgentTools([...agentTools]);
     }
   };
-
   const toggleMCPServer = (serverId: string) => {
     setMcpServers(prev => 
       prev.map(server => 
@@ -64,7 +60,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
       )
     );
   };
-
   const renderAgentTool = ({ item }: { item: AgentTool }) => (
     <View style={styles.toolItem}>
       <View style={styles.toolInfo}>
@@ -79,7 +74,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
       />
     </View>
   );
-
   const renderMCPServer = ({ item }: { item: MCPTool }) => (
     <View style={styles.toolItem}>
       <View style={styles.toolInfo}>
@@ -95,7 +89,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
       />
     </View>
   );
-
   return (
     <Modal
       visible={visible}
@@ -111,7 +104,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
           <Text style={styles.title}>Tools & Agents</Text>
           <View style={styles.placeholder} />
         </View>
-
         <View style={styles.content}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Agent Tools</Text>
@@ -125,7 +117,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
               style={styles.toolsList}
             />
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>MCP Servers</Text>
             <Text style={styles.sectionDescription}>
@@ -138,7 +129,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
               style={styles.toolsList}
             />
           </View>
-
           <View style={styles.infoSection}>
             <Text style={styles.infoTitle}>About Tools</Text>
             <Text style={styles.infoText}>
@@ -153,7 +143,6 @@ export const ToolsModal: React.FC<Props> = ({ visible, onClose }) => {
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -13,18 +13,14 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { ChatMemory } from '../types';
 import { chatMemoryService } from '../services/chatMemoryService';
-
 interface Props {
   visible: boolean;
   onClose: () => void;
   chat: ChatMemory | null;
 }
-
 export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) => {
   const [showFullSummary, setShowFullSummary] = useState(false);
-
   if (!chat) return null;
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -34,17 +30,14 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
       minute: '2-digit'
     });
   };
-
   const handleExportChat = async () => {
     try {
       const exportData = await chatMemoryService.exportChat(chat.id);
-      // In a real app, you would share this data or save it to a file
       Alert.alert('Export Complete', 'Chat data has been prepared for export');
     } catch (error) {
       Alert.alert('Export Failed', 'Failed to export chat data');
     }
   };
-
   return (
     <Modal
       visible={visible}
@@ -65,32 +58,26 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
             <Ionicons name="share-outline" size={24} color="#007AFF" />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Chat Information</Text>
-            
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Title:</Text>
               <Text style={styles.infoValue}>{chat.title}</Text>
             </View>
-
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Created:</Text>
               <Text style={styles.infoValue}>{formatDate(chat.createdAt)}</Text>
             </View>
-
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Last Updated:</Text>
               <Text style={styles.infoValue}>{formatDate(chat.lastMessageAt)}</Text>
             </View>
-
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Messages:</Text>
               <Text style={styles.infoValue}>{chat.messages.length}</Text>
             </View>
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Summary</Text>
             <Text style={styles.summaryText}>
@@ -108,7 +95,6 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
               </TouchableOpacity>
             )}
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Tags</Text>
             <View style={styles.tagsContainer}>
@@ -123,7 +109,6 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
               )}
             </View>
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Key Terms</Text>
             <View style={styles.termsContainer}>
@@ -138,7 +123,6 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
               )}
             </View>
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Message Breakdown</Text>
             <View style={styles.messageStats}>
@@ -162,7 +146,6 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
               </View>
             </View>
           </View>
-
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Models Used</Text>
             <View style={styles.modelsContainer}>
@@ -178,7 +161,6 @@ export const ChatDetailsModal: React.FC<Props> = ({ visible, onClose, chat }) =>
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

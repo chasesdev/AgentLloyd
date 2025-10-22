@@ -1,17 +1,12 @@
 import { githubService } from './githubService';
-
 interface GitHubCommandResult {
   success: boolean;
   message: string;
   data?: any;
 }
-
 class GitHubCommandService {
-  
   async handleCommand(command: string): Promise<GitHubCommandResult> {
     const trimmedCommand = command.trim().toLowerCase();
-    
-    // Handle different GitHub CLI-like commands
     if (trimmedCommand.startsWith('gh repo create')) {
       return await this.handleRepoCreate(command);
     } else if (trimmedCommand.startsWith('gh repo clone')) {
@@ -31,9 +26,7 @@ class GitHubCommandService {
       };
     }
   }
-
   private async handleRepoCreate(command: string): Promise<GitHubCommandResult> {
-    // Parse: gh repo create <repo-name> [options]
     const match = command.match(/gh repo create (\S+)(?:\s+(.+))?/);
     if (!match) {
       return {
@@ -41,14 +34,11 @@ class GitHubCommandService {
         message: 'Invalid syntax. Use: gh repo create <repo-name> [--public|--private] [--description "description"]'
       };
     }
-
     const repoName = match[1];
     const options = match[2] || '';
-    
     const isPrivate = options.includes('--private');
     const descriptionMatch = options.match(/--description\s+"([^"]+)"/);
     const description = descriptionMatch ? descriptionMatch[1] : '';
-
     try {
       const repo = await githubService.createRepo(repoName, description, isPrivate);
       if (repo) {
@@ -74,9 +64,7 @@ class GitHubCommandService {
       };
     }
   }
-
   private async handleRepoClone(command: string): Promise<GitHubCommandResult> {
-    // Parse: gh repo clone <owner/repo>
     const match = command.match(/gh repo clone (\S+)/);
     if (!match) {
       return {
@@ -84,17 +72,14 @@ class GitHubCommandService {
         message: 'Invalid syntax. Use: gh repo clone <owner/repo>'
       };
     }
-
     const repoPath = match[1];
     const [owner, repo] = repoPath.split('/');
-
     if (!owner || !repo) {
       return {
         success: false,
         message: 'Invalid repository format. Use: owner/repo'
       };
     }
-
     try {
       const repoInfo = await githubService.getRepo(owner, repo);
       if (repoInfo) {
@@ -123,9 +108,7 @@ class GitHubCommandService {
       };
     }
   }
-
   private async handleRepoView(command: string): Promise<GitHubCommandResult> {
-    // Parse: gh repo view <owner/repo>
     const match = command.match(/gh repo view (\S+)/);
     if (!match) {
       return {
@@ -133,17 +116,14 @@ class GitHubCommandService {
         message: 'Invalid syntax. Use: gh repo view <owner/repo>'
       };
     }
-
     const repoPath = match[1];
     const [owner, repo] = repoPath.split('/');
-
     if (!owner || !repo) {
       return {
         success: false,
         message: 'Invalid repository format. Use: owner/repo'
       };
     }
-
     try {
       const repoInfo = await githubService.getRepo(owner, repo);
       if (repoInfo) {
@@ -176,9 +156,7 @@ class GitHubCommandService {
       };
     }
   }
-
   private async handleIssueList(command: string): Promise<GitHubCommandResult> {
-    // Parse: gh issue list <owner/repo>
     const match = command.match(/gh issue list (\S+)/);
     if (!match) {
       return {
@@ -186,18 +164,14 @@ class GitHubCommandService {
         message: 'Invalid syntax. Use: gh issue list <owner/repo>'
       };
     }
-
     const repoPath = match[1];
     const [owner, repo] = repoPath.split('/');
-
     return {
       success: false,
-      message: `Issue listing is not yet implemented in this mobile version. You can view issues at: https://github.com/${owner}/${repo}/issues`
+      message: `Issue listing is not yet implemented in this mobile version. You can view issues at: https:
     };
   }
-
   private async handlePrList(command: string): Promise<GitHubCommandResult> {
-    // Parse: gh pr list <owner/repo>
     const match = command.match(/gh pr list (\S+)/);
     if (!match) {
       return {
@@ -205,16 +179,13 @@ class GitHubCommandService {
         message: 'Invalid syntax. Use: gh pr list <owner/repo>'
       };
     }
-
     const repoPath = match[1];
     const [owner, repo] = repoPath.split('/');
-
     return {
       success: false,
-      message: `Pull request listing is not yet implemented in this mobile version. You can view PRs at: https://github.com/${owner}/${repo}/pulls`
+      message: `Pull request listing is not yet implemented in this mobile version. You can view PRs at: https:
     };
   }
-
   private async handleGitHubUrl(url: string): Promise<GitHubCommandResult> {
     const parsed = githubService.parseGitHubUrl(url);
     if (!parsed) {
@@ -223,9 +194,7 @@ class GitHubCommandService {
         message: 'Invalid GitHub URL format'
       };
     }
-
     const { owner, repo, path } = parsed;
-
     try {
       const repoInfo = await githubService.getRepo(owner, repo);
       if (!repoInfo) {
@@ -234,9 +203,7 @@ class GitHubCommandService {
           message: `Repository ${owner}/${repo} not found or you don\'t have access to it.`
         };
       }
-
       if (path) {
-        // Try to get file content if path is specified
         const fileContent = await githubService.getFileContent(owner, repo, path, repoInfo.default_branch);
         if (fileContent) {
           return {
@@ -293,14 +260,11 @@ class GitHubCommandService {
       };
     }
   }
-
   formatCommandResult(result: GitHubCommandResult): string {
     if (!result.success) {
       return `❌ ${result.message}`;
     }
-
     let response = `✅ ${result.message}\n\n`;
-
     if (result.data) {
       if (result.data.type === 'file') {
         response += `**File:** ${result.data.path}\n`;
@@ -315,15 +279,12 @@ class GitHubCommandService {
         response += `**Default Branch:** ${repo.defaultBranch}\n`;
         response += `**Private:** ${repo.private ? 'Yes' : 'No'}\n`;
       } else {
-        // For repo create results
         if (result.data.url) response += `**URL:** ${result.data.url}\n`;
         if (result.data.cloneUrl) response += `**Clone URL:** ${result.data.cloneUrl}\n`;
         if (result.data.private !== undefined) response += `**Private:** ${result.data.private ? 'Yes' : 'No'}\n`;
       }
     }
-
     return response;
   }
 }
-
 export const githubCommandService = new GitHubCommandService();

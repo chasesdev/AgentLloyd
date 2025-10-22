@@ -7,7 +7,6 @@ export interface ChatMode {
   features: string[];
   recommendedModel: string;
 }
-
 export const CHAT_MODES: ChatMode[] = [
   {
     id: 'general',
@@ -46,7 +45,6 @@ export const CHAT_MODES: ChatMode[] = [
     recommendedModel: 'glm-4.6',
   },
 ];
-
 export interface ReasoningStep {
   id: string;
   type: 'analysis' | 'planning' | 'execution' | 'evaluation';
@@ -54,7 +52,6 @@ export interface ReasoningStep {
   content: string;
   timestamp: Date;
 }
-
 export interface ReasoningProcess {
   id: string;
   messageId: string;

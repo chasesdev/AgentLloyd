@@ -1,28 +1,20 @@
 import * as SQLite from 'expo-sqlite';
 import { ChatBio, ChatMemory, Message, MessageContent } from '../types';
 import { databaseMigration } from './databaseMigration';
-
 export class ChatDatabase {
   private db: SQLite.SQLiteDatabase | null = null;
-
   async init(): Promise<void> {
     try {
       this.db = await SQLite.openDatabaseAsync('chat_memory.db');
-      
-      // Run migrations
       await databaseMigration.migrate(this.db);
-      
       console.log('Database initialized successfully');
     } catch (error) {
       console.error('Failed to initialize database:', error);
       throw error;
     }
   }
-
-  // Bio operations
   async saveBio(bio: ChatBio): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO bio (id, name, content, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?)`,
@@ -35,10 +27,8 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getBio(): Promise<ChatBio | null> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const result = await this.db.getFirstAsync<{
       id: string;
       name: string;
@@ -46,9 +36,7 @@ export class ChatDatabase {
       created_at: string;
       updated_at: string;
     }>('SELECT * FROM bio LIMIT 1');
-
     if (!result) return null;
-
     return {
       id: result.id,
       name: result.name,
@@ -57,11 +45,8 @@ export class ChatDatabase {
       updatedAt: new Date(result.updated_at),
     };
   }
-
-  // Memory operations
   async saveMemory(memory: ChatMemory): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO memories 
        (id, title, tags, summary, key_terms, created_at, updated_at, last_message_at)
@@ -77,16 +62,12 @@ export class ChatDatabase {
         memory.lastMessageAt.toISOString()
       ]
     );
-
-    // Save messages
     for (const message of memory.messages) {
       await this.saveMessage(message);
     }
   }
-
   async getMemory(id: string): Promise<ChatMemory | null> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const result = await this.db.getFirstAsync<{
       id: string;
       title: string;
@@ -97,11 +78,8 @@ export class ChatDatabase {
       updated_at: string;
       last_message_at: string;
     }>('SELECT * FROM memories WHERE id = ?', [id]);
-
     if (!result) return null;
-
     const messages = await this.getMessages(id);
-
     return {
       id: result.id,
       title: result.title,
@@ -114,10 +92,8 @@ export class ChatDatabase {
       lastMessageAt: new Date(result.last_message_at),
     };
   }
-
   async getAllMemories(): Promise<ChatMemory[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const results = await this.db.getAllAsync<{
       id: string;
       title: string;
@@ -128,12 +104,9 @@ export class ChatDatabase {
       updated_at: string;
       last_message_at: string;
     }>('SELECT * FROM memories ORDER BY last_message_at DESC');
-
     const memories: ChatMemory[] = [];
-    
     for (const result of results) {
       const messages = await this.getMessages(result.id);
-      
       memories.push({
         id: result.id,
         title: result.title,
@@ -146,34 +119,25 @@ export class ChatDatabase {
         lastMessageAt: new Date(result.last_message_at),
       });
     }
-
     return memories;
   }
-
   async deleteMemory(id: string): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync('DELETE FROM memories WHERE id = ?', [id]);
     await this.db.runAsync('DELETE FROM messages WHERE chat_id = ?', [id]);
   }
-
   async updateMemoryTitle(id: string, title: string): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       'UPDATE memories SET title = ?, updated_at = ? WHERE id = ?',
       [title, new Date().toISOString(), id]
     );
   }
-
-  // Message operations
   async saveMessage(message: Message): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const content = typeof message.content === 'string' 
       ? message.content 
       : JSON.stringify(message.content);
-
     await this.db.runAsync(
       `INSERT OR REPLACE INTO messages 
        (id, chat_id, role, content, timestamp, thinking, model)
@@ -189,10 +153,8 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getMessages(chatId: string): Promise<Message[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const results = await this.db.getAllAsync<{
       id: string;
       chat_id: string;
@@ -205,20 +167,15 @@ export class ChatDatabase {
       'SELECT * FROM messages WHERE chat_id = ? ORDER BY timestamp ASC',
       [chatId]
     );
-
     return results.map(result => {
       let content: string | MessageContent[] = result.content;
-      
-      // Try to parse as JSON for multimodal content
       try {
         const parsed = JSON.parse(result.content);
         if (Array.isArray(parsed)) {
           content = parsed;
         }
       } catch {
-        // Keep as string if not valid JSON
       }
-
       return {
         id: result.id,
         chatId: result.chat_id,
@@ -230,20 +187,15 @@ export class ChatDatabase {
       };
     });
   }
-
-  // Search operations
   async searchMemoriesByTerms(terms: string[]): Promise<ChatMemory[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     if (terms.length === 0) return [];
-    
     const placeholders = terms.map(() => '?').join(',');
     const query = `
       SELECT DISTINCT m.* FROM memories m
       WHERE m.key_terms LIKE ${placeholders.split(',').map(() => "'%' || ? || '%'").join(' OR ')}
       ORDER BY m.last_message_at DESC
     `;
-    
     const results = await this.db.getAllAsync<{
       id: string;
       title: string;
@@ -254,12 +206,9 @@ export class ChatDatabase {
       updated_at: string;
       last_message_at: string;
     }>(query, terms);
-
     const memories: ChatMemory[] = [];
-    
     for (const result of results) {
       const messages = await this.getMessages(result.id);
-      
       memories.push({
         id: result.id,
         title: result.title,
@@ -272,46 +221,35 @@ export class ChatDatabase {
         lastMessageAt: new Date(result.last_message_at),
       });
     }
-
     return memories;
   }
-
   async close(): Promise<void> {
     if (this.db) {
       await this.db.closeAsync();
       this.db = null;
     }
   }
-
-  // Settings operations
   async saveSetting(key: string, value: string, type: string = 'string'): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO settings (key, value, type, updated_at)
        VALUES (?, ?, ?, ?)`,
       [key, value, type, new Date().toISOString()]
     );
   }
-
   async getSetting(key: string): Promise<string | null> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const result = await this.db.getFirstAsync<{ value: string }>(
       'SELECT value FROM settings WHERE key = ?',
       [key]
     );
-
     return result?.value || null;
   }
-
   async getAllSettings(): Promise<Record<string, { value: string; type: string }>> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const results = await this.db.getAllAsync<{ key: string; value: string; type: string }>(
       'SELECT key, value, type FROM settings'
     );
-
     const settings: Record<string, { value: string; type: string }> = {};
     for (const result of results) {
       settings[result.key] = {
@@ -319,11 +257,8 @@ export class ChatDatabase {
         type: result.type
       };
     }
-
     return settings;
   }
-
-  // Gist operations
   async saveGist(gist: {
     id: string;
     chatId: string;
@@ -336,7 +271,6 @@ export class ChatDatabase {
     tags: string[];
   }): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO gists 
        (id, chat_id, gist_id, gist_url, title, description, content, is_public, tags, created_at, updated_at)
@@ -356,16 +290,12 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getGist(id: string): Promise<any | null> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const result = await this.db.getFirstAsync(`
       SELECT * FROM gists WHERE id = ?
     `, [id]);
-
     if (!result) return null;
-
     return {
       id: result.id,
       chatId: result.chat_id,
@@ -380,14 +310,11 @@ export class ChatDatabase {
       updatedAt: new Date(result.updated_at),
     };
   }
-
   async getGistsByChatId(chatId: string): Promise<any[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const results = await this.db.getAllAsync(`
       SELECT * FROM gists WHERE chat_id = ? ORDER BY updated_at DESC
     `, [chatId]);
-
     return results.map(result => ({
       id: result.id,
       chatId: result.chat_id,
@@ -402,8 +329,6 @@ export class ChatDatabase {
       updatedAt: new Date(result.updated_at),
     }));
   }
-
-  // Token usage operations
   async saveTokenUsage(usage: {
     chatId: string;
     model: string;
@@ -412,7 +337,6 @@ export class ChatDatabase {
     totalTokens: number;
   }): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT INTO token_usage 
        (chat_id, model, input_tokens, output_tokens, total_tokens, timestamp)
@@ -427,7 +351,6 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getTokenUsageStats(chatId?: string): Promise<{
     totalTokens: number;
     inputTokens: number;
@@ -435,10 +358,8 @@ export class ChatDatabase {
     modelStats: Record<string, { input: number; output: number; total: number }>;
   }> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const whereClause = chatId ? 'WHERE chat_id = ?' : '';
     const params = chatId ? [chatId] : [];
-    
     const results = await this.db.getAllAsync(`
       SELECT model, 
              SUM(input_tokens) as total_input,
@@ -448,30 +369,23 @@ export class ChatDatabase {
       ${whereClause}
       GROUP BY model
     `, params);
-
     const stats = {
       totalTokens: 0,
       inputTokens: 0,
       outputTokens: 0,
       modelStats: {} as Record<string, { input: number; output: number; total: number }>
     };
-
     for (const result of results) {
       const input = Number(result.total_input) || 0;
       const output = Number(result.total_output) || 0;
       const total = Number(result.total_tokens) || 0;
-
       stats.inputTokens += input;
       stats.outputTokens += output;
       stats.totalTokens += total;
-
       stats.modelStats[result.model] = { input, output, total };
     }
-
     return stats;
   }
-
-  // Branch operations
   async saveBranch(branch: {
     id: string;
     chatId: string;
@@ -481,7 +395,6 @@ export class ChatDatabase {
     status: string;
   }): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO branches 
        (id, chat_id, repository, branch_name, last_activity, pr_url, status, created_at, updated_at)
@@ -499,14 +412,11 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getBranchesByChatId(chatId: string): Promise<any[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const results = await this.db.getAllAsync(`
       SELECT * FROM branches WHERE chat_id = ? ORDER BY updated_at DESC
     `, [chatId]);
-
     return results.map(result => ({
       id: result.id,
       chatId: result.chat_id,
@@ -519,8 +429,6 @@ export class ChatDatabase {
       updatedAt: new Date(result.updated_at),
     }));
   }
-
-  // Codespace operations
   async saveCodespace(codespace: {
     id: string;
     repository: string;
@@ -530,7 +438,6 @@ export class ChatDatabase {
     webUrl: string;
   }): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync(
       `INSERT OR REPLACE INTO codespaces 
        (id, repository, codespace_id, display_name, state, web_url, last_activity, created_at, updated_at)
@@ -548,17 +455,13 @@ export class ChatDatabase {
       ]
     );
   }
-
   async getCodespaces(repository?: string): Promise<any[]> {
     if (!this.db) throw new Error('Database not initialized');
-    
     const whereClause = repository ? 'WHERE repository = ?' : '';
     const params = repository ? [repository] : [];
-    
     const results = await this.db.getAllAsync(`
       SELECT * FROM codespaces ${whereClause} ORDER BY updated_at DESC
     `, params);
-
     return results.map(result => ({
       id: result.id,
       repository: result.repository,
@@ -571,12 +474,9 @@ export class ChatDatabase {
       updatedAt: new Date(result.updated_at),
     }));
   }
-
   async deleteCodespace(id: string): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    
     await this.db.runAsync('DELETE FROM codespaces WHERE id = ?', [id]);
   }
 }
-
 export const chatDatabase = new ChatDatabase();

@@ -1,6 +1,5 @@
 import { Message, ChatMemory, SemanticMatch, ContextInjection } from '../types';
 import { zaiService } from './zaiService';
-
 export class SemanticAnalysisService {
   private stopWords = new Set([
     'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with',
@@ -16,29 +15,20 @@ export class SemanticAnalysisService {
     'know', 'think', 'want', 'need', 'get', 'go', 'come', 'see', 'look', 'take', 'give',
     'make', 'tell', 'ask', 'work', 'seem', 'feel', 'try', 'leave', 'call', 'show',
   ]);
-
-  // Extract key terms from text using TF-IDF-like approach
   extractKeyTerms(text: string, maxTerms: number = 10): string[] {
-    // Clean and tokenize text
     const words = text.toLowerCase()
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
       .filter(word => word.length > 2 && !this.stopWords.has(word));
-
-    // Calculate term frequency
     const termFreq: Map<string, number> = new Map();
     words.forEach(word => {
       termFreq.set(word, (termFreq.get(word) || 0) + 1);
     });
-
-    // Sort by frequency and return top terms
     return Array.from(termFreq.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, maxTerms)
       .map(([term]) => term);
   }
-
-  // Extract key terms from messages
   extractKeyTermsFromMessages(messages: Message[], maxTerms: number = 15): string[] {
     const allText = messages
       .map(msg => {
@@ -52,16 +42,12 @@ export class SemanticAnalysisService {
         }
       })
       .join(' ');
-
     return this.extractKeyTerms(allText, maxTerms);
   }
-
-  // Generate summary using AI
   async generateSummary(messages: Message[]): Promise<string> {
     if (messages.length === 0) return '';
-
     const conversationText = messages
-      .slice(-10) // Use last 10 messages for context
+      .slice(-10) 
       .map(msg => {
         const role = msg.role === 'user' ? 'User' : 'Assistant';
         const content = typeof msg.content === 'string' 
@@ -70,7 +56,6 @@ export class SemanticAnalysisService {
         return `${role}: ${content}`;
       })
       .join('\n');
-
     try {
       const response = await zaiService.sendMessage([
         {
@@ -86,11 +71,9 @@ export class SemanticAnalysisService {
           timestamp: new Date(),
         }
       ], 'glm-4.5-air', false);
-
       return response.content.trim();
     } catch (error) {
       console.error('Failed to generate summary:', error);
-      // Fallback to simple summary
       const firstUserMessage = messages.find(m => m.role === 'user');
       if (firstUserMessage) {
         const content = typeof firstUserMessage.content === 'string' 
@@ -101,13 +84,10 @@ export class SemanticAnalysisService {
       return 'Conversation summary unavailable';
     }
   }
-
-  // Generate tags using AI
   async generateTags(messages: Message[]): Promise<string[]> {
     if (messages.length === 0) return [];
-
     const conversationText = messages
-      .slice(-6) // Use last 6 messages for context
+      .slice(-6) 
       .map(msg => {
         const role = msg.role === 'user' ? 'User' : 'Assistant';
         const content = typeof msg.content === 'string' 
@@ -116,7 +96,6 @@ export class SemanticAnalysisService {
         return `${role}: ${content}`;
       })
       .join('\n');
-
     try {
       const response = await zaiService.sendMessage([
         {
@@ -132,7 +111,6 @@ export class SemanticAnalysisService {
           timestamp: new Date(),
         }
       ], 'glm-4.5-air', false);
-
       return response.content
         .split(',')
         .map(tag => tag.trim().toLowerCase())
@@ -140,12 +118,9 @@ export class SemanticAnalysisService {
         .slice(0, 5);
     } catch (error) {
       console.error('Failed to generate tags:', error);
-      // Fallback to key terms extraction
       return this.extractKeyTermsFromMessages(messages, 5);
     }
   }
-
-  // Find semantic matches between current message and stored memories
   async findSemanticMatches(
     currentMessage: string,
     memories: ChatMemory[],
@@ -153,16 +128,11 @@ export class SemanticAnalysisService {
   ): Promise<SemanticMatch[]> {
     const currentTerms = new Set(this.extractKeyTerms(currentMessage, 20));
     const matches: SemanticMatch[] = [];
-
     for (const memory of memories) {
       const memoryTerms = new Set(memory.keyTerms);
-      
-      // Calculate Jaccard similarity
       const intersection = new Set([...currentTerms].filter(term => memoryTerms.has(term)));
       const union = new Set([...currentTerms, ...memoryTerms]);
-      
       const similarity = intersection.size / union.size;
-      
       if (similarity >= threshold) {
         matches.push({
           memoryId: memory.id,
@@ -172,32 +142,24 @@ export class SemanticAnalysisService {
         });
       }
     }
-
-    // Sort by similarity score and return top matches
     return matches
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3); // Return top 3 matches
+      .slice(0, 3); 
   }
-
-  // Create context injection for current message
   async createContextInjection(
     currentMessage: string,
     memories: ChatMemory[]
   ): Promise<ContextInjection> {
     const matches = await this.findSemanticMatches(currentMessage, memories);
-    
     const injectedContext = matches.map(match => 
       `Previous conversation context: ${match.summary}`
     );
-
     return {
       originalMessage: currentMessage,
       injectedContext,
       relevantMemories: matches,
     };
   }
-
-  // Parse message to extract semantic information
   parseMessage(message: Message): {
     keyTerms: string[];
     entities: string[];
@@ -206,15 +168,10 @@ export class SemanticAnalysisService {
     const content = typeof message.content === 'string' 
       ? message.content 
       : message.content.map(c => c.text || '').join(' ');
-
     const keyTerms = this.extractKeyTerms(content, 10);
-    
-    // Simple entity extraction (capitalized words, proper nouns)
     const entities = content
       .match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || []
       .filter((entity: string) => entity.length > 2 && entity.length < 30);
-
-    // Simple intent detection
     let intent = 'general';
     if (content.includes('?') || content.includes('how') || content.includes('what') || content.includes('why')) {
       intent = 'question';
@@ -225,15 +182,12 @@ export class SemanticAnalysisService {
     } else if (content.includes('sorry') || content.includes('apologize')) {
       intent = 'apology';
     }
-
     return {
       keyTerms,
       entities: entities.slice(0, 5),
       intent,
     };
   }
-
-  // Generate chat title from first message
   async generateChatTitle(firstMessage: string): Promise<string> {
     try {
       const response = await zaiService.sendMessage([
@@ -250,11 +204,9 @@ export class SemanticAnalysisService {
           timestamp: new Date(),
         }
       ], 'glm-4.5-air', false);
-
       return response.content.trim().slice(0, 50);
     } catch (error) {
       console.error('Failed to generate title:', error);
-      // Fallback to first few words
       return firstMessage
         .split(' ')
         .slice(0, 6)
@@ -263,5 +215,4 @@ export class SemanticAnalysisService {
     }
   }
 }
-
 export const semanticAnalysisService = new SemanticAnalysisService();

@@ -272,7 +272,7 @@ export class PermissionsService {
         {
           title: request.title,
           message: request.message,
-          ...(request.rationale && { alert: true }
+          ...(request.rationale && { alert: true }),
         },
         ...(request.options || {})
       ]);

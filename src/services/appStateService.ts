@@ -164,7 +164,7 @@ export class AppStateService {
   /**
    * Handle memory warnings
    */
-  private handleMemoryWarning(warning: any): {
+  private handleMemoryWarning(warning: any): void {
     console.warn('Memory warning:', warning);
     
     const memoryUsage = this.getMemoryUsage();
@@ -368,6 +368,10 @@ export class AppStateService {
    * Get crash statistics
    */
   getCrashStats(): {
+    totalCrashes: number;
+    lastCrashTime: Date | null;
+    crashRate: number;
+  } {
     return {
       totalCrashes: this.crashCount,
       lastCrashTime: this.lastCrashTime,
@@ -402,6 +406,11 @@ export class AppStateService {
    * Get performance metrics
    */
   getPerformanceMetrics(): {
+    memoryUsage: any;
+    appState: any;
+    crashStats: any;
+    uptime: number;
+  } {
     return {
       memoryUsage: this.getMemoryUsage(),
       appState: this.getStateInfo(),

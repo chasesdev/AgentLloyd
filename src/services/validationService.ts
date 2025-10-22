@@ -605,7 +605,7 @@ export class ValidationService {
   /**
    * Validate and sanitize user input
    */
-  validateAndSanitize(input: string, type: 'text' | 'html' | 'url' | 'email' | 'code' | 'filepath' = 'text'): {
+  validateAndSanitize(input: string, type: 'text' | 'html' | 'url' | 'email' | 'code' | 'filepath' = 'text'): ValidationResult {
     const schema = this.getCommonSchemas()[type];
     if (!schema) {
       return {

@@ -36,7 +36,6 @@ import { githubService } from '../services/githubService';
 import { githubCommandService } from '../services/githubCommandService';
 import { codespaceService } from '../services/codespaceService';
 import { validationService } from '../services/validationService';
-
 const MODELS: ZAIModel[] = [
   {
     id: 'glm-4.6',
@@ -63,11 +62,9 @@ const MODELS: ZAIModel[] = [
     maxTokens: 8192,
   },
 ];
-
 interface Props {
   onLogout: () => void;
 }
-
 export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -91,64 +88,49 @@ export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
   const [detectedGitHubCommands, setDetectedGitHubCommands] = useState<string[]>([]);
   const [showCodespaceModal, setShowCodespaceModal] = useState(false);
   const flatListRef = useRef<FlatList>(null);
-
-  // Loading states
   const loadingStates = useLoadingState();
   const progress = useProgress();
-
   useEffect(() => {
     initializeChat();
-    // Initialize GitHub service
     githubService.loadStoredToken();
   }, []);
-
   const initializeChat = async () => {
     loadingStates.setLoading('initialization', true);
     try {
       progress.setProgress('initialization', 0.2);
       await chatMemoryService.init();
-      
       progress.setProgress('initialization', 0.5);
       startNewChat();
-      
       progress.setProgress('initialization', 1.0);
     } catch (error) {
       console.error('Failed to initialize chat:', error);
-      // Fallback to welcome message
       addWelcomeMessage();
     } finally {
       loadingStates.setLoading('initialization', false);
     }
   };
-
   const addWelcomeMessage = () => {
     const welcomeMessage: Message = {
       id: '1',
       role: 'assistant',
       content: `Hello! I'm ${selectedModel.name}, your AI assistant. I'm currently in **${selectedMode.name}** mode.
-
 ${selectedMode.description}
-
 I can help you with: ${selectedMode.features.join(', ')}.
-
 ${selectedModel.supportsMultimodal ? 'I can also analyze images and documents!' : ''}
-
 How can I help you today?`,
       timestamp: new Date(),
       model: selectedModel.id,
     };
     setMessages([welcomeMessage]);
   };
-
   const startNewChat = async () => {
     setMessages([]);
     setCurrentChatId(null);
     setChatTitle('New Chat');
     setInjectedContext([]);
-    tokenUsageService.resetCurrentChat(); // Reset token usage for new chat
+    tokenUsageService.resetCurrentChat(); 
     addWelcomeMessage();
   };
-
   const loadChat = async (chatId: string) => {
     try {
       const memory = await chatMemoryService.loadChat(chatId);
@@ -157,37 +139,29 @@ How can I help you today?`,
         setCurrentChatId(chatId);
         setChatTitle(memory.title);
         setInjectedContext([]);
-        tokenUsageService.resetCurrentChat(); // Reset tokens when loading a different chat
+        tokenUsageService.resetCurrentChat(); 
       }
     } catch (error) {
       console.error('Failed to load chat:', error);
       Alert.alert('Error', 'Failed to load chat');
     }
   };
-
   const handleSendMessage = async () => {
     if (!inputText.trim() && messages[messages.length - 1]?.content.length === 0) {
       return;
     }
-
     const messageText = inputText.trim();
-
-    // Validate input
     const validation = validationService.validateAndSanitize(messageText, 'text');
     if (!validation.isValid) {
       Alert.alert('Validation Error', validation.errors.join('\n'));
       return;
     }
-
     if (validation.warnings.length > 0) {
       console.warn('Input validation warnings:', validation.warnings);
     }
-
     const sanitizedText = validation.sanitized;
     loadingStates.setLoading('sending', true);
     progress.setProgress('sending', 0.1);
-
-    // Check for GitHub commands and URLs
     const gitHubCommands = githubService.detectGitHubCommands(sanitizedText);
     if (gitHubCommands.length > 0) {
       if (!githubService.isAuthenticated()) {
@@ -195,16 +169,13 @@ How can I help you today?`,
         setShowGitHubAuth(true);
         return;
       } else {
-        // Handle GitHub commands
         try {
           const results = await Promise.all(
             gitHubCommands.map(cmd => githubCommandService.handleCommand(cmd))
           );
-          
           const formattedResults = results.map(result => 
             githubCommandService.formatCommandResult(result)
           ).join('\n\n');
-
           const gitHubResponse: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
@@ -212,92 +183,70 @@ How can I help you today?`,
             timestamp: new Date(),
             model: selectedModel.id,
           };
-
           const userMessage: Message = {
             id: Date.now().toString(),
             role: 'user',
             content: messageText,
             timestamp: new Date(),
           };
-
           setMessages(prev => [...prev, userMessage, gitHubResponse]);
           setInputText('');
           return;
         } catch (error) {
           console.error('GitHub command handling failed:', error);
-          // Continue with normal message processing if GitHub handling fails
         }
       }
     }
-
-    // In Full-Stack mode, check if user is talking about a project and suggest codespace
     if (selectedMode.id === 'fullstack' && githubService.isAuthenticated()) {
       const repository = codespaceService.extractRepositoryFromMessage(sanitizedText);
       const currentCodespace = await codespaceService.getCurrentCodespace();
-      
       if (repository && !currentCodespace) {
-        // User mentioned a repository but no active codespace
         const repoInfo = await githubService.getRepo(repository.split('/')[0], repository.split('/')[1]);
         if (repoInfo) {
           const suggestionMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
             content: `I see you're working with the repository **${repository}**. Would you like me to create a GitHub Codespace for this project so you can start coding right away?
-
 You can tap the Codespace status button in the header to create one, or just let me know and I'll set it up for you!`,
             timestamp: new Date(),
             model: selectedModel.id,
           };
-
           const userMessage: Message = {
             id: Date.now().toString(),
             role: 'user',
             content: messageText,
             timestamp: new Date(),
           };
-
           setMessages(prev => [...prev, userMessage, suggestionMessage]);
           setInputText('');
           return;
         }
       }
     }
-
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: sanitizedText,
       timestamp: new Date(),
     };
-
-    // Create new chat if this is the first message
     if (!currentChatId && messages.length <= 1) {
       const chatId = await chatMemoryService.createNewChat(sanitizedText);
       setCurrentChatId(chatId);
       setChatTitle(sanitizedText.slice(0, 30) + (sanitizedText.length > 30 ? '...' : ''));
     }
-
-    // Get context from previous chats
     const context = await chatMemoryService.findRelevantContext(sanitizedText);
     setInjectedContext(context);
-
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
-
     try {
-      // Prepare messages with context, bio, and mode
       let messagesToSend: Message[] = [];
-
-      // Add mode-specific system prompt
       messagesToSend.push({
         id: 'mode',
         role: 'system',
         content: selectedMode.systemPrompt,
         timestamp: new Date(),
       });
-
-      // Add bio if available
       const bio = chatMemoryService.getBio();
       if (bio) {
         messagesToSend.push({
@@ -307,8 +256,6 @@ You can tap the Codespace status button in the header to create one, or just let
           timestamp: new Date(),
         });
       }
-
-      // Add context from previous chats
       if (context.length > 0) {
         messagesToSend.push({
           id: 'context',
@@ -317,11 +264,7 @@ You can tap the Codespace status button in the header to create one, or just let
           timestamp: new Date(),
         });
       }
-
-      // Add existing messages
       messagesToSend = [...messagesToSend, ...messages, userMessage];
-
-      // Initialize reasoning process for reasoning mode
       if (selectedMode.id === 'reasoning' && thinkingEnabled) {
         const reasoningProcess: ReasoningProcess = {
           id: Date.now().toString(),
@@ -333,7 +276,6 @@ You can tap the Codespace status button in the header to create one, or just let
         setCurrentReasoning(reasoningProcess);
         setShowReasoning(true);
       }
-
       let assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -342,17 +284,11 @@ You can tap the Codespace status button in the header to create one, or just let
         model: selectedModel.id,
         chatId: currentChatId || undefined,
       };
-
       setMessages(prev => [...prev, assistantMessage]);
-
-      // Prepare tools if enabled
       const tools = toolsEnabled && selectedModel.id === 'glm-4.6' 
         ? toolService.getToolSchema() 
         : undefined;
-
       let response;
-
-      // Use enhanced reasoning for reasoning mode
       if (selectedMode.id === 'reasoning' && thinkingEnabled) {
         response = await zaiService.sendReasoningMessage(
           messagesToSend,
@@ -367,7 +303,6 @@ You can tap the Codespace status button in the header to create one, or just let
             );
           },
           (reasoningChunk) => {
-            // Update reasoning process in real-time
             if (currentReasoning) {
               setCurrentReasoning(prev => prev ? {
                 ...prev,
@@ -404,14 +339,11 @@ You can tap the Codespace status button in the header to create one, or just let
           tools
         );
       }
-
-      // Update assistant message with final response
       const finalAssistantMessage = {
         ...assistantMessage,
         content: response.content,
         thinking: response.thinking,
       };
-
       setMessages(prev => 
         prev.map(msg => 
           msg.id === assistantMessage.id 
@@ -419,8 +351,6 @@ You can tap the Codespace status button in the header to create one, or just let
             : msg
         )
       );
-
-      // Update reasoning process if in reasoning mode
       if (selectedMode.id === 'reasoning' && (response.thinking || (response as any).reasoning) && currentReasoning) {
         const reasoningContent = (response as any).reasoning || response.thinking || '';
         const updatedReasoning: ReasoningProcess = {
@@ -459,13 +389,10 @@ You can tap the Codespace status button in the header to create one, or just let
         };
         setCurrentReasoning(updatedReasoning);
       }
-
-      // Save messages to memory
       if (currentChatId) {
         await chatMemoryService.saveMessage(userMessage);
         await chatMemoryService.saveMessage(finalAssistantMessage);
       }
-
     } catch (error) {
       console.error('Message sending failed:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');
@@ -477,20 +404,17 @@ You can tap the Codespace status button in the header to create one, or just let
       progress.setProgress('sending', 0);
     }
   };
-
   const handleImagePick = async () => {
     if (!selectedModel.supportsMultimodal) {
       Alert.alert('Model Limitation', 'This model does not support images. Please select GLM-4.5V for image analysis.');
       return;
     }
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.8,
     });
-
     if (!result.canceled && result.assets[0]) {
       const imageContent: MessageContent[] = [
         { type: 'text', text: inputText || 'Please analyze this image.' },
@@ -499,18 +423,15 @@ You can tap the Codespace status button in the header to create one, or just let
           image_url: { url: result.assets[0].uri } 
         }
       ];
-
       const userMessage: Message = {
         id: Date.now().toString(),
         role: 'user',
         content: imageContent,
         timestamp: new Date(),
       };
-
       setMessages(prev => [...prev, userMessage]);
       setInputText('');
       setIsLoading(true);
-
       try {
         let assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -519,9 +440,7 @@ You can tap the Codespace status button in the header to create one, or just let
           timestamp: new Date(),
           model: selectedModel.id,
         };
-
         setMessages(prev => [...prev, assistantMessage]);
-
         const response = await zaiService.sendMessage(
           [...messages, userMessage],
           selectedModel.id,
@@ -536,7 +455,6 @@ You can tap the Codespace status button in the header to create one, or just let
             );
           }
         );
-
         setMessages(prev => 
           prev.map(msg => 
             msg.id === assistantMessage.id 
@@ -552,38 +470,28 @@ You can tap the Codespace status button in the header to create one, or just let
       }
     }
   };
-
   const handleGitHubAuthSuccess = async () => {
     setShowGitHubAuth(false);
     setDetectedGitHubCommands([]);
-    
-    // Retry the GitHub commands that triggered authentication
     if (inputText.trim()) {
       await handleSendMessage();
     }
   };
-
   const handleGitHubAuthCancel = () => {
     setShowGitHubAuth(false);
     setDetectedGitHubCommands([]);
   };
-
   const handleCodespacePress = () => {
     setShowCodespaceModal(true);
   };
-
   const handleCodespaceCreated = (codespace: any) => {
-    // Codespace was created, we can show a success message or update UI
     console.log('Codespace created:', codespace);
   };
-
   const handleCodespaceModalClose = () => {
     setShowCodespaceModal(false);
   };
-
   const renderMessage = ({ item }: { item: Message }) => {
     const isUser = item.role === 'user';
-    
     return (
       <View style={[styles.messageContainer, isUser ? styles.userMessage : styles.assistantMessage]}>
         <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.assistantBubble]}>
@@ -607,7 +515,6 @@ You can tap the Codespace status button in the header to create one, or just let
               {item.content}
             </Text>
           )}
-          
           {item.thinking && (
             <View style={styles.thinkingContainer}>
               <Text style={styles.thinkingLabel}>Thinking:</Text>
@@ -621,7 +528,6 @@ You can tap the Codespace status button in the header to create one, or just let
       </View>
     );
   };
-
   return (
     <KeyboardAvoidingView 
       style={styles.container}
@@ -658,7 +564,6 @@ You can tap the Codespace status button in the header to create one, or just let
           </TouchableOpacity>
         </View>
       </View>
-
       {showModelSelector && (
         <View style={styles.modelSelectorPanel}>
           {MODELS.map(model => (
@@ -682,7 +587,6 @@ You can tap the Codespace status button in the header to create one, or just let
               )}
             </TouchableOpacity>
           ))}
-          
           {selectedModel.supportsThinking && (
             <View style={styles.thinkingToggle}>
               <Text style={styles.thinkingToggleLabel}>Enable Thinking Mode</Text>
@@ -694,7 +598,6 @@ You can tap the Codespace status button in the header to create one, or just let
               </TouchableOpacity>
             </View>
           )}
-
           {selectedModel.id === 'glm-4.6' && (
             <View style={styles.toolsToggle}>
               <Text style={styles.toolsToggleLabel}>Enable Agent Tools</Text>
@@ -708,58 +611,49 @@ You can tap the Codespace status button in the header to create one, or just let
           )}
         </View>
       )}
-
       <ToolsModal 
         visible={showToolsModal}
         onClose={() => setShowToolsModal(false)}
       />
-
       <ChatSidebar
         visible={showSidebar}
         onClose={() => setShowSidebar(false)}
         onChatSelect={loadChat}
         currentChatId={currentChatId}
       />
-
       <BioModal
         visible={showBioModal}
         onClose={() => setShowBioModal(false)}
       />
-
       <ChatDetailsModal
         visible={showChatDetailsModal}
         onClose={() => setShowChatDetailsModal(false)}
-        chat={currentChatId ? null : null} // Will need to implement getting current chat
+        chat={currentChatId ? null : null} 
       />
-
       <ModeSelector
         visible={showModeSelector}
         selectedMode={selectedMode}
         onModeSelect={setSelectedMode}
         onClose={() => setShowModeSelector(false)}
       />
-
       {showReasoning && (
         <ReasoningDisplay
           reasoning={currentReasoning}
           isLoading={isLoading}
         />
       )}
-
       <GitHubAuthModal
         visible={showGitHubAuth}
         onClose={handleGitHubAuthCancel}
         onSuccess={handleGitHubAuthSuccess}
         detectedCommands={detectedGitHubCommands}
       />
-
       <CodespaceModal
         visible={showCodespaceModal}
         onClose={handleCodespaceModalClose}
         currentProject={inputText.trim()}
         onCodespaceCreated={handleCodespaceCreated}
       />
-
       {injectedContext.length > 0 && (
         <View style={styles.contextIndicator}>
           <Ionicons name="information-circle" size={16} color="#856404" />
@@ -768,7 +662,6 @@ You can tap the Codespace status button in the header to create one, or just let
           </Text>
         </View>
       )}
-
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -778,7 +671,6 @@ You can tap the Codespace status button in the header to create one, or just let
         contentContainerStyle={styles.messagesContainer}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />
-
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
           {selectedModel.supportsMultimodal && (
@@ -786,7 +678,6 @@ You can tap the Codespace status button in the header to create one, or just let
               <Ionicons name="image" size={24} color="#666" />
             </TouchableOpacity>
           )}
-          
           <TextInput
             style={styles.textInput}
             value={inputText}
@@ -797,7 +688,6 @@ You can tap the Codespace status button in the header to create one, or just let
             maxLength={4000}
             editable={!isLoading}
           />
-
           <TouchableOpacity
             style={[styles.sendButton, isLoading && styles.sendButtonDisabled]}
             onPress={handleSendMessage}
@@ -811,8 +701,7 @@ You can tap the Codespace status button in the header to create one, or just let
           </TouchableOpacity>
         </View>
       </View>
-      
-      {/* Loading Overlays */}
+      {}
       <LoadingOverlay 
         visible={loadingStates.isLoading('initialization')} 
         text="Initializing chat..." 
@@ -821,8 +710,7 @@ You can tap the Codespace status button in the header to create one, or just let
         visible={loadingStates.isLoading('sending')} 
         text="Sending message..." 
       />
-      
-      {/* Progress Bar for initialization */}
+      {}
       {loadingStates.isLoading('initialization') && (
         <View style={styles.progressContainer}>
           <ProgressBar 
@@ -835,7 +723,6 @@ You can tap the Codespace status button in the header to create one, or just let
     </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

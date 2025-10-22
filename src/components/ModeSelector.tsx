@@ -9,14 +9,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ChatMode, CHAT_MODES } from '../types/modes';
-
 interface Props {
   visible: boolean;
   selectedMode: ChatMode;
   onModeSelect: (mode: ChatMode) => void;
   onClose: () => void;
 }
-
 export const ModeSelector: React.FC<Props> = ({
   visible,
   selectedMode,
@@ -60,7 +58,6 @@ export const ModeSelector: React.FC<Props> = ({
           <Ionicons name="checkmark-circle" size={24} color="#007AFF" />
         )}
       </View>
-
       <View style={styles.featuresContainer}>
         {mode.features.map((feature, index) => (
           <View key={index} style={styles.featureTag}>
@@ -68,7 +65,6 @@ export const ModeSelector: React.FC<Props> = ({
           </View>
         ))}
       </View>
-
       <View style={styles.recommendedContainer}>
         <Ionicons name="star" size={14} color="#FF9500" />
         <Text style={styles.recommendedText}>
@@ -77,7 +73,6 @@ export const ModeSelector: React.FC<Props> = ({
       </View>
     </TouchableOpacity>
   );
-
   return (
     <Modal
       visible={visible}
@@ -93,7 +88,6 @@ export const ModeSelector: React.FC<Props> = ({
           <Text style={styles.title}>Select Mode</Text>
           <View style={styles.placeholder} />
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.descriptionSection}>
             <Text style={styles.descriptionTitle}>
@@ -103,14 +97,12 @@ export const ModeSelector: React.FC<Props> = ({
               Each mode is optimized for specific tasks with custom prompts and capabilities.
             </Text>
           </View>
-
           {CHAT_MODES.map(renderMode)}
         </ScrollView>
       </View>
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

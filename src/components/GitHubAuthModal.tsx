@@ -11,14 +11,12 @@ import {
   Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 interface GitHubAuthModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
   detectedCommands: string[];
 }
-
 export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
   visible,
   onClose,
@@ -28,18 +26,15 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
-
   const handleAuthenticate = async () => {
     if (!token.trim()) {
       Alert.alert('Error', 'Please enter a GitHub token');
       return;
     }
-
     setIsLoading(true);
     try {
       const { githubService } = await import('../services/githubService');
       const success = await githubService.setToken(token.trim());
-      
       if (success) {
         Alert.alert('Success', 'GitHub authentication successful!');
         onSuccess();
@@ -54,11 +49,9 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
       setIsLoading(false);
     }
   };
-
   const openGitHubTokenPage = () => {
-    Linking.openURL('https://github.com/settings/tokens');
+    Linking.openURL('https:
   };
-
   return (
     <Modal
       visible={visible}
@@ -74,7 +67,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
           <Text style={styles.title}>GitHub Authentication</Text>
           <View style={styles.placeholder} />
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {detectedCommands.length > 0 && (
             <View style={styles.detectedSection}>
@@ -86,11 +78,9 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
               ))}
             </View>
           )}
-
           <Text style={styles.description}>
             GitHub access requires a personal access token. This allows the app to interact with GitHub repositories on your behalf.
           </Text>
-
           <TouchableOpacity
             style={styles.instructionsButton}
             onPress={() => setShowInstructions(!showInstructions)}
@@ -104,12 +94,11 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
               {showInstructions ? 'Hide' : 'Show'} Setup Instructions
             </Text>
           </TouchableOpacity>
-
           {showInstructions && (
             <View style={styles.instructionsBox}>
               <Text style={styles.instructionsTitle}>How to create a GitHub token:</Text>
               <Text style={styles.instructionsText}>
-                1. Go to https://github.com/settings/tokens
+                1. Go to https:
               </Text>
               <Text style={styles.instructionsText}>
                 2. Click "Generate new token (classic)"
@@ -135,7 +124,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
               <Text style={styles.instructionsText}>
                 6. Copy the token and paste it below
               </Text>
-              
               <TouchableOpacity
                 style={styles.openGitHubButton}
                 onPress={openGitHubTokenPage}
@@ -145,7 +133,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
               </TouchableOpacity>
             </View>
           )}
-
           <View style={styles.tokenSection}>
             <Text style={styles.tokenLabel}>GitHub Personal Access Token:</Text>
             <TextInput
@@ -161,7 +148,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
               autoCorrect={false}
             />
           </View>
-
           <View style={styles.securityNote}>
             <Ionicons name="lock-closed" size={16} color="#666" />
             <Text style={styles.securityNoteText}>
@@ -169,7 +155,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
             </Text>
           </View>
         </ScrollView>
-
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.button, styles.cancelButton]}
@@ -177,7 +162,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
           >
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity
             style={[styles.button, styles.authenticateButton, isLoading && styles.disabledButton]}
             onPress={handleAuthenticate}
@@ -194,7 +178,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

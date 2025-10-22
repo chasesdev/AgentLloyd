@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -17,7 +16,6 @@ import {
 import { shareService, type ShareResult } from '@/services/shareService';
 import { localRepoService } from '@/services/localRepoService';
 import { Ionicons } from '@expo/vector-icons';
-
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,7 +25,6 @@ interface ShareModalProps {
   currentRepo?: string;
   currentBranch?: string;
 }
-
 interface SharePreview {
   type: 'pr' | 'gist' | 'link';
   title: string;
@@ -35,9 +32,7 @@ interface SharePreview {
   url: string;
   changes?: string[];
 }
-
 const { width: screenWidth } = Dimensions.get('window');
-
 export function ShareModal({ 
   isOpen, 
   onClose, 
@@ -56,8 +51,6 @@ export function ShareModal({
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<SharePreview | null>(null);
-
-  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setShareTitle('');
@@ -70,11 +63,9 @@ export function ShareModal({
       generatePreview();
     }
   }, [isOpen, mode, chatId, messages, currentRepo, currentBranch]);
-
   const generatePreview = async () => {
     try {
       let previewData: SharePreview | null = null;
-
       switch (mode) {
         case 'fullstack':
           previewData = {
@@ -85,13 +76,11 @@ export function ShareModal({
             changes: ['File changes from codespace']
           };
           break;
-
         case 'code':
           if (selectedRepo) {
             const [owner, repo] = selectedRepo.split('/');
             const repoId = `${owner}/${repo}/${selectedBranch}`;
             const changes = localRepoService.getTrackedChanges(repoId);
-            
             previewData = {
               type: 'pr',
               title: shareTitle || localRepoService.generateCommitMessage(repoId),
@@ -101,7 +90,6 @@ export function ShareModal({
             };
           }
           break;
-
         case 'reasoning':
           previewData = {
             type: 'gist',
@@ -110,30 +98,25 @@ export function ShareModal({
             url: ''
           };
           break;
-
         default:
           previewData = {
             type: 'link',
             title: shareTitle || `Chat ${chatId.slice(-8)}`,
             description: shareDescription || `Share link to chat with ${messages.length} messages`,
-            url: `https://z-ai-chat.com/chat/${chatId}`
+            url: `https:
           };
       }
-
       setPreview(previewData);
     } catch (err) {
       console.error('Preview generation failed:', err);
     }
   };
-
   useEffect(() => {
     generatePreview();
   }, [shareTitle, shareDescription, selectedRepo, selectedBranch, mode]);
-
   const handleShare = async () => {
     setIsSharing(true);
     setError(null);
-
     try {
       const result = await shareService.shareContent({
         mode,
@@ -144,7 +127,6 @@ export function ShareModal({
         repoName: selectedRepo,
         branch: selectedBranch
       });
-
       setShareResult(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sharing failed');
@@ -152,7 +134,6 @@ export function ShareModal({
       setIsSharing(false);
     }
   };
-
   const copyToClipboard = async (text: string) => {
     try {
       await Clipboard.setString(text);
@@ -162,7 +143,6 @@ export function ShareModal({
       console.error('Failed to copy:', err);
     }
   };
-
   const openLink = async (url: string) => {
     try {
       await Linking.openURL(url);
@@ -170,7 +150,6 @@ export function ShareModal({
       console.error('Failed to open link:', err);
     }
   };
-
   const getShareIcon = (type: string) => {
     switch (type) {
       case 'pr': return 'git-branch-outline';
@@ -178,7 +157,6 @@ export function ShareModal({
       default: return 'share-outline';
     }
   };
-
   const getShareTypeLabel = (type: string) => {
     switch (type) {
       case 'pr': return 'Pull Request';
@@ -186,7 +164,6 @@ export function ShareModal({
       default: return 'Share Link';
     }
   };
-
   const getModeColor = (mode: string) => {
     switch (mode) {
       case 'fullstack': return '#10b981';
@@ -195,7 +172,6 @@ export function ShareModal({
       default: return '#f59e0b';
     }
   };
-
   return (
     <Modal
       visible={isOpen}
@@ -204,7 +180,7 @@ export function ShareModal({
       onRequestClose={onClose}
     >
       <View style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Ionicons name="share-outline" size={24} color="#333" />
@@ -219,9 +195,8 @@ export function ShareModal({
             <Ionicons name="close" size={24} color="#666" />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Preview Section */}
+          {}
           {preview && (
             <View style={styles.previewCard}>
               <View style={styles.previewHeader}>
@@ -234,18 +209,15 @@ export function ShareModal({
                   {getShareTypeLabel(preview.type)} Preview
                 </Text>
               </View>
-              
               <View style={styles.previewContent}>
                 <View style={styles.previewItem}>
                   <Text style={styles.previewLabel}>Title</Text>
                   <Text style={styles.previewValue}>{preview.title}</Text>
                 </View>
-                
                 <View style={styles.previewItem}>
                   <Text style={styles.previewLabel}>Description</Text>
                   <Text style={styles.previewValue}>{preview.description}</Text>
                 </View>
-                
                 {preview.changes && preview.changes.length > 0 && (
                   <View style={styles.previewItem}>
                     <Text style={styles.previewLabel}>Changes</Text>
@@ -261,8 +233,7 @@ export function ShareModal({
               </View>
             </View>
           )}
-
-          {/* Configuration */}
+          {}
           <View style={styles.configSection}>
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Title (optional)</Text>
@@ -274,7 +245,6 @@ export function ShareModal({
                 placeholderTextColor="#999"
               />
             </View>
-
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Description (optional)</Text>
               <TextInput
@@ -288,8 +258,7 @@ export function ShareModal({
                 textAlignVertical="top"
               />
             </View>
-
-            {/* Repository selection for Code and Full-Stack modes */}
+            {}
             {(mode === 'code' || mode === 'fullstack') && (
               <>
                 <View style={styles.inputGroup}>
@@ -303,7 +272,6 @@ export function ShareModal({
                     autoCapitalize="none"
                   />
                 </View>
-
                 <View style={styles.inputGroup}>
                   <Text style={styles.inputLabel}>Branch</Text>
                   <TextInput
@@ -318,8 +286,7 @@ export function ShareModal({
               </>
             )}
           </View>
-
-          {/* Error Display */}
+          {}
           {error && (
             <View style={styles.errorCard}>
               <View style={styles.errorContent}>
@@ -328,15 +295,13 @@ export function ShareModal({
               </View>
             </View>
           )}
-
-          {/* Success Display */}
+          {}
           {shareResult && (
             <View style={styles.successCard}>
               <View style={styles.successHeader}>
                 <Ionicons name="checkmark-circle" size={16} color="#16a34a" />
                 <Text style={styles.successTitle}>Share Successful!</Text>
               </View>
-              
               <View style={styles.successContent}>
                 <Text style={styles.urlLabel}>Share URL</Text>
                 <View style={styles.urlContainer}>
@@ -369,8 +334,7 @@ export function ShareModal({
             </View>
           )}
         </ScrollView>
-
-        {/* Footer */}
+        {}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.footerButton, styles.cancelButton]}
@@ -380,7 +344,6 @@ export function ShareModal({
               {shareResult ? 'Close' : 'Cancel'}
             </Text>
           </TouchableOpacity>
-          
           {!shareResult && (
             <TouchableOpacity
               style={[styles.footerButton, styles.shareButton, isSharing && styles.shareButtonDisabled]}
@@ -404,7 +367,6 @@ export function ShareModal({
     </Modal>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

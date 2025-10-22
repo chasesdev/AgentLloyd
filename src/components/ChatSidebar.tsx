@@ -14,14 +14,12 @@ import { ChatMemory } from '../types';
 import { chatMemoryService } from '../services/chatMemoryService';
 import { SettingsModal } from './SettingsModal';
 import { IntegrationsModal } from './IntegrationsModal';
-
 interface Props {
   visible: boolean;
   onClose: () => void;
   onChatSelect: (chatId: string) => void;
   currentChatId: string | null;
 }
-
 interface ChatItemProps {
   chat: ChatMemory;
   isActive: boolean;
@@ -29,7 +27,6 @@ interface ChatItemProps {
   onRename: () => void;
   onDelete: () => void;
 }
-
 const ChatItem: React.FC<ChatItemProps> = ({ 
   chat, 
   isActive, 
@@ -38,7 +35,6 @@ const ChatItem: React.FC<ChatItemProps> = ({
   onDelete 
 }) => {
   const [showActions, setShowActions] = useState(false);
-
   return (
     <View style={[styles.chatItem, isActive && styles.activeChatItem]}>
       <TouchableOpacity 
@@ -57,11 +53,9 @@ const ChatItem: React.FC<ChatItemProps> = ({
             {chat.lastMessageAt.toLocaleDateString()}
           </Text>
         </View>
-        
         <Text style={styles.chatSummary} numberOfLines={2}>
           {chat.summary || 'No summary available'}
         </Text>
-        
         <View style={styles.chatFooter}>
           <View style={styles.tagsContainer}>
             {chat.tags.slice(0, 3).map((tag, index) => (
@@ -73,13 +67,11 @@ const ChatItem: React.FC<ChatItemProps> = ({
               <Text style={styles.moreTagsText}>+{chat.tags.length - 3}</Text>
             )}
           </View>
-          
           <Text style={styles.messageCount}>
             {chat.messages.length} messages
           </Text>
         </View>
       </TouchableOpacity>
-
       {showActions && (
         <View style={styles.chatActions}>
           <TouchableOpacity 
@@ -92,7 +84,6 @@ const ChatItem: React.FC<ChatItemProps> = ({
             <Ionicons name="pencil" size={16} color="#666" />
             <Text style={styles.actionText}>Rename</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity 
             style={[styles.actionButton, styles.deleteButton]}
             onPress={() => {
@@ -108,7 +99,6 @@ const ChatItem: React.FC<ChatItemProps> = ({
     </View>
   );
 };
-
 export const ChatSidebar: React.FC<Props> = ({ 
   visible, 
   onClose, 
@@ -123,13 +113,11 @@ export const ChatSidebar: React.FC<Props> = ({
   const [newTitle, setNewTitle] = useState('');
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
-
   useEffect(() => {
     if (visible) {
       loadChats();
     }
   }, [visible]);
-
   const loadChats = async () => {
     try {
       setIsLoading(true);
@@ -141,37 +129,31 @@ export const ChatSidebar: React.FC<Props> = ({
       setIsLoading(false);
     }
   };
-
   const handleNewChat = async () => {
     try {
       const chatId = await chatMemoryService.createNewChat('New Chat');
       onChatSelect(chatId);
       onClose();
-      // Reload chats to update the list
       setTimeout(loadChats, 100);
     } catch (error) {
       Alert.alert('Error', 'Failed to create new chat');
     }
   };
-
   const handleRenameChat = async (chat: ChatMemory) => {
     setSelectedChat(chat);
     setNewTitle(chat.title);
     setShowRenameModal(true);
   };
-
   const confirmRenameChat = async () => {
     if (!selectedChat || !newTitle.trim()) return;
-
     try {
       await chatMemoryService.renameChat(selectedChat.id, newTitle.trim());
       setShowRenameModal(false);
-      loadChats(); // Reload to show updated title
+      loadChats(); 
     } catch (error) {
       Alert.alert('Error', 'Failed to rename chat');
     }
   };
-
   const handleDeleteChat = (chat: ChatMemory) => {
     Alert.alert(
       'Delete Chat',
@@ -184,9 +166,7 @@ export const ChatSidebar: React.FC<Props> = ({
           onPress: async () => {
             try {
               await chatMemoryService.deleteChat(chat.id);
-              loadChats(); // Reload to update the list
-              
-              // If deleted chat was current, navigate to new chat
+              loadChats(); 
               if (chat.id === currentChatId) {
                 handleNewChat();
               }
@@ -198,13 +178,11 @@ export const ChatSidebar: React.FC<Props> = ({
       ]
     );
   };
-
   const filteredChats = chats.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     chat.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
     chat.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-
   const renderChatItem = ({ item }: { item: ChatMemory }) => (
     <ChatItem
       chat={item}
@@ -217,7 +195,6 @@ export const ChatSidebar: React.FC<Props> = ({
       onDelete={() => handleDeleteChat(item)}
     />
   );
-
   return (
     <>
       <Modal
@@ -236,7 +213,6 @@ export const ChatSidebar: React.FC<Props> = ({
               <Ionicons name="add" size={24} color="#007AFF" />
             </TouchableOpacity>
           </View>
-
           <View style={styles.searchContainer}>
             <View style={styles.searchInputContainer}>
               <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
@@ -249,7 +225,6 @@ export const ChatSidebar: React.FC<Props> = ({
               />
             </View>
           </View>
-
           <View style={styles.content}>
             {isLoading ? (
               <View style={styles.loadingContainer}>
@@ -280,8 +255,6 @@ export const ChatSidebar: React.FC<Props> = ({
               />
             )}
           </View>
-
-          {/* Bottom Navigation */}
           <View style={styles.bottomNav}>
             <TouchableOpacity 
               style={styles.navButton}
@@ -292,7 +265,6 @@ export const ChatSidebar: React.FC<Props> = ({
               <Ionicons name="extension-puzzle-outline" size={20} color="#666" />
               <Text style={styles.navButtonText}>Integrations</Text>
             </TouchableOpacity>
-            
             <TouchableOpacity 
               style={styles.navButton}
               onPress={() => {
@@ -305,20 +277,14 @@ export const ChatSidebar: React.FC<Props> = ({
           </View>
         </View>
       </Modal>
-
-      {/* Settings Modal */}
       <SettingsModal
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
       />
-
-      {/* Integrations Modal */}
       <IntegrationsModal
         isOpen={showIntegrationsModal}
         onClose={() => setShowIntegrationsModal(false)}
       />
-
-      {/* Rename Modal */}
       <Modal
         visible={showRenameModal}
         transparent
@@ -357,7 +323,6 @@ export const ChatSidebar: React.FC<Props> = ({
     </>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
