@@ -10,7 +10,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends("expo"),
   {
     rules: {
       // TypeScript 相关规则
@@ -26,9 +26,12 @@ const eslintConfig = [
       "react/display-name": "off",
       "react/prop-types": "off",
       
-      // Next.js 相关规则
-      "@next/next/no-img-element": "off",
-      "@next/next/no-html-link-for-pages": "off",
+      // React Native 相关规则
+      "react-native/no-inline-styles": "off",
+      "react-native/no-color-literals": "off",
+      
+      // Expo 相关规则
+      "@expo/required-asset": "off",
       
       // 一般JavaScript规则
       "prefer-const": "off",  // 关闭prefer-const规则

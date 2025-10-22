@@ -570,7 +570,7 @@ export class FileAnalyzerService {
       ],
       entities: this.extractEntities(text),
       sentiment: this.detectSentiment(text),
-      language: this.detectLanguage(text),
+      language: this.detectTextLanguage(text),
       structure: {
         lines: text.split('\n').length,
         words: text.split(/\s+/).length,
@@ -713,7 +713,7 @@ export class FileAnalyzerService {
     return 'neutral';
   }
 
-  private detectLanguage(text: string): string {
+  private detectTextLanguage(text: string): string {
     // Simple language detection based on character patterns
     const hasChinese = /[\u4e00-\u9fff]/.test(text);
     const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);

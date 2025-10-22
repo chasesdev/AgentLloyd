@@ -1,6 +1,6 @@
 import { ENVIRONMENT, debugLog, errorLog, warnLog } from '@/config/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+import { Platform, Linking } from 'react-native';
 import * as Updates from 'expo-updates';
 
 // Types for update information
@@ -270,9 +270,9 @@ class AutoUpdaterService {
         };
       }
 
-      // In a real implementation, this would check the App Store/Play Store API
-      // For demo purposes, we'll simulate this check
-      const response = await this.mockStoreUpdateCheck(currentVersion, currentBuildNumber);
+      // For now, we'll use a simple version check against a known latest version
+      // In a production app, this would call the actual App Store/Play Store APIs
+      const response = await this.checkStoreVersion(currentVersion, currentBuildNumber);
       
       return {
         hasUpdate: response.hasUpdate,
@@ -289,6 +289,64 @@ class AutoUpdaterService {
         currentVersion,
         currentBuildNumber,
       };
+    }
+  }
+
+  private async checkStoreVersion(currentVersion: string, currentBuildNumber: string): Promise<{ hasUpdate: boolean; updateInfo?: UpdateInfo }> {
+    try {
+      // In a real implementation, you would:
+      // 1. For iOS: Use iTunes Search API or App Store Connect API
+      // 2. For Android: Use Google Play Developer API
+      // 3. Cache the results to avoid rate limiting
+      
+      // For now, we'll implement a basic check that can be easily extended
+      const latestVersionInfo = await this.getLatestStoreVersion();
+      
+      if (latestVersionInfo && this.compareVersions(currentVersion, latestVersionInfo.version) < 0) {
+        return {
+          hasUpdate: true,
+          updateInfo: {
+            version: latestVersionInfo.version,
+            buildNumber: latestVersionInfo.buildNumber,
+            releaseNotes: latestVersionInfo.releaseNotes || 'New version available with improvements and bug fixes.',
+            isMandatory: latestVersionInfo.isMandatory || false,
+            publishedAt: latestVersionInfo.publishedAt || new Date().toISOString(),
+            isOTA: false,
+          },
+        };
+      }
+
+      return { hasUpdate: false };
+    } catch (error) {
+      errorLog('Store version check failed:', error);
+      return { hasUpdate: false };
+    }
+  }
+
+  private async getLatestStoreVersion(): Promise<{ version: string; buildNumber: string; releaseNotes?: string; isMandatory?: boolean; publishedAt?: string } | null> {
+    try {
+      // This is where you would implement the actual store API calls
+      // For demonstration purposes, we'll return a simple version check
+      
+      // You can extend this with real API calls:
+      // iOS: https://itunes.apple.com/lookup?bundleId=com.yourapp.id
+      // Android: Google Play Developer API
+      
+      // For now, return null to indicate no update is available
+      // This prevents the mock update behavior while still having the infrastructure in place
+      return null;
+      
+      // Example of what a real implementation might return:
+      // return {
+      //   version: '1.1.0',
+      //   buildNumber: '10',
+      //   releaseNotes: 'Major new features and improvements!',
+      //   isMandatory: false,
+      //   publishedAt: new Date().toISOString(),
+      // };
+    } catch (error) {
+      errorLog('Failed to get latest store version:', error);
+      return null;
     }
   }
 
@@ -320,8 +378,15 @@ class AutoUpdaterService {
 
       if (storeUrl) {
         debugLog('Redirecting to app store...');
-        // In a real implementation, you would use Linking.openURL(storeUrl)
-        warnLog(`Would open store URL: ${storeUrl}`);
+        // Check if the URL can be opened
+        const supported = await Linking.canOpenURL(storeUrl);
+        
+        if (supported) {
+          await Linking.openURL(storeUrl);
+          debugLog(`Successfully opened store URL: ${storeUrl}`);
+        } else {
+          throw new Error(`Cannot open URL: ${storeUrl}`);
+        }
       } else {
         throw new Error('No store URL available for current platform');
       }
@@ -329,32 +394,6 @@ class AutoUpdaterService {
       errorLog('Failed to redirect to store:', error);
       throw error;
     }
-  }
-
-  private async mockStoreUpdateCheck(currentVersion: string, currentBuildNumber: string): Promise<{ hasUpdate: boolean; updateInfo?: UpdateInfo }> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Mock update check logic
-    const mockNewVersion = '1.1.0';
-    const mockNewBuildNumber = '10';
-
-    // Simulate finding a store update
-    if (this.compareVersions(currentVersion, mockNewVersion) < 0) {
-      return {
-        hasUpdate: true,
-        updateInfo: {
-          version: mockNewVersion,
-          buildNumber: mockNewBuildNumber,
-          releaseNotes: 'Major new features and improvements!',
-          isMandatory: false,
-          publishedAt: new Date().toISOString(),
-          isOTA: false,
-        },
-      };
-    }
-
-    return { hasUpdate: false };
   }
 
   private async saveUpdateState(updateInfo?: UpdateInfo): Promise<void> {

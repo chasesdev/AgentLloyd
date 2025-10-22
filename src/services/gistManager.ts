@@ -774,22 +774,6 @@ class GistManager {
     return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
   }
 
-  // GitHub API integration methods (placeholders)
-  private async createGitHubGist(gist: ChatGist): Promise<void> {
-    // In a real implementation, this would use GitHub API to create gist
-    console.log('Creating GitHub gist:', gist.gistId);
-  }
-
-  private async updateGitHubGist(gist: ChatGist): Promise<void> {
-    // In a real implementation, this would use GitHub API to update gist
-    console.log('Updating GitHub gist:', gist.gistId);
-  }
-
-  private async deleteGitHubGist(gistId: string): Promise<void> {
-    // In a real implementation, this would use GitHub API to delete gist
-    console.log('Deleting GitHub gist:', gistId);
-  }
-
   // Get available templates
   getAvailableTemplates(): GistTemplate[] {
     return Array.from(this.templates.values());
