@@ -200,7 +200,6 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 2,
-    transition: 'width 0.3s ease',
   },
   progressPercentage: {
     fontSize: 12,

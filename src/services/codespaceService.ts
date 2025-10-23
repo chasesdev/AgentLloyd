@@ -35,7 +35,7 @@ export interface CreateCodespaceOptions {
   display_name?: string;
 }
 class CodespaceService {
-  private readonly GITHUB_API_BASE = 'https:
+  private readonly GITHUB_API_BASE = 'https://api.github.com';
   private readonly INACTIVITY_TIMEOUT = 3 * 60 * 60 * 1000; 
   async createCodespace(options: CreateCodespaceOptions): Promise<Codespace | null> {
     if (!githubService.isAuthenticated()) {

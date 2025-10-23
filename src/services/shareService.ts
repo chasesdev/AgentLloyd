@@ -3,6 +3,7 @@ import { codespaceService } from './codespaceService';
 import { gistManager } from './gistManager';
 import { branchManager } from './branchManager';
 import { pullRequestService, PullRequestData } from './pullRequestService';
+import { chatDatabase } from './chatDatabase';
 interface ShareOptions {
   mode: 'fullstack' | 'code' | 'reasoning' | 'general';
   chatId: string;
@@ -185,7 +186,7 @@ class ShareService {
     title?: string,
     description?: string
   ): Promise<ShareResult> {
-    const shareUrl = `zai-chat:
+    const shareUrl = `zai-chat://chat/${chatId}`;
     return {
       type: 'link',
       url: shareUrl,

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:corasan.github.io)",
+      "WebSearch",
+      "Bash(npx expo prebuild:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

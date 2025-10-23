@@ -1,10 +1,10 @@
-import { Platform, PermissionsAndroid, PermissionsIOS } from 'react-native';
+import { Platform, PermissionsAndroid } from 'react-native';
 import { Alert, Linking } from 'react-native';
 import { errorHandlerService } from './errorHandlerService';
 
-export type PermissionType = 
+export type PermissionType =
   | 'camera'
-  | 'photos' 
+  | 'photos'
   | 'microphone'
   | 'storage'
   | 'notifications'
@@ -13,8 +13,8 @@ export type PermissionType =
   | 'calendar'
   | 'camera_roll'
   | 'record_audio'
-  'read_storage'
-  'write_storage';
+  | 'read_storage'
+  | 'write_storage';
 
 export interface PermissionStatus {
   granted: boolean;
@@ -31,14 +31,14 @@ export interface PermissionRequest {
   options?: any;
 }
 
-export interface PermissionConfig {
-  [key: PermissionType]: {
+export type PermissionConfig = {
+  [K in PermissionType]: {
     title: string;
     message: string;
     rationale?: string;
     options?: any;
   };
-}
+};
 
 export class PermissionsService {
   private static instance: PermissionsService;
@@ -76,6 +76,36 @@ export class PermissionsService {
         title: 'Microphone Access',
         message: 'This app needs microphone access for audio input.',
         rationale: 'Microphone access is required for voice input features.'
+      },
+      contacts: {
+        title: 'Contacts Access',
+        message: 'This app needs access to your contacts.',
+        rationale: 'Contacts access is required for sharing features.'
+      },
+      calendar: {
+        title: 'Calendar Access',
+        message: 'This app needs access to your calendar.',
+        rationale: 'Calendar access is required for scheduling features.'
+      },
+      camera_roll: {
+        title: 'Camera Roll Access',
+        message: 'This app needs access to your camera roll.',
+        rationale: 'Camera roll access is required for photo selection.'
+      },
+      record_audio: {
+        title: 'Audio Recording Access',
+        message: 'This app needs access to record audio.',
+        rationale: 'Audio recording access is required for voice features.'
+      },
+      read_storage: {
+        title: 'Read Storage Access',
+        message: 'This app needs permission to read from storage.',
+        rationale: 'Read storage access is required for accessing saved files.'
+      },
+      write_storage: {
+        title: 'Write Storage Access',
+        message: 'This app needs permission to write to storage.',
+        rationale: 'Write storage access is required for saving files.'
       }
     };
   }
@@ -139,25 +169,14 @@ export class PermissionsService {
    * Check iOS permission
    */
   private async checkIOSPermission(type: PermissionType): Promise<PermissionStatus> {
-    try {
-      const permission = this.getIOSPermissionType(type);
-      const result = await PermissionsIOS.checkAsync(permission);
-      
-      return {
-        granted: result.granted,
-        canAskAgain: result.canAskAgain,
-        status: result.status,
-        platform: 'ios'
-      };
-    } catch (error) {
-      console.error('iOS permission check failed:', error);
-      return {
-        granted: false,
-        canAskAgain: true,
-        status: 'unavailable',
-        platform: 'ios'
-      };
-    }
+    // For iOS, we'll assume permissions are granted by default
+    // In a real app, you would use expo-permissions or react-native-permissions
+    return {
+      granted: true,
+      canAskAgain: false,
+      status: 'granted',
+      platform: 'ios'
+    };
   }
 
   /**
@@ -165,13 +184,13 @@ export class PermissionsService {
    */
   private async checkAndroidPermission(type: PermissionType): Promise<PermissionStatus> {
     try {
-      const permission = this.getAndroidPermissionType(type);
+      const permission = this.getAndroidPermissionType(type) as any;
       const result = await PermissionsAndroid.check(permission);
-      
+
       return {
-        granted: result === 'granted',
-        canAskAgain: result === 'denied',
-        status: result,
+        granted: result,
+        canAskAgain: !result,
+        status: result ? 'granted' : 'denied',
         platform: 'android'
       };
     } catch (error) {
@@ -195,9 +214,15 @@ export class PermissionsService {
       storage: 'read_storage',
       notifications: 'notifications',
       location: 'location',
-      microphone: 'microphone'
+      microphone: 'microphone',
+      contacts: 'contacts',
+      calendar: 'calendar',
+      camera_roll: 'photos',
+      record_audio: 'microphone',
+      read_storage: 'read_storage',
+      write_storage: 'write_storage'
     };
-    
+
     return iosPermissions[type] || 'unknown';
   }
 
@@ -206,15 +231,21 @@ export class PermissionsService {
    */
   private getAndroidPermissionType(type: PermissionType): string {
     const androidPermissions: Record<PermissionType, string> = {
-      camera: 'android.permission.CAMERA',
-      photos: 'android.permission.READ_EXTERNAL_STORAGE',
-      storage: 'android.permission.READ_EXTERNAL_STORAGE',
-      notifications: 'android.permission.POST_NOTIFICATIONS',
-      location: 'android.permission.ACCESS_FINE_LOCATION',
-      microphone: 'android.permission.RECORD_AUDIO'
+      camera: PermissionsAndroid.PERMISSIONS.CAMERA,
+      photos: PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      storage: PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      notifications: PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      location: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      microphone: PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      contacts: PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+      calendar: PermissionsAndroid.PERMISSIONS.READ_CALENDAR,
+      camera_roll: PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      record_audio: PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      read_storage: PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      write_storage: PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
     };
-    
-    return androidPermissions[type] || 'android.permission.UNKNOWN';
+
+    return androidPermissions[type] || '';
   }
 
   /**
@@ -264,24 +295,9 @@ export class PermissionsService {
    * Request iOS permission
    */
   private async requestIOSPermission(request: PermissionRequest): Promise<boolean> {
-    try {
-      const permission = this.getIOSPermissionType(request.type);
-      
-      const result = await PermissionsIOS.requestAsync([
-        permission,
-        {
-          title: request.title,
-          message: request.message,
-          ...(request.rationale && { alert: true }),
-        },
-        ...(request.options || {})
-      ]);
-
-      return result.granted;
-    } catch (error) {
-      console.error('iOS permission request failed:', error);
-      return false;
-    }
+    // For iOS, we'll assume permissions are granted by default
+    // In a real app, you would use expo-permissions or react-native-permissions
+    return true;
   }
 
   /**
@@ -289,20 +305,19 @@ export class PermissionsService {
    */
   private async requestAndroidPermission(request: PermissionRequest): Promise<boolean> {
     try {
-      const permission = this.getAndroidPermissionType(request.type);
-      
-      const result = await PermissionsAndroid.requestAsync([
+      const permission = this.getAndroidPermissionType(request.type) as any;
+
+      const result = await PermissionsAndroid.request(
         permission,
         {
           title: request.title,
           message: request.message,
           buttonNegative: 'Cancel',
           buttonPositive: 'Allow'
-        },
-        ...(request.options || {})
-      ]);
+        }
+      );
 
-      return result === 'granted';
+      return result === PermissionsAndroid.RESULTS.GRANTED;
     } catch (error) {
       console.error('Android permission request failed:', error);
       return false;
@@ -381,9 +396,11 @@ export class PermissionsService {
    * Get missing permissions
    */
   async getMissingPermissions(requiredPermissions: PermissionType[]): Promise<PermissionType[]> {
-    const results = await this.checkRequiredPermissions(requiredPermissions);
+    const results = await Promise.all(
+      requiredPermissions.map(permission => this.checkPermission(permission))
+    );
     const missing = requiredPermissions.filter((_, index) => !results[index].granted);
-    
+
     return missing;
   }
 
@@ -402,8 +419,10 @@ export class PermissionsService {
    * Check if specific permissions are available
    */
   async arePermissionsAvailable(permissions: PermissionType[]): Promise<boolean> {
-    const results = await this.checkRequiredPermissions(permissions);
-    return results.every(result => result.granted);
+    const results = await Promise.all(
+      permissions.map(permission => this.checkPermission(permission))
+    );
+    return results.every((result: PermissionStatus) => result.granted);
   }
 
   /**

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 interface Settings {
   apiKey: string;
   apiUrl: string;
@@ -8,64 +10,83 @@ interface Settings {
 class SettingsService {
   private settings: Settings;
   private readonly STORAGE_KEY = 'z-ai-chat-settings';
+  private initialized: boolean = false;
+  private initPromise: Promise<void> | null = null;
+
   constructor() {
     this.settings = this.getDefaultSettings();
-    this.loadSettings();
+    this.initPromise = this.loadSettings();
   }
+
+  private async ensureInitialized(): Promise<void> {
+    if (!this.initialized && this.initPromise) {
+      await this.initPromise;
+    }
+  }
+
   private getDefaultSettings(): Settings {
     return {
       apiKey: '',
-      apiUrl: 'https:
+      apiUrl: 'https://api.z.ai/api/paas/v4',
       modelName: '',
       githubEnabled: false,
       gistEnabled: false
     };
   }
-  private loadSettings(): void {
+  private async loadSettings(): Promise<void> {
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
+      const stored = await AsyncStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         this.settings = { ...this.settings, ...JSON.parse(stored) };
       }
     } catch (error) {
       console.error('Failed to load settings:', error);
+    } finally {
+      this.initialized = true;
+      this.initPromise = null;
     }
   }
-  private saveSettings(): void {
+  private async saveSettings(): Promise<void> {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.settings));
+      await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.settings));
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
   }
-  getSettings(): Settings {
+  async getSettings(): Promise<Settings> {
+    await this.ensureInitialized();
     return { ...this.settings };
   }
-  updateApiKey(apiKey: string): void {
+  async updateApiKey(apiKey: string): Promise<void> {
+    await this.ensureInitialized();
     this.settings.apiKey = apiKey;
-    this.saveSettings();
+    await this.saveSettings();
   }
-  updateApiUrl(apiUrl: string): void {
+  async updateApiUrl(apiUrl: string): Promise<void> {
+    await this.ensureInitialized();
     this.settings.apiUrl = apiUrl;
-    this.saveSettings();
+    await this.saveSettings();
   }
-  updateModelName(modelName: string): void {
+  async updateModelName(modelName: string): Promise<void> {
+    await this.ensureInitialized();
     this.settings.modelName = modelName;
-    this.saveSettings();
+    await this.saveSettings();
   }
-  updateGitHubEnabled(enabled: boolean): void {
+  async updateGitHubEnabled(enabled: boolean): Promise<void> {
+    await this.ensureInitialized();
     this.settings.githubEnabled = enabled;
-    this.saveSettings();
+    await this.saveSettings();
   }
-  updateGistEnabled(enabled: boolean): void {
+  async updateGistEnabled(enabled: boolean): Promise<void> {
+    await this.ensureInitialized();
     this.settings.gistEnabled = enabled;
-    this.saveSettings();
+    await this.saveSettings();
   }
   isUsingLMStudio(): boolean {
-    return !this.settings.apiKey && 
-           this.settings.modelName && 
-           this.settings.apiUrl && 
-           this.settings.apiUrl !== 'https:
+    return !this.settings.apiKey &&
+           !!this.settings.modelName &&
+           !!this.settings.apiUrl &&
+           this.settings.apiUrl !== 'https://api.z.ai/api/paas/v4';
   }
   getModelConfig(): { apiKey: string; apiUrl: string; modelName: string } {
     return {
@@ -97,22 +118,24 @@ class SettingsService {
   exportSettings(): string {
     return JSON.stringify(this.settings, null, 2);
   }
-  importSettings(settingsJson: string): { success: boolean; error?: string } {
+  async importSettings(settingsJson: string): Promise<{ success: boolean; error?: string }> {
     try {
+      await this.ensureInitialized();
       const imported = JSON.parse(settingsJson);
       if (typeof imported !== 'object' || imported === null) {
         return { success: false, error: 'Invalid settings format' };
       }
       this.settings = { ...this.settings, ...imported };
-      this.saveSettings();
+      await this.saveSettings();
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Failed to import settings' };
     }
   }
-  resetToDefaults(): void {
+  async resetToDefaults(): Promise<void> {
+    await this.ensureInitialized();
     this.settings = this.getDefaultSettings();
-    this.saveSettings();
+    await this.saveSettings();
   }
 }
 export const settingsService = new SettingsService();

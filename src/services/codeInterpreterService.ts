@@ -1,5 +1,6 @@
-import ZAI from 'z-ai-web-dev-sdk';
 import { errorHandlerService } from './errorHandlerService';
+import { SecureStorage } from '../utils/secureStorage';
+import axios from 'axios';
 import * as SQLite from 'expo-sqlite';
 
 export interface CodeExecutionRequest {
@@ -135,8 +136,11 @@ export class CodeInterpreterService {
    */
   async analyzeCode(code: string, language: string): Promise<CodeAnalysis> {
     try {
-      const zai = await ZAI.create();
-      
+      const apiKey = await SecureStorage.getApiKey('zai_api_key');
+      if (!apiKey) {
+        throw new Error('API key not set');
+      }
+
       const prompt = `Analyze this ${language} code for security issues, complexity, and provide suggestions:
 
 \`\`\`${language}
@@ -151,23 +155,32 @@ Respond with a JSON object containing:
   "estimatedTime": number (in milliseconds)
 }`;
 
-      const response = await zai.chat.completions.create({
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a code security expert. Analyze code for security vulnerabilities and complexity. Respond only with valid JSON.'
-          },
-          {
-            role: 'user',
-            content: prompt
+      const response = await axios.post(
+        'https://api.z.ai/api/paas/v4/chat/completions',
+        {
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a code security expert. Analyze code for security vulnerabilities and complexity. Respond only with valid JSON.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          model: 'glm-4.5-air',
+          max_tokens: 1000,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        model: 'glm-4.5-air',
-        max_tokens: 1000,
-        temperature: 0.1
-      });
+        }
+      );
 
-      const content = response.choices[0]?.message?.content || '{}';
+      const content = response.data.choices[0]?.message?.content || '{}';
       const analysis = JSON.parse(content);
 
       return {
@@ -180,8 +193,7 @@ Respond with a JSON object containing:
 
     } catch (error) {
       console.error('Code analysis failed:', error);
-      
-      // Fallback analysis
+
       return {
         complexity: this.estimateComplexity(code),
         securityIssues: this.detectSecurityIssues(code, language),
@@ -197,9 +209,11 @@ Respond with a JSON object containing:
    */
   private async executePython(request: CodeExecutionRequest): Promise<CodeExecutionResult> {
     try {
-      // Use ZAI SDK to execute Python code
-      const zai = await ZAI.create();
-      
+      const apiKey = await SecureStorage.getApiKey('zai_api_key');
+      if (!apiKey) {
+        throw new Error('API key not set');
+      }
+
       const prompt = `Execute this Python code and return only the output:
 
 \`\`\`python
@@ -215,24 +229,33 @@ Rules:
 - For expressions, return the evaluated result
 - For assignments with no output, return "Executed successfully"`;
 
-      const response = await zai.chat.completions.create({
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a Python interpreter. Execute the given code and return only the output. No explanations.'
-          },
-          {
-            role: 'user',
-            content: prompt
+      const response = await axios.post(
+        'https://api.z.ai/api/paas/v4/chat/completions',
+        {
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a Python interpreter. Execute the given code and return only the output. No explanations.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          model: 'glm-4.5-air',
+          max_tokens: 2000,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        model: 'glm-4.5-air',
-        max_tokens: 2000,
-        temperature: 0.1
-      });
+        }
+      );
 
-      const output = response.choices[0]?.message?.content || 'No output';
-      
+      const output = response.data.choices[0]?.message?.content || 'No output';
+
       return {
         success: true,
         output: output.trim(),
@@ -376,11 +399,11 @@ Rules:
    */
   private async executeBash(request: CodeExecutionRequest): Promise<CodeExecutionResult> {
     try {
-      // For security reasons, we'll simulate bash execution using AI
-      // In a production app, you might use a restricted backend service
-      
-      const zai = await ZAI.create();
-      
+      const apiKey = await SecureStorage.getApiKey('zai_api_key');
+      if (!apiKey) {
+        throw new Error('API key not set');
+      }
+
       const prompt = `Simulate the execution of this bash command and return only the output:
 
 \`\`\`bash
@@ -396,24 +419,33 @@ Rules:
 - If the command would fail, show appropriate error message
 - Keep the output realistic and concise`;
 
-      const response = await zai.chat.completions.create({
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a bash terminal simulator. Execute the given command and return only the output that would appear in a real terminal.'
-          },
-          {
-            role: 'user',
-            content: prompt
+      const response = await axios.post(
+        'https://api.z.ai/api/paas/v4/chat/completions',
+        {
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a bash terminal simulator. Execute the given command and return only the output that would appear in a real terminal.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          model: 'glm-4.5-air',
+          max_tokens: 1500,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        model: 'glm-4.5-air',
-        max_tokens: 1500,
-        temperature: 0.1
-      });
+        }
+      );
 
-      const output = response.choices[0]?.message?.content || 'Command executed';
-      
+      const output = response.data.choices[0]?.message?.content || 'Command executed';
+
       return {
         success: true,
         output: output.trim(),

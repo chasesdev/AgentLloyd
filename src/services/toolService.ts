@@ -2,7 +2,8 @@ import { ToolCall, ToolResult, AgentTool } from '../types/tools';
 import { zaiService } from './zaiService';
 import { codeInterpreterService, CodeExecutionResult } from './codeInterpreterService';
 import { fileAnalyzerService, FileAnalysisResult } from './fileAnalyzerService';
-import ZAI from 'z-ai-web-dev-sdk';
+import { SecureStorage } from '../utils/secureStorage';
+import axios from 'axios';
 export class ToolService {
   private tools: Map<string, AgentTool> = new Map();
   constructor() {
@@ -59,14 +60,55 @@ export class ToolService {
   }
   private async executeWebSearch(args: { query: string; num_results?: number }): Promise<ToolResult> {
     try {
-      const zai = await ZAI.create();
-      const searchResult = await zai.functions.invoke('web_search', {
-        query: args.query,
-        num: args.num_results || 10
-      });
+      const apiKey = await SecureStorage.getApiKey('zai_api_key');
+      if (!apiKey) {
+        throw new Error('API key not set');
+      }
+
+      const response = await axios.post(
+        'https://api.z.ai/api/paas/v4/chat/completions',
+        {
+          model: 'glm-4.6',
+          messages: [
+            {
+              role: 'user',
+              content: `Search the web for: ${args.query}. Provide ${args.num_results || 10} relevant results.`
+            }
+          ],
+          tools: [
+            {
+              type: 'function',
+              function: {
+                name: 'web_search',
+                description: 'Search the web for information',
+                parameters: {
+                  type: 'object',
+                  properties: {
+                    query: { type: 'string', description: 'Search query' },
+                    num: { type: 'number', description: 'Number of results' }
+                  },
+                  required: ['query']
+                }
+              }
+            }
+          ],
+          tool_choice: 'auto',
+          max_tokens: 2000
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      const choice = response.data.choices[0];
+      const content = choice.message.content || JSON.stringify(choice.message.tool_calls || [], null, 2);
+
       return {
         tool_call_id: 'web_search_' + Date.now(),
-        result: JSON.stringify(searchResult, null, 2)
+        result: content
       };
     } catch (error) {
       console.error('Web search failed:', error);

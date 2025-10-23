@@ -1,6 +1,52 @@
 import * as SQLite from 'expo-sqlite';
 import { ChatBio, ChatMemory, Message, MessageContent } from '../types';
 import { databaseMigration } from './databaseMigration';
+
+interface GistRow {
+  id: string;
+  chat_id: string;
+  gist_id: string;
+  gist_url: string;
+  title: string;
+  description: string;
+  content: string;
+  is_public: number;
+  tags: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface TokenUsageRow {
+  model: string;
+  total_input: number;
+  total_output: number;
+  total_tokens: number;
+}
+
+interface BranchRow {
+  id: string;
+  chat_id: string;
+  repository: string;
+  branch_name: string;
+  last_activity: string;
+  pr_url: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CodespaceRow {
+  id: string;
+  repository: string;
+  codespace_id: string;
+  display_name: string;
+  state: string;
+  web_url: string;
+  last_activity: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export class ChatDatabase {
   private db: SQLite.SQLiteDatabase | null = null;
   async init(): Promise<void> {
@@ -48,15 +94,16 @@ export class ChatDatabase {
   async saveMemory(memory: ChatMemory): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
     await this.db.runAsync(
-      `INSERT OR REPLACE INTO memories 
-       (id, title, tags, summary, key_terms, created_at, updated_at, last_message_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT OR REPLACE INTO memories
+       (id, title, tags, summary, key_terms, embedding, created_at, updated_at, last_message_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         memory.id,
         memory.title,
         JSON.stringify(memory.tags),
         memory.summary,
         JSON.stringify(memory.keyTerms),
+        memory.embedding ? JSON.stringify(memory.embedding) : null,
         memory.createdAt.toISOString(),
         memory.updatedAt.toISOString(),
         memory.lastMessageAt.toISOString()
@@ -66,6 +113,14 @@ export class ChatDatabase {
       await this.saveMessage(message);
     }
   }
+
+  async saveMemoryEmbedding(memoryId: string, embedding: number[]): Promise<void> {
+    if (!this.db) throw new Error('Database not initialized');
+    await this.db.runAsync(
+      `UPDATE memories SET embedding = ? WHERE id = ?`,
+      [JSON.stringify(embedding), memoryId]
+    );
+  }
   async getMemory(id: string): Promise<ChatMemory | null> {
     if (!this.db) throw new Error('Database not initialized');
     const result = await this.db.getFirstAsync<{
@@ -74,6 +129,7 @@ export class ChatDatabase {
       tags: string;
       summary: string;
       key_terms: string;
+      embedding: string | null;
       created_at: string;
       updated_at: string;
       last_message_at: string;
@@ -87,6 +143,7 @@ export class ChatDatabase {
       tags: JSON.parse(result.tags),
       summary: result.summary,
       keyTerms: JSON.parse(result.key_terms),
+      embedding: result.embedding ? JSON.parse(result.embedding) : undefined,
       createdAt: new Date(result.created_at),
       updatedAt: new Date(result.updated_at),
       lastMessageAt: new Date(result.last_message_at),
@@ -100,6 +157,7 @@ export class ChatDatabase {
       tags: string;
       summary: string;
       key_terms: string;
+      embedding: string | null;
       created_at: string;
       updated_at: string;
       last_message_at: string;
@@ -114,6 +172,7 @@ export class ChatDatabase {
         tags: JSON.parse(result.tags),
         summary: result.summary,
         keyTerms: JSON.parse(result.key_terms),
+        embedding: result.embedding ? JSON.parse(result.embedding) : undefined,
         createdAt: new Date(result.created_at),
         updatedAt: new Date(result.updated_at),
         lastMessageAt: new Date(result.last_message_at),
@@ -292,7 +351,7 @@ export class ChatDatabase {
   }
   async getGist(id: string): Promise<any | null> {
     if (!this.db) throw new Error('Database not initialized');
-    const result = await this.db.getFirstAsync(`
+    const result = await this.db.getFirstAsync<GistRow>(`
       SELECT * FROM gists WHERE id = ?
     `, [id]);
     if (!result) return null;
@@ -312,7 +371,7 @@ export class ChatDatabase {
   }
   async getGistsByChatId(chatId: string): Promise<any[]> {
     if (!this.db) throw new Error('Database not initialized');
-    const results = await this.db.getAllAsync(`
+    const results = await this.db.getAllAsync<GistRow>(`
       SELECT * FROM gists WHERE chat_id = ? ORDER BY updated_at DESC
     `, [chatId]);
     return results.map(result => ({
@@ -360,12 +419,12 @@ export class ChatDatabase {
     if (!this.db) throw new Error('Database not initialized');
     const whereClause = chatId ? 'WHERE chat_id = ?' : '';
     const params = chatId ? [chatId] : [];
-    const results = await this.db.getAllAsync(`
-      SELECT model, 
+    const results = await this.db.getAllAsync<TokenUsageRow>(`
+      SELECT model,
              SUM(input_tokens) as total_input,
              SUM(output_tokens) as total_output,
              SUM(total_tokens) as total_tokens
-      FROM token_usage 
+      FROM token_usage
       ${whereClause}
       GROUP BY model
     `, params);
@@ -414,7 +473,7 @@ export class ChatDatabase {
   }
   async getBranchesByChatId(chatId: string): Promise<any[]> {
     if (!this.db) throw new Error('Database not initialized');
-    const results = await this.db.getAllAsync(`
+    const results = await this.db.getAllAsync<BranchRow>(`
       SELECT * FROM branches WHERE chat_id = ? ORDER BY updated_at DESC
     `, [chatId]);
     return results.map(result => ({
@@ -459,7 +518,7 @@ export class ChatDatabase {
     if (!this.db) throw new Error('Database not initialized');
     const whereClause = repository ? 'WHERE repository = ?' : '';
     const params = repository ? [repository] : [];
-    const results = await this.db.getAllAsync(`
+    const results = await this.db.getAllAsync<CodespaceRow>(`
       SELECT * FROM codespaces ${whereClause} ORDER BY updated_at DESC
     `, params);
     return results.map(result => ({

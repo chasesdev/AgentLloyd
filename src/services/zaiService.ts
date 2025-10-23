@@ -9,7 +9,7 @@ export class ZAIService {
   private apiKey: string | null = null;
   constructor() {
     this.client = axios.create({
-      baseURL: 'https:
+      baseURL: 'https://api.z.ai/api/coding/paas/v4',
       timeout: 60000,
     });
     this.loadApiKey();
@@ -25,17 +25,9 @@ export class ZAIService {
     }
   }
   async setApiKey(apiKey: string): Promise<void> {
-    try {
-      const success = await SecureStorage.setApiKey('zai_api_key', apiKey);
-      if (!success) {
-        throw new Error('Failed to store API key securely');
-      }
-      this.apiKey = apiKey;
-      this.client.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
-    } catch (error) {
-      console.error('Failed to save API key:', error);
-      throw error;
-    }
+    await SecureStorage.setApiKey('zai_api_key', apiKey);
+    this.apiKey = apiKey;
+    this.client.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
   }
   get hasApiKey(): boolean {
     return !!this.apiKey;
@@ -73,7 +65,7 @@ export class ZAIService {
       throw new Error('Offline - Request queued for when connection is restored');
     }
     const config: APIConfig = {
-      baseURL: 'https:
+      baseURL: 'https://api.z.ai/api/coding/paas/v4',
       apiKey: this.apiKey,
       model,
       temperature: 0.7,
@@ -132,7 +124,7 @@ export class ZAIService {
       throw new Error('API key not set');
     }
     const config: APIConfig = {
-      baseURL: 'https:
+      baseURL: 'https://api.z.ai/api/coding/paas/v4',
       apiKey: this.apiKey,
       model,
       temperature: 0.3,
@@ -374,7 +366,7 @@ export class ZAIService {
   async validateApiKey(apiKey: string): Promise<boolean> {
     try {
       const testClient = axios.create({
-        baseURL: 'https:
+        baseURL: 'https://api.z.ai/api/coding/paas/v4',
         timeout: 10000,
         headers: {
           'Authorization': `Bearer ${apiKey}`

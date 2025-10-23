@@ -121,8 +121,9 @@ export class CacheService {
 
       // Check persistent cache if not in memory
       if (!entry) {
-        entry = await this.getPersistentCache(key);
-        if (entry) {
+        const persistentEntry = await this.getPersistentCache(key);
+        if (persistentEntry) {
+          entry = persistentEntry;
           // Restore to memory cache
           this.memoryCache.set(key, entry);
         }

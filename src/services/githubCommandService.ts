@@ -168,7 +168,7 @@ class GitHubCommandService {
     const [owner, repo] = repoPath.split('/');
     return {
       success: false,
-      message: `Issue listing is not yet implemented in this mobile version. You can view issues at: https:
+      message: `Issue listing is not yet implemented in this mobile version. You can view issues at: https://github.com/${owner}/${repo}/issues`
     };
   }
   private async handlePrList(command: string): Promise<GitHubCommandResult> {
@@ -183,7 +183,7 @@ class GitHubCommandService {
     const [owner, repo] = repoPath.split('/');
     return {
       success: false,
-      message: `Pull request listing is not yet implemented in this mobile version. You can view PRs at: https:
+      message: `Pull request listing is not yet implemented in this mobile version. You can view PRs at: https://github.com/${owner}/${repo}/pulls`
     };
   }
   private async handleGitHubUrl(url: string): Promise<GitHubCommandResult> {

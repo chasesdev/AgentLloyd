@@ -2,7 +2,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { errorHandlerService } from './errorHandlerService';
-import ZAI from 'z-ai-web-dev-sdk';
+import { SecureStorage } from '../utils/secureStorage';
+import axios from 'axios';
 
 export interface FileAnalysisRequest {
   fileUri: string;
@@ -362,7 +363,7 @@ export class FileAnalyzerService {
     try {
       // Get image metadata
       const fileInfo = await FileSystem.getInfoAsync(request.fileUri);
-      
+
       return {
         text: `Image file: ${request.fileName}`,
         data: {
@@ -370,7 +371,7 @@ export class FileAnalyzerService {
           mimeType: request.mimeType,
           size: size,
           uri: request.fileUri,
-          lastModified: fileInfo.modificationTime,
+          lastModified: fileInfo.exists && 'modificationTime' in fileInfo ? fileInfo.modificationTime : undefined,
           analysis: 'Image metadata extracted',
           features: ['file_info', 'mime_type_detection', 'size_analysis']
         },
@@ -487,11 +488,14 @@ export class FileAnalyzerService {
     structure?: any;
   }> {
     try {
-      const zai = await ZAI.create();
-      
+      const apiKey = await SecureStorage.getApiKey('zai_api_key');
+      if (!apiKey) {
+        throw new Error('API key not set');
+      }
+
       let prompt = '';
       let systemPrompt = '';
-      
+
       switch (fileType) {
         case 'image':
           prompt = `Analyze this image file: ${request.fileName}. Provide a detailed analysis including visual elements, colors, objects, and any text visible in the image.`;
@@ -510,31 +514,38 @@ export class FileAnalyzerService {
           systemPrompt = 'You are an expert text analyst. Analyze text content for meaning, sentiment, and key information.';
       }
 
-      const response = await zai.chat.completions.create({
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: prompt
+      const response = await axios.post(
+        'https://api.z.ai/api/paas/v4/chat/completions',
+        {
+          messages: [
+            {
+              role: 'system',
+              content: systemPrompt
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          model: 'glm-4.5-air',
+          max_tokens: 1000,
+          temperature: 0.3
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        model: 'glm-4.5-air',
-        max_tokens: 1000,
-        temperature: 0.3
-      });
+        }
+      );
 
-      const content = response.choices[0]?.message?.content || '';
-      
-      // Parse the AI response
+      const content = response.data.choices[0]?.message?.content || '';
+
       return this.parseAIResponse(content, fileType, extractedContent.text);
 
     } catch (error) {
       console.error('AI analysis failed:', error);
-      
-      // Fallback analysis
+
       return this.performFallbackAnalysis(extractedContent.text, fileType);
     }
   }
@@ -626,9 +637,7 @@ export class FileAnalyzerService {
     // Simulate metadata extraction
     return {
       created: new Date(),
-      modified: new Date(),
-      fileName: request.fileName,
-      mimeType: request.mimeType
+      modified: new Date()
     };
   }
 

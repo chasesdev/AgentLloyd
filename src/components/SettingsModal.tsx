@@ -133,13 +133,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>API URL</Text>
               <Text style={styles.inputHint}>
-                Z-AI API or LM Studio URL (e.g., http:
+                Z-AI API or LM Studio URL (e.g., http://localhost:1234)
               </Text>
               <TextInput
                 style={styles.textInput}
                 value={apiUrl}
                 onChangeText={setApiUrl}
-                placeholder="https:
+                placeholder="https://api.example.com"
                 placeholderTextColor="#999"
                 autoCapitalize="none"
               />

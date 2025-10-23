@@ -4,6 +4,14 @@ interface TokenUsage {
   totalTokens: number;
   cost: number;
 }
+
+interface TokenEstimationAccuracy {
+  estimated: number;
+  actual: number;
+  difference: number;
+  percentageError: number;
+}
+
 class TokenUsageService {
   private currentChatTokens: TokenUsage = {
     inputTokens: 0,
@@ -11,6 +19,7 @@ class TokenUsageService {
     totalTokens: 0,
     cost: 0
   };
+  private estimationAccuracyLog: TokenEstimationAccuracy[] = [];
   private readonly TOKEN_COSTS = {
     'glm-4.6': {
       input: 0.005,  
@@ -68,7 +77,101 @@ class TokenUsageService {
     };
   }
   estimateTokens(text: string): number {
-    return Math.ceil(text.length / 4);
+    if (!text || text.length === 0) {
+      return 0;
+    }
+
+    // Extract code blocks (both ``` and ` formats)
+    const codeBlockPattern = /```[\s\S]*?```/g;
+    const inlineCodePattern = /`[^`\n]+`/g;
+
+    const codeBlocks = text.match(codeBlockPattern) || [];
+    const inlineCode = text.match(inlineCodePattern) || [];
+
+    // Calculate code content length
+    const codeBlocksLength = codeBlocks.join('').length;
+    const inlineCodeLength = inlineCode.join('').length;
+    const totalCodeLength = codeBlocksLength + inlineCodeLength;
+
+    // Remaining text length
+    const textLength = text.length - totalCodeLength;
+
+    // Token estimation based on research:
+    // - Code: ~2 characters per token (denser tokenization)
+    // - Text: ~4 characters per token (standard English)
+    // - Add small buffer for whitespace and punctuation
+    const codeTokens = Math.ceil(totalCodeLength / 2);
+    const textTokens = Math.ceil(textLength / 4);
+
+    // Add 5% buffer for special characters and formatting
+    const totalTokens = Math.ceil((codeTokens + textTokens) * 1.05);
+
+    return totalTokens;
+  }
+
+  /**
+   * More accurate word-based estimation (alternative method)
+   */
+  estimateTokensByWords(text: string): number {
+    if (!text || text.length === 0) {
+      return 0;
+    }
+
+    // Split on whitespace
+    const words = text.trim().split(/\s+/);
+
+    // Based on OpenAI research: average ~1.3 tokens per word for English
+    // Code has slightly different ratio (~1.5 tokens per "word")
+    const hasCode = text.includes('```') || text.includes('`');
+    const tokensPerWord = hasCode ? 1.5 : 1.3;
+
+    return Math.ceil(words.length * tokensPerWord);
+  }
+
+  /**
+   * Track estimation accuracy by comparing with actual usage
+   */
+  trackEstimationAccuracy(estimated: number, actual: number): void {
+    const difference = actual - estimated;
+    const percentageError = ((Math.abs(difference) / actual) * 100);
+
+    this.estimationAccuracyLog.push({
+      estimated,
+      actual,
+      difference,
+      percentageError
+    });
+
+    // Keep only last 100 entries
+    if (this.estimationAccuracyLog.length > 100) {
+      this.estimationAccuracyLog.shift();
+    }
+  }
+
+  /**
+   * Get average estimation accuracy statistics
+   */
+  getEstimationAccuracy(): {
+    averageError: number;
+    averagePercentageError: number;
+    totalSamples: number;
+  } | null {
+    if (this.estimationAccuracyLog.length === 0) {
+      return null;
+    }
+
+    const totalError = this.estimationAccuracyLog.reduce((sum, entry) =>
+      sum + Math.abs(entry.difference), 0
+    );
+    const totalPercentageError = this.estimationAccuracyLog.reduce((sum, entry) =>
+      sum + entry.percentageError, 0
+    );
+
+    return {
+      averageError: totalError / this.estimationAccuracyLog.length,
+      averagePercentageError: totalPercentageError / this.estimationAccuracyLog.length,
+      totalSamples: this.estimationAccuracyLog.length
+    };
   }
   extractTokenUsage(response: any): { input: number; output: number } | null {
     try {

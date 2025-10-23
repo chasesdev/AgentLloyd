@@ -1,53 +1,27 @@
 import * as SecureStore from 'expo-secure-store';
-import CryptoJS from 'crypto-js';
-
-// Note: In a production app, you would use a more secure encryption method
-// and store the encryption key securely (e.g., in the device keychain/keystore)
-// For this demo, we'll use a simple approach
-
-const ENCRYPTION_KEY = 'zai-chat-encryption-key-2024'; // In production, this should be device-specific
 
 export class SecureStorage {
   /**
-   * Store data with encryption
+   * Store data securely (SecureStore uses native iOS Keychain/Android Keystore encryption)
    */
   static async setItem(key: string, value: string): Promise<void> {
     try {
-      // Encrypt the value
-      const encryptedValue = CryptoJS.AES.encrypt(value, ENCRYPTION_KEY).toString();
-      
-      // Store in secure store
-      await SecureStore.setItemAsync(key, encryptedValue);
+      await SecureStore.setItemAsync(key, value);
     } catch (error) {
-      console.error(`Failed to store encrypted data for key ${key}:`, error);
-      throw new Error('Failed to store data securely');
+      console.error(`Failed to store data for key ${key}:`, error);
+      throw new Error(`Failed to store data securely: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
   /**
-   * Retrieve and decrypt data
+   * Retrieve data securely
    */
   static async getItem(key: string): Promise<string | null> {
     try {
-      // Get encrypted value from secure store
-      const encryptedValue = await SecureStore.getItemAsync(key);
-      
-      if (!encryptedValue) {
-        return null;
-      }
-
-      // Decrypt the value
-      const decryptedBytes = CryptoJS.AES.decrypt(encryptedValue, ENCRYPTION_KEY);
-      const decryptedValue = decryptedBytes.toString(CryptoJS.enc.Utf8);
-      
-      if (!decryptedValue) {
-        console.warn(`Failed to decrypt data for key ${key}`);
-        return null;
-      }
-
-      return decryptedValue;
+      const value = await SecureStore.getItemAsync(key);
+      return value;
     } catch (error) {
-      console.error(`Failed to retrieve encrypted data for key ${key}:`, error);
+      console.error(`Failed to retrieve data for key ${key}:`, error);
       return null;
     }
   }
@@ -104,39 +78,29 @@ export class SecureStorage {
    * Validate API key format before storing
    */
   static validateApiKey(apiKey: string): boolean {
-    // Basic validation for Z.AI API keys
     if (!apiKey || typeof apiKey !== 'string') {
       return false;
     }
 
-    // Remove whitespace
     const trimmedKey = apiKey.trim();
-    
-    // Check minimum length (API keys are typically at least 20 characters)
+
     if (trimmedKey.length < 20) {
       return false;
     }
 
-    // Check for common API key patterns (alphanumeric with some special characters)
-    const apiKeyPattern = /^[a-zA-Z0-9\-_]+$/;
+    const apiKeyPattern = /^[a-zA-Z0-9\-_.]+$/;
     return apiKeyPattern.test(trimmedKey);
   }
 
   /**
    * Store API key with validation
    */
-  static async setApiKey(key: string, apiKey: string): Promise<boolean> {
-    try {
-      if (!this.validateApiKey(apiKey)) {
-        throw new Error('Invalid API key format');
-      }
-
-      await this.setItem(key, apiKey);
-      return true;
-    } catch (error) {
-      console.error(`Failed to store API key for ${key}:`, error);
-      return false;
+  static async setApiKey(key: string, apiKey: string): Promise<void> {
+    if (!this.validateApiKey(apiKey)) {
+      throw new Error('Invalid API key format');
     }
+
+    await this.setItem(key, apiKey);
   }
 
   /**
@@ -164,37 +128,4 @@ export class SecureStorage {
     }
   }
 
-  /**
-   * Rotate encryption key (for security maintenance)
-   */
-  static async rotateEncryptionKey(): Promise<void> {
-    try {
-      // Get all current values
-      const currentKeys = ['zai_api_key', 'github_token'];
-      const currentValues: Record<string, string | null> = {};
-
-      // Retrieve and decrypt all current values
-      for (const key of currentKeys) {
-        currentValues[key] = await this.getItem(key);
-      }
-
-      // Clear current storage
-      await this.clear();
-
-      // In a real implementation, you would generate a new encryption key here
-      // and re-encrypt all values with the new key
-      
-      // For now, we'll just restore the values with the same key
-      for (const [key, value] of Object.entries(currentValues)) {
-        if (value) {
-          await this.setItem(key, value);
-        }
-      }
-
-      console.log('Encryption key rotation completed');
-    } catch (error) {
-      console.error('Failed to rotate encryption key:', error);
-      throw new Error('Failed to rotate encryption key');
-    }
-  }
 }

@@ -103,7 +103,7 @@ export function ShareModal({
             type: 'link',
             title: shareTitle || `Chat ${chatId.slice(-8)}`,
             description: shareDescription || `Share link to chat with ${messages.length} messages`,
-            url: `https:
+            url: `https://share.agentlloyd.app/${chatId}`
           };
       }
       setPreview(previewData);

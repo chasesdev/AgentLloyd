@@ -28,6 +28,7 @@ export interface ChatMemory {
   tags: string[];
   summary: string;
   keyTerms: string[];
+  embedding?: number[];  // Vector embedding for semantic search
   createdAt: Date;
   updatedAt: Date;
   lastMessageAt: Date;

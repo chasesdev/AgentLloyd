@@ -216,14 +216,15 @@ class AutoUpdaterService {
       if (update.isAvailable) {
         debugLog('Expo OTA update available');
         
+        const manifest = update.manifest as any;
         return {
           hasUpdate: true,
           updateInfo: {
-            version: update.manifest?.version || 'unknown',
-            buildNumber: update.manifest?.extra?.expoClient?.extra?.eas?.buildNumber || 'unknown',
-            releaseNotes: update.manifest?.extra?.releaseNotes || 'New update available',
-            isMandatory: update.manifest?.extra?.isMandatory || false,
-            publishedAt: update.manifest?.createdAt || new Date().toISOString(),
+            version: manifest?.version || 'unknown',
+            buildNumber: manifest?.extra?.expoClient?.extra?.eas?.buildNumber || 'unknown',
+            releaseNotes: manifest?.extra?.releaseNotes || 'New update available',
+            isMandatory: manifest?.extra?.isMandatory || false,
+            publishedAt: manifest?.createdAt || new Date().toISOString(),
             isOTA: true,
           },
           isOTA: true,

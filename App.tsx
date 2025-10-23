@@ -3,7 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { ApiKeyScreen } from './src/screens/ApiKeyScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
 import { ErrorBoundary } from './src/components/ErrorBoundary';
-import { LoadingProvider, LoadingSpinner } from './src/components/LoadingSpinner';
+import { LoadingSpinner } from './src/components/LoadingSpinner';
+import { LoadingProvider } from './src/contexts/LoadingContext';
 import { zaiService } from './src/services/zaiService';
 import { chatMemoryService } from './src/services/chatMemoryService';
 import { errorHandlerService } from './src/services/errorHandlerService';
@@ -17,8 +18,9 @@ export default function App() {
 
   const initializeApp = async () => {
     try {
-      await checkApiKey();
+      await zaiService.initialize();
       await chatMemoryService.init();
+      await checkApiKey();
       await errorHandlerService.testErrorReporting();
     } catch (error) {
       await errorHandlerService.handleError(error as Error, {

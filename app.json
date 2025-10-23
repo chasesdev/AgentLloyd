@@ -1,16 +1,10 @@
 {
   "expo": {
-    "name": "Z.AI Chat",
-    "slug": "z-ai-chat-app",
+    "name": "AgentLloyd",
+    "slug": "agentlloyd",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,15 +13,9 @@
       "bundleIdentifier": "com.zai.chatapp"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.zai.chatapp"
+      "package": "com.agentlloyd.app"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    "web": {},
     "plugins": [
       "expo-router",
       [
@@ -36,7 +24,15 @@
           "photosPermission": "The app needs access to your photos to let you share them with the AI assistant."
         }
       ],
-      "expo-updates"
+      "expo-updates",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "26.0"
+          }
+        }
+      ]
     ],
     "updates": {
       "enabled": true,
