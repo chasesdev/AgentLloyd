@@ -7,13 +7,21 @@ import { cacheService } from './cacheService';
 export class ZAIService {
   private client: AxiosInstance;
   private apiKey: string | null = null;
+  private initialized: boolean = false;
+
   constructor() {
     this.client = axios.create({
       baseURL: 'https://api.z.ai/api/coding/paas/v4',
       timeout: 60000,
     });
-    this.loadApiKey();
   }
+
+  async initialize(): Promise<void> {
+    if (this.initialized) return;
+    await this.loadApiKey();
+    this.initialized = true;
+  }
+
   private async loadApiKey(): Promise<void> {
     try {
       this.apiKey = await SecureStorage.getApiKey('zai_api_key');
@@ -207,56 +215,37 @@ export class ZAIService {
       requestBody.tool_choice = 'auto';
     }
 
-    const response = await fetch(`${config.baseURL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      let lastIndex = 0;
+      let content = '';
+      let thinking = '';
+      let reasoning = '';
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-    }
+      xhr.open('POST', `${config.baseURL}/chat/completions`);
+      xhr.setRequestHeader('Authorization', `Bearer ${config.apiKey}`);
+      xhr.setRequestHeader('Content-Type', 'application/json');
 
-    if (!response.body) {
-      throw new Error('Response body is null');
-    }
+      xhr.onprogress = () => {
+        const newData = xhr.responseText.substring(lastIndex);
+        lastIndex = xhr.responseText.length;
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    let content = '';
-    let thinking = '';
-    let reasoning = '';
-    let buffer = '';
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-
+        const lines = newData.split('\n');
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6).trim();
             if (data === '[DONE]') {
-              const inputTokens = this.estimateTokensFromMessages(messages);
-              const outputTokens = this.estimateTokens(content);
-              tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              return { content, thinking, reasoning };
+              continue;
             }
             try {
               const parsed = JSON.parse(data);
               const delta = parsed.choices?.[0]?.delta;
+
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
               }
+
               if (delta?.reasoning_content) {
                 thinking += delta.reasoning_content;
                 reasoning += delta.reasoning_content;
@@ -265,18 +254,37 @@ export class ZAIService {
                 }
               }
             } catch (e) {
+              // Ignore parse errors for incomplete chunks
             }
           }
         }
-      }
-    } finally {
-      reader.releaseLock();
-    }
+      };
 
-    const inputTokens = this.estimateTokensFromMessages(messages);
-    const outputTokens = this.estimateTokens(content);
-    tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-    return { content, thinking, reasoning };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const inputTokens = this.estimateTokensFromMessages(messages);
+          const outputTokens = this.estimateTokens(content);
+          tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
+          resolve({ content, thinking, reasoning });
+        } else {
+          reject(new Error(`API request failed: ${xhr.status} ${xhr.statusText}`));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error('Network error occurred'));
+      };
+
+      xhr.ontimeout = () => {
+        reject(new Error('Request timeout'));
+      };
+
+      xhr.onabort = () => {
+        reject(new Error('Request aborted'));
+      };
+
+      xhr.send(JSON.stringify(requestBody));
+    });
   }
   private async streamMessage(
     messages: any[],
@@ -297,71 +305,71 @@ export class ZAIService {
       requestBody.tool_choice = 'auto';
     }
 
-    const response = await fetch(`${config.baseURL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      let lastIndex = 0;
+      let content = '';
+      let thinking = '';
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-    }
+      xhr.open('POST', `${config.baseURL}/chat/completions`);
+      xhr.setRequestHeader('Authorization', `Bearer ${config.apiKey}`);
+      xhr.setRequestHeader('Content-Type', 'application/json');
 
-    if (!response.body) {
-      throw new Error('Response body is null');
-    }
+      xhr.onprogress = () => {
+        const newData = xhr.responseText.substring(lastIndex);
+        lastIndex = xhr.responseText.length;
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    let content = '';
-    let thinking = '';
-    let buffer = '';
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-
+        const lines = newData.split('\n');
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6).trim();
             if (data === '[DONE]') {
-              const inputTokens = this.estimateTokensFromMessages(messages);
-              const outputTokens = this.estimateTokens(content);
-              tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              return { content, thinking };
+              continue;
             }
             try {
               const parsed = JSON.parse(data);
               const delta = parsed.choices?.[0]?.delta;
+
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
               }
+
               if (delta?.reasoning_content) {
                 thinking += delta.reasoning_content;
               }
             } catch (e) {
+              // Ignore parse errors for incomplete chunks
             }
           }
         }
-      }
-    } finally {
-      reader.releaseLock();
-    }
+      };
 
-    const inputTokens = this.estimateTokensFromMessages(messages);
-    const outputTokens = this.estimateTokens(content);
-    tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-    return { content, thinking };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const inputTokens = this.estimateTokensFromMessages(messages);
+          const outputTokens = this.estimateTokens(content);
+          tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
+          resolve({ content, thinking });
+        } else {
+          reject(new Error(`API request failed: ${xhr.status} ${xhr.statusText}`));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error('Network error occurred'));
+      };
+
+      xhr.ontimeout = () => {
+        reject(new Error('Request timeout'));
+      };
+
+      xhr.onabort = () => {
+        reject(new Error('Request aborted'));
+      };
+
+      xhr.send(JSON.stringify(requestBody));
+    });
   }
   async validateApiKey(apiKey: string): Promise<boolean> {
     try {

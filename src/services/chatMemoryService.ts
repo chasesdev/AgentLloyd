@@ -29,10 +29,16 @@ export class ChatMemoryService {
   async createNewChat(firstMessage: string): Promise<string> {
     const chatId = uuid.v4();
     this.currentChatId = chatId;
-    const title = await semanticAnalysisService.generateChatTitle(firstMessage);
+
+    const fallbackTitle = firstMessage
+      .split(' ')
+      .slice(0, 6)
+      .join(' ')
+      .slice(0, 50) + (firstMessage.length > 50 ? '...' : '');
+
     const memory: ChatMemory = {
       id: chatId,
-      title,
+      title: fallbackTitle,
       messages: [],
       tags: [],
       summary: '',
@@ -42,6 +48,17 @@ export class ChatMemoryService {
       lastMessageAt: new Date(),
     };
     await chatDatabase.saveMemory(memory);
+
+    semanticAnalysisService.generateChatTitle(firstMessage)
+      .then(title => {
+        if (title && title !== fallbackTitle) {
+          chatDatabase.updateMemoryTitle(chatId, title).catch(err =>
+            console.warn('Failed to update chat title:', err)
+          );
+        }
+      })
+      .catch(err => console.warn('Failed to generate chat title:', err));
+
     return chatId;
   }
   async loadChat(chatId: string): Promise<ChatMemory | null> {

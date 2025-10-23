@@ -47,21 +47,21 @@ export class SemanticAnalysisService {
    * Generate embedding vector for text using OpenAI API
    */
   async generateEmbedding(text: string): Promise<number[]> {
-    // Normalize text for cache key
     const normalizedText = text.trim().toLowerCase();
 
-    // Check cache first
     const cached = this.embeddingCache.get(normalizedText);
     if (cached) {
       console.log('Using cached embedding');
       return cached.embedding;
     }
 
-    try {
-      // Call OpenAI embeddings API via fetch
-      // Note: You'll need an OpenAI API key for this
-      const apiKey = settingsService.getSettings().apiKey;
+    const apiKey = settingsService.getSettings().apiKey;
+    if (!apiKey) {
+      console.log('No OpenAI API key available, skipping embedding generation');
+      return [];
+    }
 
+    try {
       const response = await fetch('https://api.openai.com/v1/embeddings', {
         method: 'POST',
         headers: {
@@ -75,19 +75,19 @@ export class SemanticAnalysisService {
       });
 
       if (!response.ok) {
-        throw new Error(`Embedding API error: ${response.statusText}`);
+        console.warn(`Embedding API error: ${response.statusText}`);
+        return [];
       }
 
       const data = await response.json();
       const embedding = data.data[0].embedding;
 
-      // Cache the embedding
       this.cacheEmbedding(normalizedText, embedding);
 
       return embedding;
     } catch (error) {
-      console.error('Failed to generate embedding:', error);
-      throw error;
+      console.warn('Failed to generate embedding, continuing without it:', error);
+      return [];
     }
   }
 
@@ -386,6 +386,17 @@ export class SemanticAnalysisService {
     };
   }
   async generateChatTitle(firstMessage: string): Promise<string> {
+    const fallbackTitle = firstMessage
+      .split(' ')
+      .slice(0, 6)
+      .join(' ')
+      .slice(0, 50) + (firstMessage.length > 50 ? '...' : '');
+
+    if (!zaiService.hasApiKey) {
+      console.log('No API key available, using fallback title');
+      return fallbackTitle;
+    }
+
     try {
       const response = await zaiService.sendMessage([
         {
@@ -404,11 +415,7 @@ export class SemanticAnalysisService {
       return response.content.trim().slice(0, 50);
     } catch (error) {
       console.error('Failed to generate title:', error);
-      return firstMessage
-        .split(' ')
-        .slice(0, 6)
-        .join(' ')
-        .slice(0, 50) + (firstMessage.length > 50 ? '...' : '');
+      return fallbackTitle;
     }
   }
 }

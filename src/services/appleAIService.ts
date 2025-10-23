@@ -1,6 +1,7 @@
 import {
   LanguageModelSession,
-  AvailabilityStatus,
+  checkFoundationModelsAvailability,
+  type FoundationModelsAvailability,
 } from 'react-native-apple-ai';
 import { Message } from '../types';
 import { tokenUsageService } from './tokenUsageService';
@@ -8,7 +9,7 @@ import { tokenUsageService } from './tokenUsageService';
 export class AppleAIService {
   private session: LanguageModelSession | null = null;
   private isAvailable: boolean = false;
-  private availabilityStatus: AvailabilityStatus | null = null;
+  private availabilityInfo: FoundationModelsAvailability | null = null;
 
   constructor() {
     this.checkAvailability();
@@ -16,13 +17,13 @@ export class AppleAIService {
 
   async checkAvailability(): Promise<boolean> {
     try {
-      this.availabilityStatus = null;
-      this.isAvailable = false;
+      this.availabilityInfo = checkFoundationModelsAvailability();
+      this.isAvailable = this.availabilityInfo.isAvailable;
 
       if (this.isAvailable) {
         console.log('Apple Intelligence is available');
       } else {
-        console.log('Apple Intelligence is not available on this device');
+        console.log('Apple Intelligence is not available:', this.availabilityInfo.message);
       }
 
       return this.isAvailable;
@@ -37,8 +38,8 @@ export class AppleAIService {
     return this.isAvailable;
   }
 
-  get status(): AvailabilityStatus | null {
-    return this.availabilityStatus;
+  get status(): FoundationModelsAvailability | null {
+    return this.availabilityInfo;
   }
 
   private initializeSession(systemPrompt?: string): void {
@@ -178,23 +179,11 @@ export class AppleAIService {
   }
 
   getAvailabilityMessage(): string {
-    if (this.isAvailable) {
-      return 'Apple Intelligence is available';
+    if (!this.availabilityInfo) {
+      return 'Apple Intelligence availability has not been checked';
     }
 
-    switch (this.availabilityStatus as string) {
-      case 'unavailableOSVersion':
-        return 'Apple Intelligence requires iOS 18.1 or later';
-      case 'unavailableHardware':
-        return 'Apple Intelligence requires compatible hardware (iPhone 15 Pro or newer, M1+ iPad/Mac)';
-      case 'unavailableDisabled':
-        return 'Apple Intelligence is disabled. Enable it in Settings > Apple Intelligence & Siri';
-      case 'unavailableRegion':
-        return 'Apple Intelligence is not available in your region';
-      case 'unavailableUnknown':
-      default:
-        return 'Apple Intelligence is not available on this device';
-    }
+    return this.availabilityInfo.message;
   }
 }
 

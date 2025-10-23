@@ -21,7 +21,6 @@ export default function App() {
       await zaiService.initialize();
       await chatMemoryService.init();
       await checkApiKey();
-      await errorHandlerService.testErrorReporting();
     } catch (error) {
       await errorHandlerService.handleError(error as Error, {
         screen: 'App',
