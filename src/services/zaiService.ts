@@ -214,54 +214,77 @@ export class ZAIService {
       requestBody.tools = tools;
       requestBody.tool_choice = 'auto';
     }
-    const response = await this.client.post('/chat/completions', requestBody, {
-      responseType: 'stream'
+
+    const response = await fetch(`${config.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     });
-    return new Promise((resolve, reject) => {
-      let content = '';
-      let thinking = '';
-      let reasoning = '';
-      response.data.on('data', (chunk: Buffer) => {
-        const lines = chunk.toString().split('\n');
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
+
+    if (!response.body) {
+      throw new Error('Response body is null');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let content = '';
+    let thinking = '';
+    let reasoning = '';
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            const data = line.slice(6);
+            const data = line.slice(6).trim();
             if (data === '[DONE]') {
               const inputTokens = this.estimateTokensFromMessages(messages);
               const outputTokens = this.estimateTokens(content);
               tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              resolve({ content, thinking, reasoning });
-              return;
+              return { content, thinking, reasoning };
             }
             try {
               const parsed = JSON.parse(data);
-              const delta = parsed.choices[0]?.delta;
+              const delta = parsed.choices?.[0]?.delta;
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
               }
               if (delta?.reasoning_content) {
                 thinking += delta.reasoning_content;
+                reasoning += delta.reasoning_content;
                 if (onReasoning) {
                   onReasoning(delta.reasoning_content);
                 }
-              }
-              if (delta?.reasoning_content) {
-                reasoning += delta.reasoning_content;
               }
             } catch (e) {
             }
           }
         }
-      });
-      response.data.on('error', reject);
-      response.data.on('end', () => {
-        const inputTokens = this.estimateTokensFromMessages(messages);
-        const outputTokens = this.estimateTokens(content);
-        tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-        resolve({ content, thinking, reasoning });
-      });
-    });
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const inputTokens = this.estimateTokensFromMessages(messages);
+    const outputTokens = this.estimateTokens(content);
+    tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
+    return { content, thinking, reasoning };
   }
   private async streamMessage(
     messages: any[],
@@ -281,27 +304,52 @@ export class ZAIService {
       requestBody.tools = tools;
       requestBody.tool_choice = 'auto';
     }
-    const response = await this.client.post('/chat/completions', requestBody, {
-      responseType: 'stream'
+
+    const response = await fetch(`${config.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     });
-    return new Promise((resolve, reject) => {
-      let content = '';
-      let thinking = '';
-      response.data.on('data', (chunk: Buffer) => {
-        const lines = chunk.toString().split('\n');
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
+
+    if (!response.body) {
+      throw new Error('Response body is null');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let content = '';
+    let thinking = '';
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            const data = line.slice(6);
+            const data = line.slice(6).trim();
             if (data === '[DONE]') {
               const inputTokens = this.estimateTokensFromMessages(messages);
               const outputTokens = this.estimateTokens(content);
               tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-              resolve({ content, thinking });
-              return;
+              return { content, thinking };
             }
             try {
               const parsed = JSON.parse(data);
-              const delta = parsed.choices[0]?.delta;
+              const delta = parsed.choices?.[0]?.delta;
               if (delta?.content) {
                 content += delta.content;
                 onStream(delta.content);
@@ -313,15 +361,15 @@ export class ZAIService {
             }
           }
         }
-      });
-      response.data.on('error', reject);
-      response.data.on('end', () => {
-        const inputTokens = this.estimateTokensFromMessages(messages);
-        const outputTokens = this.estimateTokens(content);
-        tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
-        resolve({ content, thinking });
-      });
-    });
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const inputTokens = this.estimateTokensFromMessages(messages);
+    const outputTokens = this.estimateTokens(content);
+    tokenUsageService.updateTokenUsage(config.model, inputTokens, outputTokens);
+    return { content, thinking };
   }
   async validateApiKey(apiKey: string): Promise<boolean> {
     try {

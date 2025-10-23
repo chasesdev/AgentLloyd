@@ -36,6 +36,7 @@ import { githubService } from '../services/githubService';
 import { githubCommandService } from '../services/githubCommandService';
 import { codespaceService } from '../services/codespaceService';
 import { validationService } from '../services/validationService';
+import { uuid } from '../utils/uuid';
 const MODELS: ZAIModel[] = [
   {
     id: 'glm-4.6',
@@ -147,7 +148,7 @@ How can I help you today?`,
     }
   };
   const handleSendMessage = async () => {
-    if (!inputText.trim() && messages[messages.length - 1]?.content.length === 0) {
+    if (!inputText.trim()) {
       return;
     }
     const messageText = inputText.trim();
@@ -173,21 +174,21 @@ How can I help you today?`,
           const results = await Promise.all(
             gitHubCommands.map(cmd => githubCommandService.handleCommand(cmd))
           );
-          const formattedResults = results.map(result => 
+          const formattedResults = results.map(result =>
             githubCommandService.formatCommandResult(result)
           ).join('\n\n');
+          const userMessage: Message = {
+            id: uuid.v4(),
+            role: 'user',
+            content: messageText,
+            timestamp: new Date(),
+          };
           const gitHubResponse: Message = {
-            id: (Date.now() + 1).toString(),
+            id: uuid.v4(),
             role: 'assistant',
             content: formattedResults,
             timestamp: new Date(),
             model: selectedModel.id,
-          };
-          const userMessage: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: messageText,
-            timestamp: new Date(),
           };
           setMessages(prev => [...prev, userMessage, gitHubResponse]);
           setInputText('');
@@ -203,19 +204,19 @@ How can I help you today?`,
       if (repository && !currentCodespace) {
         const repoInfo = await githubService.getRepo(repository.split('/')[0], repository.split('/')[1]);
         if (repoInfo) {
+          const userMessage: Message = {
+            id: uuid.v4(),
+            role: 'user',
+            content: messageText,
+            timestamp: new Date(),
+          };
           const suggestionMessage: Message = {
-            id: (Date.now() + 1).toString(),
+            id: uuid.v4(),
             role: 'assistant',
             content: `I see you're working with the repository **${repository}**. Would you like me to create a GitHub Codespace for this project so you can start coding right away?
 You can tap the Codespace status button in the header to create one, or just let me know and I'll set it up for you!`,
             timestamp: new Date(),
             model: selectedModel.id,
-          };
-          const userMessage: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: messageText,
-            timestamp: new Date(),
           };
           setMessages(prev => [...prev, userMessage, suggestionMessage]);
           setInputText('');
@@ -224,7 +225,7 @@ You can tap the Codespace status button in the header to create one, or just let
       }
     }
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: uuid.v4(),
       role: 'user',
       content: sanitizedText,
       timestamp: new Date(),
@@ -265,10 +266,11 @@ You can tap the Codespace status button in the header to create one, or just let
         });
       }
       messagesToSend = [...messagesToSend, ...messages, userMessage];
+      const assistantMessageId = uuid.v4();
       if (selectedMode.id === 'reasoning' && thinkingEnabled) {
         const reasoningProcess: ReasoningProcess = {
-          id: Date.now().toString(),
-          messageId: (Date.now() + 1).toString(),
+          id: uuid.v4(),
+          messageId: assistantMessageId,
           steps: [],
           conclusion: '',
           timestamp: new Date(),
@@ -277,7 +279,7 @@ You can tap the Codespace status button in the header to create one, or just let
         setShowReasoning(true);
       }
       let assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: assistantMessageId,
         role: 'assistant',
         content: '',
         timestamp: new Date(),
@@ -395,8 +397,9 @@ You can tap the Codespace status button in the header to create one, or just let
       }
     } catch (error) {
       console.error('Message sending failed:', error);
-      Alert.alert('Error', 'Failed to send message. Please try again.');
-      setMessages(prev => prev.filter(msg => msg.id !== (Date.now() + 1).toString()));
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      Alert.alert('Error', `Failed to send message: ${errorMessage}\n\nPlease try again.`);
+      setMessages(prev => prev.filter(msg => msg.id !== assistantMessageId));
     } finally {
       setIsLoading(false);
       setInjectedContext([]);
@@ -418,13 +421,13 @@ You can tap the Codespace status button in the header to create one, or just let
     if (!result.canceled && result.assets[0]) {
       const imageContent: MessageContent[] = [
         { type: 'text', text: inputText || 'Please analyze this image.' },
-        { 
-          type: 'image_url', 
-          image_url: { url: result.assets[0].uri } 
+        {
+          type: 'image_url',
+          image_url: { url: result.assets[0].uri }
         }
       ];
       const userMessage: Message = {
-        id: Date.now().toString(),
+        id: uuid.v4(),
         role: 'user',
         content: imageContent,
         timestamp: new Date(),
@@ -432,9 +435,10 @@ You can tap the Codespace status button in the header to create one, or just let
       setMessages(prev => [...prev, userMessage]);
       setInputText('');
       setIsLoading(true);
+      const imageAssistantMessageId = uuid.v4();
       try {
         let assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: imageAssistantMessageId,
           role: 'assistant',
           content: '',
           timestamp: new Date(),
@@ -463,8 +467,10 @@ You can tap the Codespace status button in the header to create one, or just let
           )
         );
       } catch (error) {
-        Alert.alert('Error', 'Failed to analyze image. Please try again.');
-        setMessages(prev => prev.filter(msg => msg.id !== (Date.now() + 1).toString()));
+        console.error('Image analysis failed:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        Alert.alert('Error', `Failed to analyze image: ${errorMessage}\n\nPlease try again.`);
+        setMessages(prev => prev.filter(msg => msg.id !== imageAssistantMessageId));
       } finally {
         setIsLoading(false);
       }
@@ -691,7 +697,7 @@ You can tap the Codespace status button in the header to create one, or just let
           <TouchableOpacity
             style={[styles.sendButton, isLoading && styles.sendButtonDisabled]}
             onPress={handleSendMessage}
-            disabled={isLoading || (!inputText.trim() && messages[messages.length - 1]?.content.length === 0)}
+            disabled={isLoading || !inputText.trim()}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" size="small" />
