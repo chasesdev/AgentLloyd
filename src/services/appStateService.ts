@@ -38,6 +38,11 @@ export class AppStateService {
   private crashCount = 0;
   private lastCrashTime: Date | null = null;
   private memoryCheckInterval: NodeJS.Timeout | null = null;
+  private syncTimer: NodeJS.Timeout | null = null;
+  private appStateSubscription: any = null;
+  private memoryWarningSubscription: any = null;
+  private blurSubscription: any = null;
+  private focusSubscription: any = null;
 
   private constructor() {
     this.config = {
@@ -64,18 +69,15 @@ export class AppStateService {
    */
   private setupAppStateHandling(): void {
     // Handle app state changes
-    AppState.addEventListener('change', this.handleAppStateChange.bind(this));
-    
+    this.appStateSubscription = AppState.addEventListener('change', this.handleAppStateChange.bind(this));
+
     // Handle memory warnings
-    AppState.addEventListener('memoryWarning', this.handleMemoryWarning.bind(this));
-    
-    // Handle app errors
-    AppState.addEventListener('error', this.handleError.bind(this));
-    
+    this.memoryWarningSubscription = AppState.addEventListener('memoryWarning', this.handleMemoryWarning.bind(this));
+
     // Handle app state changes for background/foreground
-    AppState.addEventListener('blur', this.handleAppBlur.bind(this));
-    AppState.addEventListener('focus', this.handleAppFocus.bind(this));
-    
+    this.blurSubscription = AppState.addEventListener('blur', this.handleAppBlur.bind(this));
+    this.focusSubscription = AppState.addEventListener('focus', this.handleAppFocus.bind(this));
+
     console.log('App state handling initialized');
   }
 
@@ -140,7 +142,7 @@ export class AppStateService {
     }
     
     // Process any queued operations
-    if (this.isOnline) {
+    if (offlineService.getStatus().isOnline) {
       offlineService.forceSync();
     }
   }
@@ -227,19 +229,11 @@ export class AppStateService {
    */
   private performMemoryCleanup(): void {
     try {
-      // Clear cache if memory usage is high
-      const cacheStats = cacheService.getStats();
-      
-      if (cacheStats.totalSize > 30 * 1024 * 1024) { // 30MB
-        console.log('Clearing cache due to memory pressure');
-        cacheService.clear();
-      }
-      
       // Trigger garbage collection if available
       if (global.gc) {
         global.gc();
       }
-      
+
       console.log('Memory cleanup completed');
     } catch (error) {
       console.error('Memory cleanup failed:', error);
@@ -426,20 +420,27 @@ export class AppStateService {
     if (this.memoryCheckInterval) {
       clearInterval(this.memoryCheckInterval);
     }
-    
+
     if (this.syncTimer) {
       clearInterval(this.syncTimer);
     }
-    
+
     this.listeners.clear();
-    
+
     // Remove app state listeners
-    AppState.removeEventListener('change', this.handleAppStateChange);
-    AppState.removeEventListener('memoryWarning', this.handleMemoryWarning);
-    AppState.removeEventListener('error', this.handleError);
-    AppState.removeEventListener('blur', this.handleAppBlur);
-    AppState.removeEventListener('focus', this.handleAppFocus);
-    
+    if (this.appStateSubscription) {
+      this.appStateSubscription.remove();
+    }
+    if (this.memoryWarningSubscription) {
+      this.memoryWarningSubscription.remove();
+    }
+    if (this.blurSubscription) {
+      this.blurSubscription.remove();
+    }
+    if (this.focusSubscription) {
+      this.focusSubscription.remove();
+    }
+
     console.log('App state service destroyed');
   }
 }

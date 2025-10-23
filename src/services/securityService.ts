@@ -254,12 +254,12 @@ export class SecurityService {
   /**
    * Validate session
    */
-  validateSession(sessionId: string): SecuritySession | null {
+  async validateSession(sessionId: string): Promise<SecuritySession | null> {
     const session = this.sessions.get(sessionId);
-    
+
     if (!session) {
       // Try to load from storage
-      const storedSession = this.loadSession(sessionId);
+      const storedSession = await this.loadSession(sessionId);
       if (storedSession) {
         this.sessions.set(sessionId, storedSession);
         return this.validateSession(sessionId);
@@ -455,9 +455,9 @@ export class SecurityService {
   /**
    * Load session from secure storage
    */
-  private loadSession(sessionId: string): SecuritySession | null {
+  private async loadSession(sessionId: string): Promise<SecuritySession | null> {
     try {
-      const data = SecureStorage.getItem(`session_${sessionId}`);
+      const data = await SecureStorage.getItem(`session_${sessionId}`);
       if (!data) return null;
 
       const session = JSON.parse(data) as SecuritySession;

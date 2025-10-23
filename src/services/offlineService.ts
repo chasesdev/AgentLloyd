@@ -61,7 +61,7 @@ export class OfflineService {
     // Use React Native NetInfo for real connectivity monitoring
     const unsubscribe = NetInfo.addEventListener(state => {
       const wasOnline = this.isOnline;
-      this.isOnline = state.isConnected && state.isInternetReachable;
+      this.isOnline = (state.isConnected && state.isInternetReachable) || false;
       
       if (!wasOnline && this.isOnline) {
         // Came back online
@@ -142,7 +142,9 @@ export class OfflineService {
     if (this.queue.length >= this.config.maxQueueSize) {
       // Remove oldest item
       const removed = this.queue.shift();
-      console.warn('Queue full, removed oldest item:', removed.id);
+      if (removed) {
+        console.warn('Queue full, removed oldest item:', removed.id);
+      }
     }
 
     const queueItem: OfflineQueueItem = {
@@ -250,7 +252,16 @@ export class OfflineService {
 
     // Save to chat memory if needed
     if (item.data.saveToMemory && item.data.chatId) {
-      await chatMemoryService.saveMessage(response);
+      const message = {
+        id: Date.now().toString(),
+        role: 'assistant' as const,
+        content: response.content,
+        timestamp: new Date(),
+        thinking: response.thinking,
+        model: item.data.model,
+        chatId: item.data.chatId
+      };
+      await chatMemoryService.saveMessage(message);
     }
   }
 

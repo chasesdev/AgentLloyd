@@ -260,7 +260,7 @@ export const CodespaceModal: React.FC<CodespaceModalProps> = ({
             </Text>
             <TouchableOpacity
               style={styles.learnMoreButton}
-              onPress={() => Linking.openURL('https:
+              onPress={() => Linking.openURL('https://github.com/features/codespaces')}
             >
               <Text style={styles.learnMoreButtonText}>Learn More</Text>
             </TouchableOpacity>

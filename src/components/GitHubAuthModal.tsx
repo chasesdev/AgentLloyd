@@ -11,6 +11,7 @@ import {
   Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { githubService } from '../services/githubService';
 interface GitHubAuthModalProps {
   visible: boolean;
   onClose: () => void;
@@ -33,7 +34,6 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
     }
     setIsLoading(true);
     try {
-      const { githubService } = await import('../services/githubService');
       const success = await githubService.setToken(token.trim());
       if (success) {
         Alert.alert('Success', 'GitHub authentication successful!');
@@ -50,7 +50,7 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
     }
   };
   const openGitHubTokenPage = () => {
-    Linking.openURL('https:
+    Linking.openURL('https://github.com/settings/tokens');
   };
   return (
     <Modal
@@ -98,7 +98,7 @@ export const GitHubAuthModal: React.FC<GitHubAuthModalProps> = ({
             <View style={styles.instructionsBox}>
               <Text style={styles.instructionsTitle}>How to create a GitHub token:</Text>
               <Text style={styles.instructionsText}>
-                1. Go to https:
+                1. Go to https://github.com/settings/tokens
               </Text>
               <Text style={styles.instructionsText}>
                 2. Click "Generate new token (classic)"

@@ -176,6 +176,23 @@ export class DatabaseMigration {
           CREATE INDEX IF NOT EXISTS idx_codespaces_state ON codespaces(state);
         `);
       }
+    },
+    {
+      version: 7,
+      description: 'Add embedding column for semantic search',
+      up: async (db: SQLite.SQLiteDatabase) => {
+        // Add embedding column to memories table
+        await db.execAsync(`
+          ALTER TABLE memories ADD COLUMN embedding TEXT;
+        `);
+
+        console.log('Added embedding column to memories table for semantic search');
+      },
+      down: async (db: SQLite.SQLiteDatabase) => {
+        // SQLite doesn't support DROP COLUMN easily, so we'd need to recreate the table
+        // For now, just log a warning
+        console.warn('Rollback for embedding column not implemented - column will remain');
+      }
     }
   ];
 

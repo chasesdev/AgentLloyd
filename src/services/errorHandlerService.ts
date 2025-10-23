@@ -1,6 +1,21 @@
 import { SecureStorage } from '../utils/secureStorage';
 import { chatDatabase } from './chatDatabase';
 
+// React Native global types
+declare const ErrorUtils:
+  | {
+      setGlobalHandler: (handler: (error: Error, isFatal?: boolean) => void) => void;
+      getGlobalHandler: () => ((error: Error, isFatal?: boolean) => void) | undefined;
+    }
+  | undefined;
+
+declare const global:
+  | {
+      HermesInternal?: any;
+      addEventListener?: (event: string, handler: (event: any) => void) => void;
+    }
+  | undefined;
+
 export interface ErrorReport {
   id: string;
   message: string;
@@ -44,24 +59,64 @@ export class ErrorHandlerService {
    * Setup global error handlers
    */
   private setupGlobalHandlers(): void {
-    // Handle unhandled promise rejections
-    if (typeof window !== 'undefined') {
-      window.addEventListener('unhandledrejection', (event) => {
-        this.handleError(new Error(event.reason), {
-          context: { type: 'unhandled_promise_rejection' }
-        });
-      });
+    // React Native global error handler
+    if (typeof ErrorUtils !== 'undefined' && ErrorUtils) {
+      const originalHandler = ErrorUtils.getGlobalHandler?.();
 
-      // Handle global errors
+      ErrorUtils.setGlobalHandler?.((error, isFatal) => {
+        this.handleError(error, {
+          action: 'global_error',
+          data: { isFatal }
+        });
+
+        // Call original handler
+        originalHandler?.(error, isFatal);
+      });
+    }
+
+    // Handle unhandled promise rejections (works in both React Native and web)
+    const promiseRejectionHandler = (event: any) => {
+      const rejectionReason = event?.reason;
+      let serializedReason: string | undefined;
+
+      if (rejectionReason && !(rejectionReason instanceof Error)) {
+        if (typeof rejectionReason === 'string') {
+          serializedReason = rejectionReason;
+        } else {
+          try {
+            serializedReason = JSON.stringify(rejectionReason);
+          } catch {
+            serializedReason = String(rejectionReason);
+          }
+        }
+      }
+
+      const error =
+        rejectionReason instanceof Error
+          ? rejectionReason
+          : new Error(rejectionReason ? String(rejectionReason) : 'Unhandled promise rejection');
+
+      this.handleError(error, {
+        action: 'unhandled_promise_rejection',
+        data: serializedReason ? { reason: serializedReason } : undefined
+      });
+    };
+
+    // Use appropriate API based on environment
+    if (typeof global !== 'undefined' && global?.HermesInternal) {
+      // React Native with Hermes
+      global?.addEventListener?.('unhandledrejection', promiseRejectionHandler);
+    } else if (typeof window !== 'undefined') {
+      // Web environment
+      window.addEventListener?.('unhandledrejection', promiseRejectionHandler);
+
       window.onerror = (message, source, lineno, colno, error) => {
         this.handleError(error || new Error(String(message)), {
-          context: { source, lineno, colno }
+          action: 'global_error',
+          data: { source, lineno, colno }
         });
       };
     }
-
-    // React Native error handling would be setup differently
-    // This is a basic setup for web environment
   }
 
   /**

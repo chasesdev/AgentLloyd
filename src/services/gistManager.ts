@@ -122,7 +122,7 @@ class GistManager {
       return updatedGist;
     } else {
       const gistId = this.generateGistId();
-      const gistUrl = `https:
+      const gistUrl = `https://gist.github.com/${gistId}`;
       const newGist: ChatGist = {
         id: `gist-${chatId}`,
         chatId,
@@ -173,7 +173,7 @@ class GistManager {
           content: file.content
         };
       });
-      const response = await fetch('https:
+      const response = await fetch('https://api.github.com/gists', {
         method: 'POST',
         headers: {
           'Authorization': `token ${token}`,
@@ -214,7 +214,7 @@ class GistManager {
           content: file.content
         };
       });
-      const response = await fetch(`https:
+      const response = await fetch(`https://api.github.com/gists/${gist.gistId}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `token ${token}`,
@@ -247,7 +247,7 @@ class GistManager {
       if (!token) {
         throw new Error('GitHub token not found');
       }
-      const response = await fetch(`https:
+      const response = await fetch(`https://api.github.com/gists/${gistId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `token ${token}`,
@@ -426,7 +426,7 @@ class GistManager {
         markdown += `${api.description}\n\n`;
         if (api.parameters) {
           markdown += `**Parameters:**\n`;
-          api.parameters.forEach(param => {
+          api.parameters.forEach((param: any) => {
             markdown += `- \`${param.name}\` (${param.type}): ${param.description}\n`;
           });
           markdown += `\n`;

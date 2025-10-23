@@ -1,6 +1,19 @@
 import { Message, ChatMemory, SemanticMatch, ContextInjection } from '../types';
 import { zaiService } from './zaiService';
+import { chatDatabase } from './chatDatabase';
+import { settingsService } from './settingsService';
+
+interface EmbeddingCache {
+  text: string;
+  embedding: number[];
+  timestamp: Date;
+}
+
 export class SemanticAnalysisService {
+  private embeddingCache: Map<string, EmbeddingCache> = new Map();
+  private readonly MAX_CACHE_SIZE = 100;
+  private readonly EMBEDDING_MODEL = 'text-embedding-3-small';
+
   private stopWords = new Set([
     'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with',
     'by', 'from', 'up', 'about', 'into', 'through', 'during', 'before', 'after', 'above',
@@ -28,6 +41,98 @@ export class SemanticAnalysisService {
       .sort((a, b) => b[1] - a[1])
       .slice(0, maxTerms)
       .map(([term]) => term);
+  }
+
+  /**
+   * Generate embedding vector for text using OpenAI API
+   */
+  async generateEmbedding(text: string): Promise<number[]> {
+    // Normalize text for cache key
+    const normalizedText = text.trim().toLowerCase();
+
+    // Check cache first
+    const cached = this.embeddingCache.get(normalizedText);
+    if (cached) {
+      console.log('Using cached embedding');
+      return cached.embedding;
+    }
+
+    try {
+      // Call OpenAI embeddings API via fetch
+      // Note: You'll need an OpenAI API key for this
+      const apiKey = settingsService.getSettings().apiKey;
+
+      const response = await fetch('https://api.openai.com/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: this.EMBEDDING_MODEL,
+          input: text,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Embedding API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const embedding = data.data[0].embedding;
+
+      // Cache the embedding
+      this.cacheEmbedding(normalizedText, embedding);
+
+      return embedding;
+    } catch (error) {
+      console.error('Failed to generate embedding:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Cache embedding with LRU eviction
+   */
+  private cacheEmbedding(text: string, embedding: number[]): void {
+    // If cache is full, remove oldest entry
+    if (this.embeddingCache.size >= this.MAX_CACHE_SIZE) {
+      const firstKey = this.embeddingCache.keys().next().value;
+      this.embeddingCache.delete(firstKey);
+    }
+
+    this.embeddingCache.set(text, {
+      text,
+      embedding,
+      timestamp: new Date(),
+    });
+  }
+
+  /**
+   * Calculate cosine similarity between two vectors
+   */
+  cosineSimilarity(vec1: number[], vec2: number[]): number {
+    if (vec1.length !== vec2.length) {
+      throw new Error('Vectors must have the same length');
+    }
+
+    let dotProduct = 0;
+    let norm1 = 0;
+    let norm2 = 0;
+
+    for (let i = 0; i < vec1.length; i++) {
+      dotProduct += vec1[i] * vec2[i];
+      norm1 += vec1[i] * vec1[i];
+      norm2 += vec2[i] * vec2[i];
+    }
+
+    const denominator = Math.sqrt(norm1) * Math.sqrt(norm2);
+
+    if (denominator === 0) {
+      return 0;
+    }
+
+    return dotProduct / denominator;
   }
   extractKeyTermsFromMessages(messages: Message[], maxTerms: number = 15): string[] {
     const allText = messages
@@ -121,18 +226,93 @@ export class SemanticAnalysisService {
       return this.extractKeyTermsFromMessages(messages, 5);
     }
   }
+  /**
+   * Find semantically similar memories using embeddings (primary) or keyword matching (fallback)
+   */
   async findSemanticMatches(
+    currentMessage: string,
+    memories: ChatMemory[],
+    threshold: number = 0.3
+  ): Promise<SemanticMatch[]> {
+    try {
+      // Try embedding-based similarity first
+      return await this.findSemanticMatchesByEmbedding(currentMessage, memories, threshold);
+    } catch (error) {
+      console.warn('Embedding-based search failed, falling back to keyword search:', error);
+      // Fallback to keyword-based similarity
+      return this.findSemanticMatchesByKeywords(currentMessage, memories, threshold);
+    }
+  }
+
+  /**
+   * Find similar memories using vector embeddings (real semantic search)
+   */
+  private async findSemanticMatchesByEmbedding(
+    currentMessage: string,
+    memories: ChatMemory[],
+    threshold: number = 0.7  // Higher threshold for cosine similarity
+  ): Promise<SemanticMatch[]> {
+    // Generate embedding for current message
+    const currentEmbedding = await this.generateEmbedding(currentMessage);
+
+    const matches: SemanticMatch[] = [];
+
+    for (const memory of memories) {
+      try {
+        // Get or generate embedding for memory
+        let memoryEmbedding: number[];
+
+        if (memory.embedding && Array.isArray(memory.embedding)) {
+          memoryEmbedding = memory.embedding;
+        } else {
+          // Generate embedding for memory summary
+          memoryEmbedding = await this.generateEmbedding(memory.summary);
+
+          // Store embedding in memory for future use
+          await this.storeEmbeddingForMemory(memory.id, memoryEmbedding);
+        }
+
+        // Calculate cosine similarity
+        const similarity = this.cosineSimilarity(currentEmbedding, memoryEmbedding);
+
+        if (similarity >= threshold) {
+          matches.push({
+            memoryId: memory.id,
+            score: similarity,
+            matchedTerms: [],  // Not applicable for embedding-based search
+            summary: memory.summary,
+          });
+        }
+      } catch (error) {
+        console.error(`Failed to process embedding for memory ${memory.id}:`, error);
+        // Skip this memory and continue
+      }
+    }
+
+    return matches
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  }
+
+  /**
+   * Find similar memories using keyword matching (fallback method)
+   */
+  private findSemanticMatchesByKeywords(
     currentMessage: string,
     memories: ChatMemory[],
     threshold: number = 0.3
   ): Promise<SemanticMatch[]> {
     const currentTerms = new Set(this.extractKeyTerms(currentMessage, 20));
     const matches: SemanticMatch[] = [];
+
     for (const memory of memories) {
       const memoryTerms = new Set(memory.keyTerms);
       const intersection = new Set([...currentTerms].filter(term => memoryTerms.has(term)));
       const union = new Set([...currentTerms, ...memoryTerms]);
+
+      // Jaccard similarity
       const similarity = intersection.size / union.size;
+
       if (similarity >= threshold) {
         matches.push({
           memoryId: memory.id,
@@ -142,9 +322,26 @@ export class SemanticAnalysisService {
         });
       }
     }
-    return matches
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3); 
+
+    return Promise.resolve(
+      matches
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3)
+    );
+  }
+
+  /**
+   * Store embedding for a memory in the database
+   */
+  private async storeEmbeddingForMemory(memoryId: string, embedding: number[]): Promise<void> {
+    try {
+      // Store embedding in database
+      // This would require updating the chatDatabase schema
+      await chatDatabase.saveMemoryEmbedding(memoryId, embedding);
+    } catch (error) {
+      console.error('Failed to store embedding:', error);
+      // Non-fatal error, just log it
+    }
   }
   async createContextInjection(
     currentMessage: string,

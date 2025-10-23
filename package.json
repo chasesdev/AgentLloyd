@@ -10,35 +10,38 @@
     "lint": "expo lint"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.0",
+    "@expo/vector-icons": "~14.0.4",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/netinfo": "^11.4.1",
     "@types/crypto-js": "^4.2.2",
     "axios": "^1.10.0",
     "crypto-js": "^4.2.0",
     "expo": "~52.0.0",
+    "expo-build-properties": "~0.13.3",
+    "expo-constants": "~17.0.8",
     "expo-document-picker": "~13.0.1",
     "expo-image-picker": "~16.0.3",
-    "expo-linear-gradient": "^15.0.7",
+    "expo-linear-gradient": "~14.0.2",
+    "expo-linking": "~7.0.5",
     "expo-router": "~4.0.0",
     "expo-secure-store": "~14.0.0",
-    "expo-sqlite": "~14.0.6",
+    "expo-sqlite": "~15.1.4",
     "expo-status-bar": "~2.0.0",
-    "expo-updates": "~0.25.0",
+    "expo-updates": "~0.27.4",
     "react": "18.3.1",
-    "react-native": "0.76.5",
+    "react-native": "0.76.9",
+    "react-native-apple-ai": "^0.1.0",
     "react-native-gesture-handler": "~2.20.2",
+    "react-native-nitro-modules": "^0.31.1",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-svg": "15.8.0",
-    "uuid": "^9.0.1",
-    "z-ai-web-dev-sdk": "^0.0.10"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/react": "~18.3.12",
-    "@types/react-native": "^0.72.0",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
@@ -47,5 +50,6 @@
     "eslint-plugin-jest": "^29.0.1",
     "typescript": "~5.3.3"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

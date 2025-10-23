@@ -28,7 +28,7 @@ class GitHubService {
   private authenticated = false;
   async setToken(token: string): Promise<boolean> {
     try {
-      const response = await axios.get('https:
+      const response = await axios.get('https://api.github.com/user', {
         headers: {
           'Authorization': `token ${token}`,
           'Accept': 'application/vnd.github.v3+json'
@@ -63,7 +63,7 @@ class GitHubService {
       return null;
     }
     try {
-      const response = await axios.get('https:
+      const response = await axios.get('https://api.github.com/user/repos', {
         headers: {
           'Authorization': `token ${this.token}`,
           'Accept': 'application/vnd.github.v3+json'
@@ -80,7 +80,7 @@ class GitHubService {
       return null;
     }
     try {
-      const response = await axios.get(`https:
+      const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}`, {
         headers: {
           'Authorization': `token ${this.token}`,
           'Accept': 'application/vnd.github.v3+json'
@@ -97,7 +97,7 @@ class GitHubService {
       return null;
     }
     try {
-      const response = await axios.get(`https:
+      const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         headers: {
           'Authorization': `token ${this.token}`,
           'Accept': 'application/vnd.github.v3+json'
@@ -120,7 +120,7 @@ class GitHubService {
       return [];
     }
     try {
-      const response = await axios.get(`https:
+      const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         headers: {
           'Authorization': `token ${this.token}`,
           'Accept': 'application/vnd.github.v3+json'
@@ -140,7 +140,7 @@ class GitHubService {
       return null;
     }
     try {
-      const response = await axios.post('https:
+      const response = await axios.post('https://api.github.com/user/repos', {
         name,
         description,
         private: isPrivate,
@@ -194,7 +194,7 @@ class GitHubService {
   }
   getTokenSetupInstructions(): string {
     return `To set up GitHub access:
-1. Go to https:
+1. Go to https://github.com/settings/tokens
 2. Click "Generate new token (classic)"
 3. Give it a name (e.g., "Chat App")
 4. Select these scopes:

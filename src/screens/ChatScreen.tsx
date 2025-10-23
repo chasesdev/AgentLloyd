@@ -17,7 +17,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { Message, MessageContent, ZAIModel, ChatMemory } from '../types';
 import { ChatMode, CHAT_MODES, ReasoningProcess } from '../types/modes';
-import { zaiService } from '../services/zaiService';
+import { aiRouter } from '../services/aiRouter';
 import { ToolsModal } from '../components/ToolsModal';
 import { ChatSidebar } from '../components/ChatSidebar';
 import { BioModal } from '../components/BioModal';
@@ -88,6 +88,7 @@ export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
   const [showGitHubAuth, setShowGitHubAuth] = useState(false);
   const [detectedGitHubCommands, setDetectedGitHubCommands] = useState<string[]>([]);
   const [showCodespaceModal, setShowCodespaceModal] = useState(false);
+  const [aiBackend, setAIBackend] = useState<string>('');
   const flatListRef = useRef<FlatList>(null);
   const loadingStates = useLoadingState();
   const progress = useProgress();
@@ -99,8 +100,11 @@ export const ChatScreen: React.FC<Props> = ({ onLogout }) => {
     loadingStates.setLoading('initialization', true);
     try {
       progress.setProgress('initialization', 0.2);
+      await aiRouter.initialize();
+      setAIBackend(aiRouter.backendDisplayName);
+      progress.setProgress('initialization', 0.4);
       await chatMemoryService.init();
-      progress.setProgress('initialization', 0.5);
+      progress.setProgress('initialization', 0.7);
       startNewChat();
       progress.setProgress('initialization', 1.0);
     } catch (error) {
@@ -152,7 +156,7 @@ How can I help you today?`,
       return;
     }
     const messageText = inputText.trim();
-    const validation = validationService.validateAndSanitize(messageText, 'text');
+    const validation = validationService.validateAndSanitize(messageText, 'message');
     if (!validation.isValid) {
       Alert.alert('Validation Error', validation.errors.join('\n'));
       return;
@@ -160,7 +164,7 @@ How can I help you today?`,
     if (validation.warnings.length > 0) {
       console.warn('Input validation warnings:', validation.warnings);
     }
-    const sanitizedText = validation.sanitized;
+    const sanitizedText = validation.sanitized || messageText.trim();
     loadingStates.setLoading('sending', true);
     progress.setProgress('sending', 0.1);
     const gitHubCommands = githubService.detectGitHubCommands(sanitizedText);
@@ -292,13 +296,13 @@ You can tap the Codespace status button in the header to create one, or just let
         : undefined;
       let response;
       if (selectedMode.id === 'reasoning' && thinkingEnabled) {
-        response = await zaiService.sendReasoningMessage(
+        response = await aiRouter.sendReasoningMessage(
           messagesToSend,
           selectedModel.id,
           (chunk) => {
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === assistantMessage.id 
+            setMessages(prev =>
+              prev.map(msg =>
+                msg.id === assistantMessage.id
                   ? { ...msg, content: (msg.content as string) + chunk }
                   : msg
               )
@@ -314,8 +318,8 @@ You can tap the Codespace status button in the header to create one, or just let
                   title: 'Real-time Reasoning',
                   content: reasoningChunk,
                   timestamp: new Date(),
-                }] : prev.steps.map(step => 
-                  step.id === 'realtime' 
+                }] : prev.steps.map(step =>
+                  step.id === 'realtime'
                     ? { ...step, content: step.content + reasoningChunk }
                     : step
                 )
@@ -325,14 +329,14 @@ You can tap the Codespace status button in the header to create one, or just let
           tools
         );
       } else {
-        response = await zaiService.sendMessage(
+        response = await aiRouter.sendMessage(
           messagesToSend,
           selectedModel.id,
           thinkingEnabled,
           (chunk) => {
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === assistantMessage.id 
+            setMessages(prev =>
+              prev.map(msg =>
+                msg.id === assistantMessage.id
                   ? { ...msg, content: (msg.content as string) + chunk }
                   : msg
               )
@@ -445,14 +449,14 @@ You can tap the Codespace status button in the header to create one, or just let
           model: selectedModel.id,
         };
         setMessages(prev => [...prev, assistantMessage]);
-        const response = await zaiService.sendMessage(
+        const response = await aiRouter.sendMessage(
           [...messages, userMessage],
           selectedModel.id,
           thinkingEnabled,
           (chunk) => {
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === assistantMessage.id 
+            setMessages(prev =>
+              prev.map(msg =>
+                msg.id === assistantMessage.id
                   ? { ...msg, content: (msg.content as string) + chunk }
                   : msg
               )
@@ -545,6 +549,9 @@ You can tap the Codespace status button in the header to create one, or just let
         </TouchableOpacity>
         <View style={styles.titleSection}>
           <Text style={styles.chatTitle}>{chatTitle}</Text>
+          {aiBackend && (
+            <Text style={styles.backendIndicator}>{aiBackend}</Text>
+          )}
           <TokenUsageCounter model={selectedModel.id} />
         </View>
         <View style={styles.headerActions}>
@@ -970,6 +977,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
+    textAlign: 'center',
+  },
+  backendIndicator: {
+    fontSize: 11,
+    color: '#666',
+    marginTop: 2,
     textAlign: 'center',
   },
   titleSection: {

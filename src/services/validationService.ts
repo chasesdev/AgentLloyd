@@ -10,6 +10,7 @@ export interface ValidationResult {
   isValid: boolean;
   errors: string[];
   warnings: string[];
+  sanitized?: string;
 }
 
 export interface ValidationSchema {
@@ -51,21 +52,26 @@ export class ValidationService {
     const warnings: string[] = [];
 
     for (const [key, rule] of Object.entries(schema)) {
-      // Check if required field is missing
-      if (rule.required && (value === null || value === undefined || value === '')) {
-        errors.push(`${key} is required`);
-        continue;
-      }
+      // Check if this is a ValidationRule (not a nested ValidationSchema)
+      if ('validate' in rule && typeof rule.validate === 'function') {
+        const validationRule = rule as ValidationRule;
 
-      // Skip validation if field is optional and empty
-      if (!rule.required && (value === null || value === undefined || value === '')) {
-        continue;
-      }
+        // Check if required field is missing
+        if (validationRule.required && (value === null || value === undefined || value === '')) {
+          errors.push(`${key} is required`);
+          continue;
+        }
 
-      // Run validation rule
-      const result = rule.validate(value);
-      errors.push(...result.errors);
-      warnings.push(...result.warnings);
+        // Skip validation if field is optional and empty
+        if (!validationRule.required && (value === null || value === undefined || value === '')) {
+          continue;
+        }
+
+        // Run validation rule
+        const result = validationRule.validate(value);
+        errors.push(...result.errors);
+        warnings.push(...result.warnings);
+      }
     }
 
     return {
@@ -90,8 +96,8 @@ export class ValidationService {
     const trimmedKey = apiKey.trim();
 
     // Basic format validation
-    if (trimmedKey.length < 20) {
-      errors.push('API key must be at least 20 characters long');
+    if (trimmedKey.length < 10) {
+      errors.push('API key must be at least 10 characters long');
     }
 
     if (trimmedKey.length > 200) {
@@ -99,7 +105,7 @@ export class ValidationService {
     }
 
     // Pattern validation (basic API key pattern)
-    const apiKeyPattern = /^[a-zA-Z0-9\-_]+$/;
+    const apiKeyPattern = /^[a-zA-Z0-9\-_.]+$/;
     if (!apiKeyPattern.test(trimmedKey)) {
       errors.push('API key contains invalid characters');
     }
@@ -509,26 +515,26 @@ export class ValidationService {
   /**
    * Get validation schema for common use cases
    */
-  getCommonSchemas(): Record<string, ValidationSchema> {
+  getCommonSchemas(): Record<string, ValidationRule> {
     return {
       apiKey: {
         name: 'API Key',
-        validate: (value) => this.validateApiKey(value),
+        validate: (value: any) => this.validateApiKey(value),
         required: true
       },
       message: {
         name: 'Message',
-        validate: (value) => this.validateMessage(value),
+        validate: (value: any) => this.validateMessage(value),
         required: true
       },
       filePath: {
         name: 'File Path',
-        validate: (value) => this.validateFilePath(value),
+        validate: (value: any) => this.validateFilePath(value),
         required: true
       },
       code: {
         name: 'Code',
-        validate: (value) => {
+        validate: (value: any) => {
           // This would need language detection
           return this.validateCode(value, 'javascript');
         },
@@ -536,7 +542,7 @@ export class ValidationService {
       },
       email: {
         name: 'Email',
-        validate: (value) => {
+        validate: (value: any) => {
           const emailRegex = /^[^\s]*[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\s*$/;
           return {
             isValid: emailRegex.test(value),
@@ -548,7 +554,7 @@ export class ValidationService {
       },
       url: {
         name: 'URL',
-        validate: (value) => {
+        validate: (value: any) => {
           try {
             new URL(value);
             return {
@@ -606,8 +612,8 @@ export class ValidationService {
    * Validate and sanitize user input
    */
   validateAndSanitize(input: string, type: 'text' | 'html' | 'url' | 'email' | 'code' | 'filepath' = 'text'): ValidationResult {
-    const schema = this.getCommonSchemas()[type];
-    if (!schema) {
+    const rule = this.getCommonSchemas()[type];
+    if (!rule) {
       return {
         isValid: false,
         errors: ['Unknown validation type'],
@@ -616,7 +622,7 @@ export class ValidationService {
       };
     }
 
-    const validation = this.validate(input, schema);
+    const validation = rule.validate(input);
     let sanitized = input;
 
     if (type === 'html') {
