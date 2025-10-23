@@ -58,62 +58,29 @@ export class OfflineService {
    * Setup connectivity monitoring
    */
   private setupConnectivityMonitoring(): void {
-    // Use React Native NetInfo for real connectivity monitoring
-    const unsubscribe = NetInfo.addEventListener(state => {
+    NetInfo.addEventListener(state => {
       const wasOnline = this.isOnline;
-      this.isOnline = (state.isConnected && state.isInternetReachable) || false;
-      
+
+      // Handle iOS Simulator quirk where isInternetReachable can be null
+      // If isConnected is true, assume online (especially for simulator)
+      if (state.isConnected === true) {
+        this.isOnline = true;
+      } else if (state.isConnected === false) {
+        this.isOnline = false;
+      } else {
+        // Unknown state, assume online to avoid false negatives
+        this.isOnline = true;
+      }
+
       if (!wasOnline && this.isOnline) {
-        // Came back online
         console.log('Back online, starting sync...');
         this.processQueue();
       } else if (wasOnline && !this.isOnline) {
-        // Went offline
         console.log('Went offline, enabling offline mode');
       }
-      
+
       this.notifyListeners();
     });
-
-    // Additional connectivity validation with periodic checks
-    const validateConnectivity = async () => {
-      if (this.isOnline) {
-        try {
-          // Validate actual internet connectivity
-          const response = await fetch('https://api.github.com/rate_limit', {
-            method: 'HEAD',
-            cache: 'no-cache',
-            signal: AbortSignal.timeout(5000)
-          });
-          
-          if (!response.ok) {
-            // Network is connected but no internet access
-            const wasOnline = this.isOnline;
-            this.isOnline = false;
-            
-            if (wasOnline) {
-              console.log('Network connected but no internet access');
-              this.notifyListeners();
-            }
-          }
-        } catch (error) {
-          // Network connectivity issue
-          const wasOnline = this.isOnline;
-          this.isOnline = false;
-          
-          if (wasOnline) {
-            console.log('Network connectivity issue detected');
-            this.notifyListeners();
-          }
-        }
-      }
-    };
-
-    // Validate connectivity every 60 seconds
-    setInterval(validateConnectivity, 60000);
-    
-    // Initial validation
-    setTimeout(validateConnectivity, 5000);
   }
 
   /**

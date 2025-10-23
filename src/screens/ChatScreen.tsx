@@ -244,6 +244,7 @@ You can tap the Codespace status button in the header to create one, or just let
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
+    const assistantMessageId = uuid.v4();
     try {
       let messagesToSend: Message[] = [];
       messagesToSend.push({
@@ -270,7 +271,6 @@ You can tap the Codespace status button in the header to create one, or just let
         });
       }
       messagesToSend = [...messagesToSend, ...messages, userMessage];
-      const assistantMessageId = uuid.v4();
       if (selectedMode.id === 'reasoning' && thinkingEnabled) {
         const reasoningProcess: ReasoningProcess = {
           id: uuid.v4(),
